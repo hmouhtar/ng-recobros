@@ -1,0 +1,27 @@
+.spacer {
+  flex: 1 0 auto;
+}
+
+button {
+  margin: 0 10px;
+}
+
+#sidenav {
+  width: 250px;
+}
+
+#mainNav {
+  z-index: 2;
+  position: relative;
+}
+
+.mat-drawer-content {
+  overflow: visible;
+
+}
+
+.mat-drawer-container {
+  background-color: white;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}

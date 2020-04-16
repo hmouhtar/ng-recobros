@@ -1,0 +1,96 @@
+<header id="mainNav">
+  <mat-toolbar *ngIf="!isUserLoggedIn; else loggedInNav" color="primary">
+    Recobros
+    <span class="spacer"></span>
+    <!-- <button mat-flat-button color="primary" routerLink="home">Home</button> -->
+    <button mat-flat-button color="primary" routerLink="login">Log in</button>
+    <!-- <button mat-flat-button color="primary" routerLink="register">Sign up</button> -->
+  </mat-toolbar>
+  <ng-template #loggedInNav>
+    <mat-toolbar color="primary">
+      <!-- <button mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button> -->
+      Recobros
+      <span class="spacer"></span>
+      <button mat-flat-button color="primary" routerLink="home">Home</button>
+    </mat-toolbar>
+  </ng-template>
+</header>
+
+<section id="main">
+  <mat-sidenav-container>
+
+    <mat-sidenav fixedInViewport=true id="sidenav" mode="side" [opened]="isUserLoggedIn">
+
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <h2> Recobros </h2>
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <mat-nav-list>
+
+        <h2 matSubheader> Menu </h2>
+
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>home</mat-icon>
+          Home
+        </a>
+
+        <mat-divider></mat-divider>
+
+        <h2 matSubheader> Gestión de Recobros </h2>
+
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>library_books</mat-icon>
+          Lista de Recobros
+        </a>
+
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>library_add</mat-icon>
+          Carga de Recobros
+        </a>
+
+        <mat-divider></mat-divider>
+
+        <h2 matSubheader> Reportes </h2>
+
+
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>insert_chart</mat-icon>
+          Cuadros de Mando
+        </a>
+
+        <mat-divider></mat-divider>
+
+        <h2 matSubheader> Administración </h2>
+
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>account_circle</mat-icon>
+          Gestión de Usuarios
+        </a>
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>settings</mat-icon>
+          Configuración de Carga
+        </a>
+        <a mat-list-item routerLink="home" routerLinkActive="list-item-active">
+          <mat-icon matListIcon>supervised_user_circle</mat-icon>
+          Gestión de Abogados
+        </a>
+
+      </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <div class="container">
+        <router-outlet></router-outlet>
+
+      </div>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</section>
+
+<footer></footer>
