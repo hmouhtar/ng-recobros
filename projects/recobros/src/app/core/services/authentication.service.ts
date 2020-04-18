@@ -34,7 +34,7 @@ export class AuthenticationService {
 
   login(userCredential: string, password: string) {
     return this.http
-      .post<any>(`${Config.apiURL}/api/login/doLogin/`, {
+      .post<any>(`${Config.apiURL}/api/login/user/doLogin`, {
         userCredential,
         password,
       })
