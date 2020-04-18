@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { map, tap } from 'rxjs/operators';
 import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
 
@@ -34,16 +33,20 @@ export class AuthenticationService {
 
   login(userCredential: string, password: string) {
     return this.http
-      .post<any>(`${Config.apiURL}/api/login/user/doLogin`, {
-        userCredential,
-        password,
-      })
+      .post(
+        `${Config.apiURL}/api/login/user/doLogin`,
+        {
+          userCredential,
+          password,
+        },
+        {
+          responseType: 'text',
+        }
+      )
       .pipe(
-        map((user: User) => {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
+        tap((res) => {
+          localStorage.setItem('token', res);
+          this.currentUserSubject.next(new User());
         })
       );
   }
