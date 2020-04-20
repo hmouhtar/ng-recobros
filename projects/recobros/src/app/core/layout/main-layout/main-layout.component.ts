@@ -4,6 +4,7 @@ import { AlertService } from '../../services/alert.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSidenav } from '@angular/material/sidenav';
+import { SidenavService } from '../../services/sidenav.service';
 
 @Component({
   selector: 'alvea-main-layout',
@@ -12,15 +13,23 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class MainLayoutComponent implements OnInit {
   public isUserLoggedIn: boolean;
+  public objectValues = Object.values;
+  public sidenavLinks: object;
+  public objectKeys = Object.keys;
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private _snackBar: MatSnackBar
-  ) {
-    this.isUserLoggedIn = authenticationService.isUserLoggedIn();
-  }
+    private _snackBar: MatSnackBar,
+    private sidenavService: SidenavService
+  ) {}
 
   ngOnInit(): void {
+    this.sidenavLinks = this.sidenavService.getAvailableRoutes();
+    console.log(this.sidenavLinks);
+    this.authenticationService.currentUser.subscribe(
+      (res) => (this.isUserLoggedIn = res !== null)
+    );
+
     this.alertService.getAlert().subscribe((message) => {
       message &&
         this._snackBar.open(message.text, '', {

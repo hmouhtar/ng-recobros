@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RolesService {
+  constructor() {}
 
-  constructor() { }
+  currentUserCan(capability: string) {
+    return true;
+  }
 }

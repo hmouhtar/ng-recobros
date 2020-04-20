@@ -46,6 +46,8 @@ export class AuthenticationService {
       .pipe(
         tap((res) => {
           localStorage.setItem('token', res);
+          localStorage.setItem('currentUser', '0');
+
           this.currentUserSubject.next(new User());
         })
       );
