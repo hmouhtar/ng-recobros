@@ -46,4 +46,8 @@ export class MainLayoutComponent implements OnInit {
       // }
     });
   }
+
+  logout() {
+    if (confirm('Deseas cerrar sesión?')) this.authenticationService.logout();
+  }
 }

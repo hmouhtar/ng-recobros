@@ -4,13 +4,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     let storedUser = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
     if (storedUser !== null) {
@@ -58,5 +59,6 @@ export class AuthenticationService {
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigate(['login']);
   }
 }
