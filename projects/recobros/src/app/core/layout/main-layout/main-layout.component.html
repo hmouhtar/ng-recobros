@@ -15,12 +15,7 @@
 
 <section id="main">
   <mat-sidenav-container>
-    <mat-sidenav
-      fixedInViewport="true"
-      id="sidenav"
-      mode="side"
-      [opened]="isUserLoggedIn"
-    ></mat-sidenav>
+    <mat-sidenav fixedInViewport="true" id="sidenav" mode="side" [opened]="isUserLoggedIn">
       <mat-toolbar>
         <mat-toolbar-row>
           <h2>Recobros</h2>
@@ -29,12 +24,8 @@
       <mat-nav-list>
         <div *ngFor="let key of objectKeys(sidenavLinks)">
           <h2 matSubheader>{{ key }}</h2>
-          <a
-            *ngFor="let element of sidenavLinks[key]"
-            mat-list-item
-            routerLink="{{ element.path }}"
-            routerLinkActive="list-item-active"
-          >
+          <a *ngFor="let element of sidenavLinks[key]" mat-list-item routerLink="{{ element.path }}"
+            routerLinkActive="list-item-active">
             <mat-icon matListIcon>{{ element.icon }}</mat-icon>
             {{ element.title }}
           </a>
