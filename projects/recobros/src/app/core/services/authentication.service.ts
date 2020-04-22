@@ -5,31 +5,31 @@ import { map, tap } from 'rxjs/operators';
 import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
+  private isUserLoggedIn$: BehaviorSubject<boolean>;
+  public isUserLoggedInO: Observable<boolean>;
 
-  constructor(private http: HttpClient, private router: Router) {
-    let storedUser = localStorage.getItem('currentUser');
-    this.currentUserSubject = new BehaviorSubject<User | null>(null);
-    if (storedUser !== null) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
-    }
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private userService: UserService
+  ) {
+    this.isUserLoggedIn$ = new BehaviorSubject<boolean>(
+      this.currentUserToken !== null
+    );
+
+    this.isUserLoggedInO = this.isUserLoggedIn$.asObservable();
   }
 
-  public get currentUserToken(): string {
-    return localStorage.getItem('token') || '';
+  public get currentUserToken() {
+    return localStorage.getItem('token');
   }
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  public isUserLoggedIn(): boolean {
-    return this.currentUserSubject.value !== null;
+  public get isUserLoggedIn() {
+    return this.isUserLoggedIn$.value;
   }
 
   login(userCredential: string, password: string) {
@@ -47,9 +47,7 @@ export class AuthenticationService {
       .pipe(
         tap((res) => {
           localStorage.setItem('token', res);
-          localStorage.setItem('currentUser', '0');
-
-          this.currentUserSubject.next(new User());
+          this.isUserLoggedIn$.next(true);
         })
       );
   }
@@ -57,8 +55,6 @@ export class AuthenticationService {
   logout() {
     // remove user from local storage and set current user to null
     localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
     this.router.navigate(['login']);
   }
 }

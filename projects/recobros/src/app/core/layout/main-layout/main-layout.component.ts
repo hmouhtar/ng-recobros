@@ -5,6 +5,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SidenavService } from '../../services/sidenav.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'alvea-main-layout',
@@ -13,22 +14,28 @@ import { SidenavService } from '../../services/sidenav.service';
 })
 export class MainLayoutComponent implements OnInit {
   public isUserLoggedIn: boolean;
-  public objectValues = Object.values;
   public sidenavLinks: object;
+  public currentUser;
+  public objectValues = Object.values;
   public objectKeys = Object.keys;
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private _snackBar: MatSnackBar,
-    private sidenavService: SidenavService
+    private sidenavService: SidenavService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.sidenavLinks = this.sidenavService.getAvailableRoutes();
-    console.log(this.sidenavLinks);
-    this.authenticationService.currentUser.subscribe(
-      (res) => (this.isUserLoggedIn = res !== null)
-    );
+    this.authenticationService.isUserLoggedInO.subscribe((res) => {
+      if (res) {
+        this.isUserLoggedIn = true;
+        this.userService
+          .getCurrentUser()
+          .subscribe((user) => (this.currentUser = user));
+      }
+    });
 
     this.alertService.getAlert().subscribe((message) => {
       message &&

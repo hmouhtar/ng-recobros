@@ -8,7 +8,7 @@
     <mat-toolbar color="primary">
       Recobros
       <span class="spacer"></span>
-      <button mat-flat-button color="primary" routerLink="home">Bienvenido, userName</button>
+      <p *ngIf="currentUser">Bienvenido, {{currentUser.name}}</p>
     </mat-toolbar>
   </ng-template>
 </header>
