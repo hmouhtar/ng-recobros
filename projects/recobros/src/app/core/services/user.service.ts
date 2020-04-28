@@ -6,6 +6,7 @@ import { shareReplay } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private _currentUser: Promise<object>;
   constructor(private http: HttpClient) {}
 
   register(user: User) {
@@ -13,8 +14,12 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http
-      .get(`${Config.apiURL}/api/manager/user`)
-      .pipe(shareReplay(1));
+    if (!this._currentUser) {
+      this._currentUser = this.http
+        .get(`${Config.apiURL}/api/manager/user`)
+        .toPromise();
+    }
+
+    return this._currentUser;
   }
 }

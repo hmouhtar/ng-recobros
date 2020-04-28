@@ -1,1 +1,48 @@
-<p>new-user works!</p>
+<h1>Nuevo usuario</h1>
+<form ngNativeValidate>
+  <mat-form-field appearance="fill">
+    <mat-label>Nombres</mat-label>
+    <input required matInput>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Primer Apellido</mat-label>
+    <input required matInput>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Segundo Apellido</mat-label>
+    <input required matInput>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Teléfono</mat-label>
+    <input required matInput>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Correo Electrónico</mat-label>
+    <input required matInput>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label>Perfil</mat-label>
+    <mat-select required (selectionChange)="loadRoleFields($event.value)">
+      <mat-option *ngFor="let role of (roles | async)" value="{{role}}">{{role}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <ng-container *ngFor="let field of (selectedRoleFields | async)">
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>{{field.label}}</mat-label>
+      <ng-container *ngIf="['text', 'number', 'email', 'checkbox', 'password', 'date'].includes(field.type)">
+        <input type="{{field.type}}" [required]="field.required" matInput>
+      </ng-container>
+    </mat-form-field>
+
+  </ng-container>
+
+  <br>
+  <button mat-raised-button color="primary">Crear usuario</button>
+</form>

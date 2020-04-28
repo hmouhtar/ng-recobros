@@ -12,11 +12,15 @@ button {
 
 #mainNav {
   z-index: 2;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 .mat-drawer-content {
   overflow: visible;
+  margin-top: 60px;
 
 }
 

@@ -24,7 +24,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./list-users.component.scss'],
 })
 export class ListUsersComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = [
+    //'username',
+    'role',
+    'name',
+    'email',
+    'phone',
+    'company',
+    'type',
+    'edit',
+    'delete',
+  ];
   dataSource = ELEMENT_DATA;
   constructor() {}
 

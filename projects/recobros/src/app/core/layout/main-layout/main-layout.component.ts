@@ -29,11 +29,11 @@ export class MainLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.sidenavLinks = this.sidenavService.getAvailableRoutes();
     this.authenticationService.isUserLoggedInO.subscribe((res) => {
+      this.isUserLoggedIn = res;
       if (res) {
-        this.isUserLoggedIn = true;
         this.userService
           .getCurrentUser()
-          .subscribe((user) => (this.currentUser = user));
+          .then((user) => (this.currentUser = user));
       }
     });
 
