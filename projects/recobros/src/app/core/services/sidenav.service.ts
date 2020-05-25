@@ -17,7 +17,7 @@ export class SidenavService {
     {
       title: 'Lista de Recobros',
       capability: 'list_recobros',
-      path: 'recobros/list',
+      path: 'recobros',
       icon: 'library_books',
       category: 'Gestión de Recobros',
     },
@@ -65,7 +65,18 @@ export class SidenavService {
     return groupBy(this.routes, 'category');
   }
 
-  getAvailableRoutes() {
+  async getAvailableRoutes() {
     return this.getAllRoutes();
+    let asyncFiltered = await Promise.all(
+      this.routes.map(
+        async (route) =>
+          await this.rolesService.currentUserCan(route.capability)
+      )
+    );
+
+    return groupBy(
+      this.routes.filter((role, index) => asyncFiltered[index]),
+      'category'
+    );
   }
 }

@@ -4,8 +4,8 @@ import { Routes, RouterModule, Router } from '@angular/router';
 import { RecobrosComponent } from './recobros.component';
 import { AuthGuard } from '../../core/guards/auth.guard';
 import { RoleGuard } from '../../core/guards/role.guard';
-import { RecobrosNewComponent } from './components/recobros-new/recobros-new.component';
-import { RecobrosListComponent } from './components/recobros-list/recobros-list.component';
+import { NewRecobroComponent } from './components/new-recobro/new-recobro.component';
+import { ListRecobrosComponent } from './components/list-recobros/list-recobros.component';
 
 @NgModule({
   imports: [
@@ -15,13 +15,13 @@ import { RecobrosListComponent } from './components/recobros-list/recobros-list.
         component: RecobrosComponent,
         children: [
           {
-            path: 'new',
-            component: RecobrosNewComponent,
+            path: '',
+            component: ListRecobrosComponent,
             canActivate: [AuthGuard],
           },
           {
-            path: 'list',
-            component: RecobrosListComponent,
+            path: 'new',
+            component: NewRecobroComponent,
             canActivate: [AuthGuard],
           },
         ],

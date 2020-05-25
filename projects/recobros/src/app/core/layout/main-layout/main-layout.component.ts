@@ -27,7 +27,9 @@ export class MainLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sidenavLinks = this.sidenavService.getAvailableRoutes();
+    this.sidenavService.getAvailableRoutes().then((routes) => {
+      this.sidenavLinks = routes;
+    });
     this.authenticationService.isUserLoggedInO.subscribe((res) => {
       this.isUserLoggedIn = res;
       if (res) {
@@ -40,17 +42,17 @@ export class MainLayoutComponent implements OnInit {
     this.alertService.getAlert().subscribe((message) => {
       message &&
         this._snackBar.open(message.text, '', {
-          duration: 1000,
+          duration: 2500,
         });
 
-      // switch (message && message.type) {
-      //   case 'success':
-      //     message.cssClass = 'alert alert-success';
-      //     break;
-      //   case 'error':
-      //     message.cssClass = 'alert alert-danger';
-      //     break;
-      // }
+      switch (message && message.type) {
+        case 'success':
+          message.cssClass = 'alert alert-success';
+          break;
+        case 'error':
+          message.cssClass = 'alert alert-danger';
+          break;
+      }
     });
   }
 

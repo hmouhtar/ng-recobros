@@ -9,6 +9,7 @@ import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+  private tokenExpirationDate;
   private isUserLoggedIn$: BehaviorSubject<boolean>;
   public isUserLoggedInO: Observable<boolean>;
 
@@ -25,7 +26,17 @@ export class AuthenticationService {
   }
 
   public get currentUserToken() {
-    return localStorage.getItem('token');
+    let token = localStorage.getItem('token');
+    if (token !== null && !this.tokenExpirationDate) {
+      this.tokenExpirationDate =
+        Number(JSON.parse(atob(token.split('.')[1]))['exp']) * 1000;
+    }
+    if (token !== null && new Date(this.tokenExpirationDate) < new Date()) {
+      localStorage.removeItem('token');
+      this.tokenExpirationDate = null;
+      return null;
+    }
+    return token;
   }
 
   public get isUserLoggedIn() {

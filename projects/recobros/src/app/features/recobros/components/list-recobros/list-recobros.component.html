@@ -1,0 +1,68 @@
+<button [disabled]="loadingAction" id="addNewRecobroButton" routerLink="new" mat-raised-button color="primary">Nuevo
+  recobro</button>
+
+
+<table mat-table [dataSource]="(recobros | async)?.content" class="mat-elevation-z8">
+  displayedColumns: string[] = [
+  //'username',
+  'sinisterNumber',
+  'codSinister',
+  'initDate',
+  'recoverySituation',
+  'recoveryRoute',
+  'situationManagement',
+  'situationDate',
+  'company',
+  ];
+  <ng-container matColumnDef="sinisterNumber">
+    <th mat-header-cell *matHeaderCellDef>N. Siniestro</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.sinisterNumber}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="codSinister">
+    <th mat-header-cell *matHeaderCellDef>N. Encargo</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.codSinister}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="initDate">
+    <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.initDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="recoverySituation">
+    <th mat-header-cell *matHeaderCellDef>Situación Recobro</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.recoverySituation}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="recoveryRoute">
+    <th mat-header-cell *matHeaderCellDef>Vía Recobro</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.recoveryRoute}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="situationManagement">
+    <th mat-header-cell *matHeaderCellDef>Estado @Gestión</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.situationManagement}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="situationDate">
+    <th mat-header-cell *matHeaderCellDef>Fecha Situación</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.situationDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="company">
+    <th mat-header-cell *matHeaderCellDef>Compañía</th>
+    <td mat-cell *matCellDef="let recobro"> {{recobro.company}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef>Editar</th>
+    <td mat-cell *matCellDef="let recobro">
+      <button [routerLink]="['edit', recobro.id]" mat-icon-button color="primary">
+        <mat-icon>create</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

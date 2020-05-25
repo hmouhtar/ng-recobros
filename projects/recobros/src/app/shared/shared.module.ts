@@ -24,20 +24,25 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DynamicFieldComponent } from './components/dynamic-field/dynamic-field.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [],
+  declarations: [DynamicFieldComponent],
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatBadgeModule,
     MatListModule,
     MatGridListModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     MatInputModule,
     MatSelectModule,
     MatRadioModule,
@@ -59,9 +64,11 @@ import { MatCardModule } from '@angular/material/card';
     MatIconModule,
     MatSidenavModule,
     MatBadgeModule,
+    MatProgressSpinnerModule,
     MatListModule,
     MatGridListModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     MatInputModule,
     MatSelectModule,
     MatRadioModule,
@@ -74,6 +81,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
+    DynamicFieldComponent,
   ],
 })
 export class SharedModule {}

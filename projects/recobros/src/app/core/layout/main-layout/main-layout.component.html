@@ -21,7 +21,7 @@
           <h2>Recobros</h2>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-nav-list>
+      <mat-nav-list *ngIf="sidenavLinks">
         <div *ngFor="let key of objectKeys(sidenavLinks)">
           <h2 matSubheader>{{ key }}</h2>
           <a *ngFor="let element of sidenavLinks[key]" mat-list-item routerLink="{{ element.path }}"

@@ -19,27 +19,6 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // add authorization header with jwt token if available
-    console.log(request.url);
-    if (request.url === `${Config.apiURL}/api/manager/roles`) {
-      console.log('Yohooo');
-      return of(
-        new HttpResponse({
-          status: 200,
-          body: [
-            {
-              role: 'COMPANY_MANAGER',
-              capabilities: ['CREATE_EMPLOYEE_MANAGER', 'cap2'],
-            },
-            {
-              role: 'EMPLOYEE_MANAGER',
-              capabilities: ['CREATE_COMPANY_MANAGER', 'cap2'],
-            },
-            { role: 'EMPLOYEE', capabilities: ['cap1', 'cap2'] },
-          ],
-        })
-      );
-    }
     if (this.authenticationService.currentUserToken !== null) {
       request = request.clone({
         setHeaders: {

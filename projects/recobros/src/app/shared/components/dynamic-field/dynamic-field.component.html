@@ -1,0 +1,26 @@
+<div [formGroup]="form">
+  <ng-container [ngSwitch]="field.type">
+    <br />
+    <mat-form-field *ngSwitchCase="'textarea'" appearance="fill">
+      <mat-label>{{ field.label }}</mat-label>
+      <textarea [formControlName]="field.name" name="{{field.name}}" [required]="field.required" matInput cols="30"
+        rows="10"></textarea>
+    </mat-form-field>
+    <mat-form-field *ngSwitchCase="'select'" appearance="fill">
+      <mat-label>{{ field.label }}</mat-label>
+      <select [formControlName]="field.name" matNativeControl [required]="field.required" name="{{field.name}}">
+        <option [selected]="field.value === undefined" disabled value="">Seleccione</option>
+        <option [selected]="field.value === option.value" *ngFor="let option of field.options" value="{{option.value}}">{{
+                    option.label
+                  }}</option>
+      </select>
+    </mat-form-field>
+    <mat-checkbox [formControlName]="field.name" *ngSwitchCase="'checkbox'" name="{{ field.name }}">{{ field.label }}
+    </mat-checkbox>
+    <mat-form-field *ngSwitchDefault appearance="fill">
+      <mat-label>{{ field.label }}</mat-label>
+      <input [formControlName]="field.name" value="{{field.value}}" class="{{field.type}}" type="{{ field.type }}"
+        name="{{field.name}}" [required]="field.required" matInput />
+    </mat-form-field>
+  </ng-container>
+</div>
