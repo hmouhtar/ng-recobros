@@ -1,4 +1,4 @@
 export class Config {
   public static apiURL: string =
-    'http://eurekaauth.eu-west-3.elasticbeanstalk.com';
+    'https://eurekaauth.eu-west-3.elasticbeanstalk.com';
 }
