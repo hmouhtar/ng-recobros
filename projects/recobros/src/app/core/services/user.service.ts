@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
-import { shareReplay } from 'rxjs/operators';
+import { shareReplay, map } from 'rxjs/operators';
 import { Field } from '../../shared/models/field';
 import { RolesService } from './roles.service';
 
@@ -12,7 +12,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   register(data) {
-    return this.http.post(`${Config.apiURL}/api/login/user`, data);
+    return this.http.post(`${Config.apiURL}/api/login/user`, data).toPromise();
   }
 
   editUser(userID: number, data) {
@@ -23,7 +23,9 @@ export class UserService {
 
   deleteUser(username: string) {
     return this.http
-      .delete(`${Config.apiURL}/api/login/user?username=${username}`)
+      .delete(`${Config.apiURL}/api/login/user?username=${username}`, {
+        responseType: 'text',
+      })
       .toPromise();
   }
 
@@ -49,15 +51,20 @@ export class UserService {
     );
   }
 
-  getUsers(page: number = 0, size: number = 25, sort: string = 'name,asc') {
+  getUsers(
+    page: number = 0,
+    size: number = 25,
+    sort: string = 'name,asc'
+  ): Promise<User[]> {
     return this.http
-      .get(`${Config.apiURL}/api/manager/ownerUsers`, {
+      .get<User[]>(`${Config.apiURL}/api/manager/ownerUsers`, {
         params: {
           page: String(page),
           size: String(size),
           sort,
         },
       })
+      .pipe(map((getUsersRequest) => getUsersRequest['content']))
       .toPromise();
   }
 
