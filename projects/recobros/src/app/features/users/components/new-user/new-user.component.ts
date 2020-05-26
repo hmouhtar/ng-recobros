@@ -4,6 +4,8 @@ import { RolesService } from 'projects/recobros/src/app/core/services/roles.serv
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { Observable, Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'alvea-new-user',
@@ -39,7 +41,9 @@ export class NewUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private alertService: AlertService,
+    private router: Router
   ) {
     this.userFields$ = new Subject();
     this.userFieldsO = this.userFields$.asObservable();
@@ -66,9 +70,16 @@ export class NewUserComponent implements OnInit {
     formData.forEach((value, key) => {
       formDataObj[key] = value;
     });
-    this.userService.register(formDataObj).subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err)
-    );
+    this.loadingAction = true;
+    this.userService
+      .register(formDataObj)
+      .then((res) => {
+        this.alertService.success('Yay!');
+        this.router.navigate(['/users'], {});
+      })
+      .catch((err) => this.alertService.error(err.message))
+      .finally(() => {
+        this.loadingAction = false;
+      });
   }
 }
