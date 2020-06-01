@@ -3,6 +3,7 @@ import { RecobrosService } from 'projects/recobros/src/app/core/services/recobro
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
+import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 
 @Component({
   selector: 'alvea-new-recobro',
@@ -16,7 +17,10 @@ export class NewRecobroComponent implements OnInit {
   roles: Promise<string[]>;
   form: FormGroup;
   loadingAction: boolean = false;
-  constructor(private recobrosService: RecobrosService) {
+  constructor(
+    private recobrosService: RecobrosService,
+    private alertService: AlertService
+  ) {
     this.form = new FormGroup({});
     this.recobroFields$ = new Subject();
     this.recobroFieldsO = this.recobroFields$.asObservable();
@@ -37,5 +41,22 @@ export class NewRecobroComponent implements OnInit {
       this.recobroFields$.next(this._newRecobroFields);
     });
   }
-  createNewRecobro(form) {}
+  createNewRecobro(form) {
+    let formData = new FormData(form);
+    let formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+    this.loadingAction = true;
+    this.recobrosService
+      .createRecobro(formDataObj)
+      .then((res) => {
+        this.alertService.success('Yay!');
+        //this.router.navigate(['/users'], {});
+      })
+      .catch((err) => this.alertService.error(`Oops. ${err.message}`))
+      .finally(() => {
+        this.loadingAction = false;
+      });
+  }
 }

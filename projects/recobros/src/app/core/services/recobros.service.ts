@@ -13,7 +13,7 @@ export class RecobrosService {
   public getAllRecobros(
     page: number = 0,
     size: number = 25,
-    sort: string = 'name,asc'
+    sort: string = 'id,asc'
   ) {
     return this.http
       .get(`${Config.apiURL}/api/manager/recoveries`, {
@@ -38,5 +38,11 @@ export class RecobrosService {
       context,
       recobro
     );
+  }
+
+  createRecobro(data) {
+    return this.http
+      .post(`${Config.apiURL}/api/manager/recovery`, data)
+      .toPromise();
   }
 }
