@@ -56,6 +56,7 @@ export class Recobro {
         name: 'sinisterNumber',
         required: true,
         displayOnTable: true,
+        order: 1,
       },
       {
         type: 'text',
@@ -63,6 +64,7 @@ export class Recobro {
         name: 'codSinister',
         required: true,
         displayOnTable: true,
+        context: 'edit',
       },
       {
         type: 'date',
@@ -70,6 +72,7 @@ export class Recobro {
         name: 'initDate',
         required: true,
         displayOnTable: true,
+        context: 'edit',
       },
       {
         type: 'select',
@@ -86,6 +89,7 @@ export class Recobro {
           },
         ],
         required: true,
+        order: 4,
         displayOnTable: true,
       },
       {
@@ -112,12 +116,13 @@ export class Recobro {
         ],
         required: true,
         displayOnTable: true,
+        order: 2,
       },
       {
         type: 'select',
         label: 'Compania',
         name: 'company',
-        required: true,
+        // required: true,
         options: [],
         displayOnTable: true,
       },
@@ -125,7 +130,6 @@ export class Recobro {
         type: 'select',
         label: 'Ramo',
         name: 'branch',
-        required: true,
         options: [],
         displayOnTable: true,
       },
@@ -133,7 +137,6 @@ export class Recobro {
         type: 'text',
         label: 'Naturaleza',
         name: 'nature',
-        required: true,
         displayOnTable: true,
       },
       {
@@ -141,6 +144,7 @@ export class Recobro {
         label: 'En Nombre De',
         name: 'inNameOf',
         required: true,
+        order: 3,
         options: [
           {
             label: 'Compañía',
@@ -163,18 +167,17 @@ export class Recobro {
         name: 'employer',
         required: true,
         displayOnTable: true,
+        context: 'edit',
       },
       {
         type: 'number',
         label: 'Potencial Compañía',
-        name: '?',
-        required: true,
+        name: 'potentialInitialCompany',
       },
       {
         type: 'number',
         label: 'Potencial Asegurado',
-        name: '?',
-        required: true,
+        name: 'initialPersonalPotential',
       },
 
       {
@@ -186,7 +189,6 @@ export class Recobro {
         type: 'date',
         label: 'Fecha Nueva Prescripción',
         name: 'newPrescriptionDate',
-        required: true,
       },
       {
         type: 'text',

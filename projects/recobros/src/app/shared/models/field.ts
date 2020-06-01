@@ -22,29 +22,34 @@ export class Field {
   value?: () => string | string;
   valuePath?: string;
   context?: string;
+  order?: number;
 
   // If field value or options is a function, call it.
   static async processField(fields: Field[], context, subject?: any) {
     console.log(fields);
 
     return await Promise.all(
-      fields.map(async (field) => {
-        if (typeof field.options === 'function') {
-          field.options = await field.options.call(this);
-        }
+      fields
+        .sort((a, b) => {
+          return (a.order || 999) - (b.order || 999);
+        })
+        .map(async (field) => {
+          if (typeof field.options === 'function') {
+            field.options = await field.options.call(this);
+          }
 
-        if (
-          subject !== undefined &&
-          field.value === undefined &&
-          'edit' === context
-        ) {
-          field.value = field.valuePath
-            ? subject[field.valuePath][field.name]
-            : subject[field.name];
-        }
+          if (
+            subject !== undefined &&
+            field.value === undefined &&
+            'edit' === context
+          ) {
+            field.value = field.valuePath
+              ? subject[field.valuePath][field.name]
+              : subject[field.name];
+          }
 
-        return field;
-      })
+          return field;
+        })
     );
   }
 }
