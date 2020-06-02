@@ -1,5 +1,4 @@
 <div class="container" id="loginWrapper">
-
   <mat-card class="box">
     <mat-card-header class="justify-content-center">
       <mat-card-title>Log in</mat-card-title>
@@ -8,17 +7,49 @@
     <form class="text-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <mat-card-content>
         <mat-form-field>
-          <input [ngClass]="{ 'is-invalid': submitted && f.username.errors }" formControlName="username" required
-            matInput placeholder="Username">
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+            formControlName="username"
+            required
+            matInput
+            placeholder="Username"
+          />
         </mat-form-field>
-
         <mat-form-field>
-          <input [ngClass]="{ 'is-invalid': submitted && f.password.errors }" formControlName="password" required
-            matInput placeholder="Password">
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+            formControlName="password"
+            required
+            matInput
+            placeholder="Password"
+          />
         </mat-form-field>
       </mat-card-content>
       <button mat-stroked-button class="btn-block">Log in</button>
     </form>
-  </mat-card>
 
+    <mat-card-content class="forgot-password">
+      <button mat-stroked-button class="btn-block" (click)="openDialog()">
+        I forgot my password
+      </button>
+    </mat-card-content>
+
+    <ng-template #dialogRef let-data>
+      <div mat-dialog-content>
+        <form
+          class="text-center"
+          ngNativeValidate
+          (ngSubmit)="onResetUserPassword($event.target.emailAddress.value)"
+        >
+          <mat-form-field>
+            <mat-label>Input your email</mat-label>
+            <input matInput type="text" name="emailAddress" required />
+          </mat-form-field>
+          <div mat-dialog-actions>
+            <button mat-stroked-button class="btn-block">Submit</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </mat-card>
 </div>

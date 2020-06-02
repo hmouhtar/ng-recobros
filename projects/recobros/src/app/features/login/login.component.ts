@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AlertService } from '../../core/services/alert.service';
 import { AuthenticationService } from '../../core/services/authentication.service';
+
+import { UserService } from '../../core/services/user.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { User } from '../../shared/models/user';
 
 @Component({
   templateUrl: 'login.component.html',
@@ -16,12 +20,17 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl: string;
 
+  @ViewChild('dialogRef') dialogRef: TemplateRef<any>;
+  currentDialog: MatDialogRef<any>;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog,
+    private userService: UserService // private currentDialog: MatDialogRef
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserToken) {
@@ -68,5 +77,23 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         }
       );
+  }
+
+  openDialog(): void {
+    this.currentDialog = this.dialog.open(this.dialogRef, {
+      width: '250px',
+      data: { info: '' },
+    });
+
+    this.currentDialog.afterClosed().subscribe((txt) => {
+      console.log(`The dialog was closed ${txt}`);
+    });
+  }
+  onResetUserPassword(emailAddress): void {
+    this.currentDialog.close();
+    this.userService
+      .resetUserPassword(emailAddress)
+      .then((sucess) => this.alertService.success(sucess))
+      .catch((error) => this.alertService.error(error));
   }
 }
