@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl: string;
+  hide = true;
 
   @ViewChild('dialogRef') dialogRef: TemplateRef<any>;
   currentDialog: MatDialogRef<any>;
@@ -73,7 +74,10 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          this.alertService.error(JSON.parse(error).message);
+          console.log(JSON.parse(error.error).message);
+          this.alertService.error(
+            'ERROR: El nombre de usuario o contraseña ingresado es incorrecto'
+          );
           this.loading = false;
         }
       );
