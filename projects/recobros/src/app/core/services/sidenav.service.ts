@@ -51,13 +51,13 @@ export class SidenavService {
     //   icon: 'settings',
     //   category: 'Administración',
     // },
-    // {
-    //   title: 'Gestión de Abogados',
-    //   capability: 'manage_settings',
-    //   path: 'users?role=lawyer',
-    //   icon: 'supervised_user_circle',
-    //   category: 'Administración',
-    // },
+    {
+      title: 'Gestión de Abogados',
+      capability: '',
+      path: 'lawyers',
+      icon: 'supervised_user_circle',
+      category: 'Administración',
+    },
   ];
   constructor(private rolesService: RolesService) {}
 

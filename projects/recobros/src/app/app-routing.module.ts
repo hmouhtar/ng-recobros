@@ -42,6 +42,7 @@ const routes = [
     loadChildren: () =>
       import('./features/users/users.module').then((m) => m.UsersModule),
   },
+  { path: 'lawyers', loadChildren: () => import('./features/lawyers/lawyers.module').then(m => m.LawyersModule) },
 
   {
     path: '**',
