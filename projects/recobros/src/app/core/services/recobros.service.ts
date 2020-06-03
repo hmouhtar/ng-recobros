@@ -9,7 +9,7 @@ import { Recobro } from '../../shared/models/recobro';
 })
 export class RecobrosService {
   constructor(private http: HttpClient) {}
-
+  private _autoComplete;
   public getAllRecobros(
     page: number = 0,
     size: number = 25,
@@ -41,9 +41,13 @@ export class RecobrosService {
   }
 
   getRecobroAutoComplete() {
-    return this.http
-      .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
-      .toPromise();
+    if (!this._autoComplete) {
+      this._autoComplete = this.http
+        .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
+        .toPromise();
+    }
+
+    return this._autoComplete;
   }
 
   createRecobro(data) {

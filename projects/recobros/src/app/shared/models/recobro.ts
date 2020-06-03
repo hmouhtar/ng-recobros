@@ -57,7 +57,6 @@ export class Recobro {
         label: 'N. Siniestro',
         name: 'sinisterNumber',
         required: true,
-        displayOnTable: true,
         order: 1,
       },
       {
@@ -98,24 +97,18 @@ export class Recobro {
         type: 'select',
         label: 'Vía Recobro',
         name: 'recoveryRoute',
-        options: [
-          {
-            label: 'Amistoso',
-            value: 'amistoso',
-          },
-          {
-            label: 'Judicial',
-            value: 'judicial',
-          },
-          {
-            label: 'SGR',
-            value: 'sgr',
-          },
-          {
-            label: 'TCA (Consorcio)',
-            value: 'tca',
-          },
-        ],
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete['recoveryRouteSelect'].map((element) => {
+                return {
+                  label: element['route'],
+                  value: element['id'],
+                };
+              });
+            });
+        },
         required: true,
         displayOnTable: true,
         order: 2,
@@ -169,20 +162,18 @@ export class Recobro {
         name: 'inNameOf',
         required: true,
         order: 3,
-        options: [
-          {
-            label: 'Compañía',
-            value: 'compañia',
-          },
-          {
-            label: 'Asegurado',
-            value: 'asegurado',
-          },
-          {
-            label: 'Ambos',
-            value: 'ambos',
-          },
-        ],
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete['inNameOfSelect'].map((element) => {
+                return {
+                  label: element['inNameOf'],
+                  value: element['id'],
+                };
+              });
+            });
+        },
         displayOnTable: true,
       },
       {
@@ -228,11 +219,18 @@ export class Recobro {
         type: 'select',
         label: 'Interviniente',
         name: 'interveningType',
-        options: [
-          { label: 'Gestor', value: '0' },
-          { label: 'Périto', value: '1' },
-          { label: 'Reparador', value: '2' },
-        ],
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete['interveningSelect'].map((element) => {
+                return {
+                  label: element['interveningType'],
+                  value: element['id'],
+                };
+              });
+            });
+        },
       },
       {
         type: 'text',
