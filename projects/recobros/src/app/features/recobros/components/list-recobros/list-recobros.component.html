@@ -3,17 +3,7 @@
 
 
 <table mat-table [dataSource]="(recobros | async)?.content" class="mat-elevation-z8">
-  displayedColumns: string[] = [
-  //'username',
-  'sinisterNumber',
-  'codSinister',
-  'initDate',
-  'recoverySituation',
-  'recoveryRoute',
-  'situationManagement',
-  'situationDate',
-  'company',
-  ];
+
   <ng-container matColumnDef="sinisterNumber">
     <th mat-header-cell *matHeaderCellDef>N. Siniestro</th>
     <td mat-cell *matCellDef="let recobro"> {{recobro.sinisterNumber}} </td>

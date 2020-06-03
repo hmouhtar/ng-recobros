@@ -27,6 +27,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamicFieldComponent } from './components/dynamic-field/dynamic-field.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [DynamicFieldComponent],
@@ -50,6 +51,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatNativeDateModule,
     MatChipsModule,
     MatTooltipModule,
+    MatSortModule,
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
@@ -77,6 +79,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatChipsModule,
     MatTooltipModule,
     MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
     MatCardModule,
     FormsModule,

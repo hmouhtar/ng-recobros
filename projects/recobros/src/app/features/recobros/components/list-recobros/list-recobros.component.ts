@@ -32,5 +32,6 @@ export class ListRecobrosComponent implements OnInit {
 
   ngOnInit(): void {
     this.recobros = this.recobrosService.getAllRecobros();
+    this.recobros.then(console.log);
   }
 }

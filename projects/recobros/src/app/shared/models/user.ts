@@ -25,6 +25,16 @@ export class User {
         name: 'username',
         required: true,
         context: 'new',
+        order: 1,
+      },
+
+      {
+        type: 'text',
+        label: 'Nombre de Usuario',
+        name: 'username',
+        disabled: true,
+        context: 'edit',
+        order: 1,
       },
 
       {
@@ -32,6 +42,7 @@ export class User {
         label: 'Nombres',
         name: 'name',
         required: true,
+        order: 3,
       },
 
       {
@@ -39,20 +50,20 @@ export class User {
         label: 'Primer Apellido',
         name: 'surname1',
         required: true,
+        order: 4,
       },
 
       {
         type: 'text',
         label: 'Segundo Apellido',
         name: 'surname2',
-        required: true,
+        order: 5,
       },
 
       {
         type: 'text',
         label: 'Teléfono',
         name: 'phoneNumber',
-        required: true,
       },
 
       {
@@ -60,6 +71,7 @@ export class User {
         label: 'E-mail',
         name: 'emailAddress',
         required: true,
+        order: 2,
       },
 
       {
@@ -68,12 +80,27 @@ export class User {
         name: 'rol',
         context: 'new',
         required: true,
-        options: async function () {
-          return (
-            await (this['rolesService'] as RolesService).getEditableRoles()
-          ).map((role) => {
-            return { label: role, value: role };
-          });
+
+        options: function () {
+          return (this['rolesService'] as RolesService)
+            .getEditableRoles()
+            .then((editableRoles) =>
+              editableRoles.map((role) => {
+                let label = '';
+                switch (role) {
+                  case 'COMPANY_MANAGER':
+                    label = 'Administrador de Compañía';
+                    break;
+                  case 'RECOVERY_ADMINISTRATOR':
+                    label = 'Administrador Recobrador';
+                    break;
+                  case 'RECOVERY_EMPLOYEE':
+                    label = 'Empleado Recobrador';
+                    break;
+                }
+                return { label: label, value: role };
+              })
+            );
         },
       },
 
@@ -96,7 +123,7 @@ export class User {
         return [
           {
             type: 'text',
-            label: 'Empresa Recobradora',
+            label: 'Empresa / Departamento Recobrador',
             name: 'companyName',
             required: true,
             valuePath: 'company',
@@ -104,9 +131,8 @@ export class User {
 
           {
             type: 'select',
-            label: 'Departamento',
+            label: 'Tipo Empresa / Departamento',
             name: 'companyScope',
-            required: true,
             valuePath: 'company',
 
             options: [
@@ -125,7 +151,6 @@ export class User {
             type: 'text',
             label: 'NIF Empresa Recobradora',
             name: 'nif',
-            required: true,
             valuePath: 'company',
           },
         ];
