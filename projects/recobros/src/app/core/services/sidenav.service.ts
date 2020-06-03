@@ -8,56 +8,56 @@ export class SidenavService {
   private routes = [
     {
       title: 'Home',
-      capability: 'exist',
+      capability: '',
       path: 'home',
       icon: 'home',
       category: 'Menu',
     },
 
     {
-      title: 'Lista de Recobros',
-      capability: 'list_recobros',
+      title: 'Gestión de Recobros',
+      capability: '',
       path: 'recobros',
       icon: 'library_books',
-      category: 'Gestión de Recobros',
+      category: 'Recobros',
     },
-    {
-      title: 'Carga de Recobros',
-      capability: 'add_recobros',
-      path: 'recobros/new',
-      icon: 'library_add',
-      category: 'Gestión de Recobros',
-    },
+    // {
+    //   title: 'Carga de Recobros',
+    //   capability: 'add_recobros',
+    //   path: 'recobros/new',
+    //   icon: 'library_add',
+    //   category: 'Gestión de Recobros',
+    // },
 
-    {
-      title: 'Cuadros de Mando',
-      capability: 'view_stats',
-      path: 'stats',
-      icon: 'insert_chart',
-      category: 'Cuadros de Mando',
-    },
+    // {
+    //   title: 'Cuadros de Mando',
+    //   capability: 'view_stats',
+    //   path: 'stats',
+    //   icon: 'insert_chart',
+    //   category: 'Cuadros de Mando',
+    // },
 
     {
       title: 'Gestión de Usuarios',
-      capability: 'manage_users',
+      capability: '',
       path: 'users',
       icon: 'account_circle',
       category: 'Administración',
     },
-    {
-      title: 'Configuración de Carga',
-      capability: 'manage_settings',
-      path: 'settings',
-      icon: 'settings',
-      category: 'Administración',
-    },
-    {
-      title: 'Gestión de Abogados',
-      capability: 'manage_settings',
-      path: 'users?role=lawyer',
-      icon: 'supervised_user_circle',
-      category: 'Administración',
-    },
+    // {
+    //   title: 'Configuración de Carga',
+    //   capability: 'manage_settings',
+    //   path: 'settings',
+    //   icon: 'settings',
+    //   category: 'Administración',
+    // },
+    // {
+    //   title: 'Gestión de Abogados',
+    //   capability: 'manage_settings',
+    //   path: 'users?role=lawyer',
+    //   icon: 'supervised_user_circle',
+    //   category: 'Administración',
+    // },
   ];
   constructor(private rolesService: RolesService) {}
 
@@ -65,18 +65,17 @@ export class SidenavService {
     return groupBy(this.routes, 'category');
   }
 
-  async getAvailableRoutes() {
-    return this.getAllRoutes();
-    let asyncFiltered = await Promise.all(
-      this.routes.map(
-        async (route) =>
-          await this.rolesService.currentUserCan(route.capability)
+  // Returns routes accesible by the current user based on the role.
+  getAccesibleRoutes(): Promise<any> {
+    return Promise.all(
+      this.routes.map((route) =>
+        this.rolesService.currentUserCan(route.capability)
       )
-    );
-
-    return groupBy(
-      this.routes.filter((role, index) => asyncFiltered[index]),
-      'category'
+    ).then((routesBool) =>
+      groupBy(
+        this.routes.filter((role, index) => routesBool[index]),
+        'category'
+      )
     );
   }
 }

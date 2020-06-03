@@ -27,7 +27,7 @@ export class MainLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sidenavService.getAvailableRoutes().then((routes) => {
+    this.sidenavService.getAccesibleRoutes().then((routes) => {
       this.sidenavLinks = routes;
     });
 
