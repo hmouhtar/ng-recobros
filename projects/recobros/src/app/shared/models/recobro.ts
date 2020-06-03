@@ -1,6 +1,8 @@
 import { Field } from './field';
 import { Company } from './company';
 import { RolesService } from '../../core/services/roles.service';
+import { RecobrosService } from '../../core/services/recobros.service';
+import { groupBy } from 'lodash';
 
 export class Recobro {
   amountCondemned: number;
@@ -120,24 +122,46 @@ export class Recobro {
       },
       {
         type: 'select',
-        label: 'Compania',
+        label: 'Compañía',
         name: 'company',
         // required: true,
-        options: [],
-        displayOnTable: true,
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete['companySelect'].map((company: Company) => {
+                return { label: company.companyName, value: company.id };
+              });
+            });
+        },
+        required: true,
+        order: 7,
       },
       {
         type: 'select',
         label: 'Ramo',
         name: 'branch',
-        options: [],
-        displayOnTable: true,
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return Object.keys(
+                groupBy(autoComplete['incidentTypologySelect'], 'branch')
+              ).map((branchName) => {
+                return { label: branchName, value: branchName };
+              });
+            });
+        },
+        required: true,
+        order: 5,
       },
       {
-        type: 'text',
+        type: 'select',
         label: 'Naturaleza',
-        name: 'nature',
-        displayOnTable: true,
+        name: 'incidentTypology',
+        options: [],
+        required: true,
+        order: 6,
       },
       {
         type: 'select',

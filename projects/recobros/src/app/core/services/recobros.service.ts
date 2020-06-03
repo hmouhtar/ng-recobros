@@ -40,6 +40,12 @@ export class RecobrosService {
     );
   }
 
+  getRecobroAutoComplete() {
+    return this.http
+      .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
+      .toPromise();
+  }
+
   createRecobro(data) {
     return this.http
       .post(`${Config.apiURL}/api/manager/recovery`, data)

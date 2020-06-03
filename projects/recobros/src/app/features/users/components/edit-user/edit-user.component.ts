@@ -54,7 +54,10 @@ export class EditUserComponent implements OnInit {
         field.name,
         field.required
           ? new FormControl(field.value || '', Validators.required)
-          : new FormControl(field.value || '')
+          : new FormControl({
+              value: field.value || '',
+              disabled: field.disabled,
+            })
       );
     });
 

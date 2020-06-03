@@ -11,8 +11,10 @@ export class Field {
     | 'textarea';
   label: string;
   required?: boolean;
+  readonly?: boolean;
+  hidden?: boolean;
+  disabled?: boolean;
   name: string;
-  attr?: { attr: string; value: string } | { attr: string; value: string }[];
   options?:
     | { label: string; value: string }[]
     | (() => Promise<{ label: string; value: string }[]>);
@@ -25,19 +27,21 @@ export class Field {
   order?: number;
 
   // If field value or options is a function, call it.
-  static async processField(fields: Field[], context, subject?: any) {
-    console.log(fields);
-
-    return await Promise.all(
-      fields
-        .sort((a, b) => {
-          return (a.order || 999) - (b.order || 999);
-        })
-        .map(async (field) => {
-          if (typeof field.options === 'function') {
-            field.options = await field.options.call(this);
-          }
-
+  static processField(fields: Field[], context, subject?: any) {
+    return Promise.all(
+      fields.map((field) => {
+        return Promise.all(
+          // If any of the field properties is a function, call it with the current scope.
+          Object.keys(field).map((key) => {
+            if ('function' === typeof field[key]) {
+              return field[key].call(this).then((res) => (field[key] = res));
+            }
+          })
+        );
+      })
+    )
+      .then((res) =>
+        fields.map((field) => {
           if (
             subject !== undefined &&
             field.value === undefined &&
@@ -47,9 +51,13 @@ export class Field {
               ? subject[field.valuePath][field.name]
               : subject[field.name];
           }
-
           return field;
         })
-    );
+      )
+      .then((fields) =>
+        fields.sort((a, b) => {
+          return (a.order || 999) - (b.order || 999);
+        })
+      );
   }
 }

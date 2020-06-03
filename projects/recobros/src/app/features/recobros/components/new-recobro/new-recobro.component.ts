@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
-
+import { groupBy } from 'lodash';
 @Component({
   selector: 'alvea-new-recobro',
   templateUrl: './new-recobro.component.html',
@@ -17,6 +17,33 @@ export class NewRecobroComponent implements OnInit {
   roles: Promise<string[]>;
   form: FormGroup;
   loadingAction: boolean = false;
+  incidentTypologies: any[];
+
+  @HostListener('change', ['$event']) async loadRoleFields(event) {
+    if ('branch' === event.target.name) {
+      this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+        this.form.addControl(
+          'incidentTypology',
+          new FormControl('', Validators.required)
+        );
+
+        let fields = this._newRecobroFields.slice();
+        let incidentTypologyField = fields.find(
+          (field) => field.name === 'incidentTypology'
+        );
+        if (incidentTypologyField)
+          incidentTypologyField.options = groupBy(
+            autoComplete['incidentTypologySelect'],
+            'branch'
+          )[event.target.value].map((element) => {
+            return { label: element.nature, value: element.id };
+          });
+
+        this.recobroFields$.next(fields);
+      });
+    }
+  }
+
   constructor(
     private recobrosService: RecobrosService,
     private alertService: AlertService
@@ -28,7 +55,8 @@ export class NewRecobroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.recobrosService.getRecobrosFields('new').then((fields) => {
+    this.recobrosService.getRecobroAutoComplete().then(console.log);
+    this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
       this._newRecobroFields = fields;
       fields.forEach((field) => {
         this.form.addControl(
@@ -41,6 +69,7 @@ export class NewRecobroComponent implements OnInit {
       this.recobroFields$.next(this._newRecobroFields);
     });
   }
+
   createNewRecobro(form) {
     let formData = new FormData(form);
     let formDataObj = {};
@@ -54,7 +83,10 @@ export class NewRecobroComponent implements OnInit {
         this.alertService.success('Yay!');
         //this.router.navigate(['/users'], {});
       })
-      .catch((err) => this.alertService.error(`Oops. ${err.message}`))
+      .catch((err) => {
+        console.log(err);
+        this.alertService.error(`Oops. ${err.message}`);
+      })
       .finally(() => {
         this.loadingAction = false;
       });
