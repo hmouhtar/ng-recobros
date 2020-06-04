@@ -1,1 +1,10 @@
-<p>new-lawyer works!</p>
+<h1>Nuevo abogado</h1>
+<form ngNativeValidate (ngSubmit)="createLawyer($event.target)" [formGroup]="form">
+  <ng-container *ngFor="let field of lawyerFieldsO | async">
+    <alvea-dynamic-field [form]="form" [field]="field"></alvea-dynamic-field>
+  </ng-container>
+  <br>
+  <button [disabled]="!form.valid || loadingAction" mat-raised-button color="primary">Crear abogado <mat-spinner
+      *ngIf="loadingAction" id="spinner" [diameter]="20">
+    </mat-spinner> </button>
+</form>
