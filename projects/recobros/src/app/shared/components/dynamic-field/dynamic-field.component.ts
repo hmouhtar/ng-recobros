@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Field } from '../../models/field';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ControlContainer, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'alvea-dynamic-field',
   templateUrl: './dynamic-field.component.html',
   styleUrls: ['./dynamic-field.component.scss'],
+  viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
 export class DynamicFieldComponent implements OnInit {
   @Input() field: Field;

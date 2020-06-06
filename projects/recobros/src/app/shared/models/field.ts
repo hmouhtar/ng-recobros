@@ -8,7 +8,8 @@ export class Field {
     | 'radio'
     | 'select'
     | 'date'
-    | 'textarea';
+    | 'textarea'
+    | 'hidden';
   label: string;
   required?: boolean;
   readonly?: boolean;
@@ -21,7 +22,7 @@ export class Field {
   displayOnTable?: boolean;
   capability?: string | string[];
   displayCondition?: () => boolean;
-  value?: () => string | string;
+  value?: (() => string) | string;
   valuePath?: string;
   context?: string;
   order?: number;

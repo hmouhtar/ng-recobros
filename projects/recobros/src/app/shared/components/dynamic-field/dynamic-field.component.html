@@ -1,27 +1,36 @@
-<div [formGroup]="form">
+<div>
   <ng-container [ngSwitch]="field.type">
-    <br />
+
     <mat-form-field *ngSwitchCase="'textarea'" appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
-      <textarea [formControlName]="field.name" name="{{field.name}}" [readonly]="field.readonly"
-        [required]="field.required" matInput cols="30" rows="10"></textarea>
+      <textarea [ngModel]="field.value" name="{{field.name}}" [readonly]="field.readonly" [required]="field.required"
+        matInput cols="30" rows="10"></textarea>
     </mat-form-field>
+    <!--  -->
     <mat-form-field *ngSwitchCase="'select'" appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
-      <select [formControlName]="field.name" matNativeControl [readonly]="field.readonly" [required]="field.required"
+      <select [ngModel]="field.value" matNativeControl [readonly]="field.readonly" [required]="field.required"
         name="{{field.name}}">
-        <option [selected]="field.value === undefined" disabled value="">Seleccione</option>
-        <option [selected]="field.value === option.value" *ngFor="let option of field.options" value="{{option.value}}">{{
-                    option.label
-                  }}</option>
+        <!-- <option value="">Seleccione</option> -->
+        <option *ngFor="let option of field.options" value="{{option.value}}">
+          {{option.label}}
+        </option>
       </select>
     </mat-form-field>
-    <mat-checkbox [formControlName]="field.name" *ngSwitchCase="'checkbox'" name="{{ field.name }}">{{ field.label }}
-    </mat-checkbox>
+    <!--  -->
+    <ng-container *ngSwitchCase="'checkbox'">
+      <input [ngModel]="false" name="{{field.name}}" type="hidden">
+      <mat-checkbox [ngModel]="field.value" value="true" name="{{ field.name }}">
+        {{ field.label }}
+      </mat-checkbox>
+    </ng-container>
+
+    <!--  -->
     <mat-form-field *ngSwitchDefault appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
-      <input [formControlName]="field.name" value="{{field.value}}" class="{{field.type}}" type="{{ field.type }}"
-        name="{{field.name}}" [required]="field.required" matInput />
+      <input [ngModel]="field.value" class="{{field.type}}" type="{{ field.type }}" name="{{field.name}}"
+        [required]="field.required" [disabled]="field.disabled" matInput />
     </mat-form-field>
+
   </ng-container>
 </div>
