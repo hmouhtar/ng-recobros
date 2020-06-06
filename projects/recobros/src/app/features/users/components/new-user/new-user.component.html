@@ -1,10 +1,10 @@
 <h1>Nuevo usuario</h1>
-<form ngNativeValidate (ngSubmit)="createNewUser($event.target)" [formGroup]="form">
+<form ngNativeValidate #newUserForm="ngForm" (ngSubmit)="createNewUser(newUserForm)">
   <ng-container *ngFor="let field of userFieldsO | async">
-    <alvea-dynamic-field [form]="form" [field]="field"></alvea-dynamic-field>
+    <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
   </ng-container>
   <br>
-  <button [disabled]="!form.valid || loadingAction" mat-raised-button color="primary">Crear usuario <mat-spinner
-      *ngIf="loadingAction" id="spinner" [diameter]="20">
+  <button [disabled]="!newUserForm.form.valid || loadingAction" mat-raised-button color="primary">Crear usuario
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
     </mat-spinner> </button>
 </form>

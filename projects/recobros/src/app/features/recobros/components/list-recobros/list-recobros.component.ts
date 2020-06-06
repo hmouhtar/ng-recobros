@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'projects/recobros/src/app/core/services/user.service';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'alvea-list-recobros',
@@ -10,7 +12,7 @@ import { RecobrosService } from 'projects/recobros/src/app/core/services/recobro
   styleUrls: ['./list-recobros.component.scss'],
 })
 export class ListRecobrosComponent implements OnInit {
-  recobros: Promise<any>;
+  dataSource: MatTableDataSource<Recobro>;
   loadingAction: boolean = false;
   displayedColumns: string[] = [
     //'username',
@@ -24,14 +26,19 @@ export class ListRecobrosComponent implements OnInit {
     'company',
     'edit',
   ];
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private recobrosService: RecobrosService,
     private alertService: AlertService
-  ) {}
+  ) {
+    this.dataSource = new MatTableDataSource();
+  }
 
   ngOnInit(): void {
-    this.recobros = this.recobrosService.getAllRecobros();
-    this.recobros.then(console.log);
+    this.recobrosService.getAllRecobros().then((recobros) => {
+      this.dataSource.data = recobros;
+      this.dataSource.sort = this.sort;
+    });
   }
 }

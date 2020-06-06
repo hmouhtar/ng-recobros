@@ -3,6 +3,7 @@ import { LawyersService } from 'projects/recobros/src/app/core/services/lawyers.
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { Lawyer } from 'projects/recobros/src/app/shared/models/lawyer';
 
 @Component({
   selector: 'alvea-list-lawyers',
@@ -12,8 +13,15 @@ import { MatSort } from '@angular/material/sort';
 export class ListLawyersComponent implements OnInit {
   users: Promise<any[]>;
   loadingAction: boolean = false;
-  dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['fullName', 'edit', 'delete'];
+  dataSource: MatTableDataSource<Lawyer>;
+  displayedColumns: string[] = [
+    'id',
+    'fullName',
+    'location',
+    'active',
+    'edit',
+    'delete',
+  ];
 
   constructor(
     private lawyersService: LawyersService,
@@ -25,36 +33,33 @@ export class ListLawyersComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit(): void {
-    // this.userService.getUsers().then((users) => {
-    //   this.dataSource.data = users;
-    //   this.dataSource.sort = this.sort;
-    // });
+    this.lawyersService.getLawyers().then((lawyers) => {
+      this.dataSource.data = lawyers;
+      this.dataSource.sort = this.sort;
+    });
   }
 
-  deleteUser(username) {
+  deleteUser(id) {
     if (
       confirm(
         'Procederás a eliminar al abogado. Esta acción no es reversible. ¿Estás seguro?'
       )
     ) {
       this.loadingAction = true;
-      // this.userService
-      //   .deleteUser(username)
-      //   .then((res) => {
-      //     this.dataSource.data = this.dataSource.data.filter(
-      //       (user) => user.username !== username
-      //     );
-      //     // this.users = this.users.then((users) =>
-      //     //   users.filter((user) => user.username !== username)
-      //     // );
-      //     this.alertService.success('Se ha eliminado el usuario exitosamente.');
-      //   })
-      //   .catch((err) => {
-      //     this.alertService.error('Oops.');
-      //   })
-      //   .finally(() => {
-      //     this.loadingAction = false;
-      //   });
+      this.lawyersService
+        .deleteLawyer(id)
+        .then((res) => {
+          this.dataSource.data = this.dataSource.data.filter(
+            (lawyer) => lawyer.id !== id
+          );
+          this.alertService.success('Se ha eliminado el usuario exitosamente.');
+        })
+        .catch((err) => {
+          this.alertService.error('Oops.');
+        })
+        .finally(() => {
+          this.loadingAction = false;
+        });
     }
   }
 }

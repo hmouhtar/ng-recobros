@@ -12,12 +12,10 @@ import { AlertService } from 'projects/recobros/src/app/core/services/alert.serv
   styleUrls: ['./new-lawyer.component.scss'],
 })
 export class NewLawyerComponent implements OnInit {
-  form: FormGroup;
   _lawyerFields: Field[];
   lawyerFields$: Subject<Field[]>;
   lawyerFieldsO: Observable<Field[]>;
   loadingAction: boolean = false;
-
   constructor(
     private lawyersService: LawyersService,
     private alertService: AlertService,
@@ -25,36 +23,22 @@ export class NewLawyerComponent implements OnInit {
   ) {
     this.lawyerFields$ = new Subject();
     this.lawyerFieldsO = this.lawyerFields$.asObservable();
-    this.form = new FormGroup({});
   }
 
   ngOnInit(): void {
     this.lawyersService.getLawyerFields.call(this, 'new').then((fields) => {
       this._lawyerFields = fields;
-      this._lawyerFields.forEach((field) => {
-        this.form.addControl(
-          field.name,
-          field.required
-            ? new FormControl(field.value || '', Validators.required)
-            : new FormControl(field.value || '')
-        );
-      });
       this.lawyerFields$.next(this._lawyerFields);
     });
   }
 
   createLawyer(form) {
-    let formData = new FormData(form);
-    let formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
     this.loadingAction = true;
     this.lawyersService
-      .createLawyer(formDataObj)
+      .createLawyer(form.value)
       .then((res) => {
         this.alertService.success('Yay!');
-        //this.router.navigate(['/users'], {});
+        this.router.navigate(['/lawyers'], {});
       })
       .catch((err) => this.alertService.error(err.message))
       .finally(() => {

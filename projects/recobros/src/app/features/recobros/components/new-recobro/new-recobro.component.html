@@ -1,10 +1,10 @@
 <h1>Nuevo Recobro</h1>
-<form ngNativeValidate (submit)="createNewRecobro($event.target)">
+<form ngNativeValidate #newRecobroForm="ngForm" (submit)="createNewRecobro(newRecobroForm)">
   <ng-container *ngFor="let field of recobroFieldsO | async">
-    <alvea-dynamic-field [form]="form" [field]="field"></alvea-dynamic-field>
+    <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
   </ng-container>
   <br>
-  <button [disabled]="!form.valid || loadingAction" mat-raised-button color="primary">Crear recobro <mat-spinner
-      *ngIf="loadingAction" id="spinner" [diameter]="20">
+  <button [disabled]="!newRecobroForm.form.valid || loadingAction" mat-raised-button color="primary">Crear recobro
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
     </mat-spinner> </button>
 </form>

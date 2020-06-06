@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { groupBy } from 'lodash';
@@ -15,29 +15,24 @@ export class NewRecobroComponent implements OnInit {
   recobroFields$: Subject<Field[]>;
   recobroFieldsO: Observable<Field[]>;
   roles: Promise<string[]>;
-  form: FormGroup;
   loadingAction: boolean = false;
   incidentTypologies: any[];
 
   @HostListener('change', ['$event']) async loadRoleFields(event) {
-    if ('branch' === event.target.name) {
+    if ('branch' === event.target.getAttribute('ng-reflect-name')) {
       this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-        this.form.addControl(
-          'incidentTypology',
-          new FormControl('', Validators.required)
-        );
-
         let fields = this._newRecobroFields.slice();
         let incidentTypologyField = fields.find(
           (field) => field.name === 'incidentTypology'
         );
-        if (incidentTypologyField)
+        if (incidentTypologyField) {
           incidentTypologyField.options = groupBy(
             autoComplete['incidentTypologySelect'],
             'branch'
           )[event.target.value].map((element) => {
             return { label: element.nature, value: element.id };
           });
+        }
 
         this.recobroFields$.next(fields);
       });
@@ -48,37 +43,22 @@ export class NewRecobroComponent implements OnInit {
     private recobrosService: RecobrosService,
     private alertService: AlertService
   ) {
-    this.form = new FormGroup({});
     this.recobroFields$ = new Subject();
     this.recobroFieldsO = this.recobroFields$.asObservable();
-    this.form = new FormGroup({});
   }
 
   ngOnInit(): void {
     this.recobrosService.getRecobroAutoComplete().then(console.log);
     this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
       this._newRecobroFields = fields;
-      fields.forEach((field) => {
-        this.form.addControl(
-          field.name,
-          field.required
-            ? new FormControl(field.value || '', Validators.required)
-            : new FormControl(field.value || '')
-        );
-      });
       this.recobroFields$.next(this._newRecobroFields);
     });
   }
 
-  createNewRecobro(form) {
-    let formData = new FormData(form);
-    let formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
+  createNewRecobro(form: NgForm) {
     this.loadingAction = true;
     this.recobrosService
-      .createRecobro(formDataObj)
+      .createRecobro(form.value)
       .then((res) => {
         this.alertService.success('Yay!');
         //this.router.navigate(['/users'], {});

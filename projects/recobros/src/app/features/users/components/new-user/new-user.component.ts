@@ -3,7 +3,7 @@ import { UserService } from 'projects/recobros/src/app/core/services/user.servic
 import { RolesService } from 'projects/recobros/src/app/core/services/roles.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { Observable, Subject } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { Router } from '@angular/router';
 
@@ -14,27 +14,17 @@ import { Router } from '@angular/router';
 })
 export class NewUserComponent implements OnInit {
   roles: Promise<string[]>;
-  form: FormGroup;
   _userFields: Field[];
   userFields$: Subject<Field[]>;
   userFieldsO: Observable<Field[]>;
   loadingAction: boolean = false;
 
   @HostListener('change', ['$event']) async loadRoleFields(event) {
-    if ('rol' === event.target.name) {
+    if ('rol' === event.target.getAttribute('ng-reflect-name')) {
       let role = event.target.value;
       let roleFields = await this.userService.getRoleFields(role, 'new');
-      roleFields.forEach((field) => {
-        this.form.addControl(
-          field.name,
-          field.required
-            ? new FormControl(field.value || '', Validators.required)
-            : new FormControl(field.value || '')
-        );
-      });
       let fields = this._userFields.slice();
       fields.splice(-1, 0, ...roleFields);
-
       this.userFields$.next(fields);
     }
   }
@@ -47,32 +37,18 @@ export class NewUserComponent implements OnInit {
   ) {
     this.userFields$ = new Subject();
     this.userFieldsO = this.userFields$.asObservable();
-    this.form = new FormGroup({});
   }
 
   ngOnInit(): void {
     this.userService.getUserFields.call(this, 'new').then((fields) => {
       this._userFields = fields;
-      this._userFields.forEach((field) => {
-        this.form.addControl(
-          field.name,
-          field.required
-            ? new FormControl(field.value || '', Validators.required)
-            : new FormControl(field.value || '')
-        );
-      });
       this.userFields$.next(this._userFields);
     });
   }
-  createNewUser(form) {
-    let formData = new FormData(form);
-    let formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
+  createNewUser(form: NgForm) {
     this.loadingAction = true;
     this.userService
-      .register(formDataObj)
+      .register(form.value)
       .then((res) => {
         this.alertService.success('Yay!');
         this.router.navigate(['/users'], {});

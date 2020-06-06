@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Config } from 'projects/recobros/src/constants';
 import { Field } from '../../shared/models/field';
 import { Recobro } from '../../shared/models/recobro';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,15 +15,16 @@ export class RecobrosService {
     page: number = 0,
     size: number = 25,
     sort: string = 'id,asc'
-  ) {
+  ): Promise<Recobro[]> {
     return this.http
-      .get(`${Config.apiURL}/api/manager/recoveries`, {
+      .get<Recobro[]>(`${Config.apiURL}/api/manager/recoveries`, {
         params: {
           page: String(page),
           size: String(size),
           sort,
         },
       })
+      .pipe(map((getUsersRequest) => getUsersRequest['content']))
       .toPromise();
   }
 

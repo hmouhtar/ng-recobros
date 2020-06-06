@@ -11,14 +11,28 @@ export class LawyersService {
   constructor(private http: HttpClient) {}
 
   createLawyer(data) {
-    return this.http.post(`${Config.apiURL}/api/lawyer`, data).toPromise();
+    return this.http
+      .post(`${Config.apiURL}/api/lawyer`, data, {
+        responseType: 'text',
+      })
+      .toPromise();
   }
 
-  getLawyers() {}
+  getLawyers(): Promise<Lawyer[]> {
+    return this.http.get<Lawyer[]>(`${Config.apiURL}/api/lawyer`).toPromise();
+  }
 
   deleteLawyer(id) {
     return this.http
-      .delete(`${Config.apiURL}/api/login/user?${id}`, {
+      .delete(`${Config.apiURL}/api/lawyer/${id}`, {
+        responseType: 'text',
+      })
+      .toPromise();
+  }
+
+  editLawyer(id: number, data) {
+    return this.http
+      .put(`${Config.apiURL}/api/lawyer/${id}`, data, {
         responseType: 'text',
       })
       .toPromise();

@@ -34,6 +34,19 @@ export class Lawyer {
         name: 'location',
         required: true,
       },
+      // {
+      //   type: 'hidden',
+      //   label: '',
+      //   name: 'active',
+      //   value: 'false',
+      //   context: 'edit',
+      // },
+      {
+        type: 'checkbox',
+        label: 'Asignable',
+        name: 'active',
+        context: 'edit',
+      },
     ];
   }
 }
