@@ -1,24 +1,59 @@
 <div class="container" id="loginWrapper">
-
   <mat-card class="box">
     <mat-card-header class="justify-content-center">
-      <mat-card-title>Log in</mat-card-title>
+      <mat-card-title>Iniciar sesión</mat-card-title>
     </mat-card-header>
 
     <form class="text-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <mat-card-content>
-        <mat-form-field>
-          <input [ngClass]="{ 'is-invalid': submitted && f.username.errors }" formControlName="username" required
-            matInput placeholder="Username">
+        <mat-form-field class="width-input">
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+            formControlName="username"
+            required
+            matInput
+            placeholder="Nombre de usuario"
+          />
         </mat-form-field>
-
-        <mat-form-field>
-          <input [ngClass]="{ 'is-invalid': submitted && f.password.errors }" formControlName="password" required
-            matInput placeholder="Password">
+        <mat-form-field class="width-input">
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+            formControlName="password"
+            required
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            placeholder="Contraseña"
+          />
+          <mat-icon matSuffix (click)="hide = !hide">{{
+            hide ? 'visibility_off' : 'visibility'
+          }}</mat-icon>
         </mat-form-field>
       </mat-card-content>
-      <button mat-stroked-button class="btn-block">Log in</button>
+      <button mat-stroked-button class="btn-block">Iniciar sesión</button>
     </form>
-  </mat-card>
 
+    <mat-card-content class="forgot-password">
+      <button mat-stroked-button class="btn-block" (click)="openDialog()">
+        ¿Olvidó su contraseña?
+      </button>
+    </mat-card-content>
+
+    <ng-template #dialogRef let-data>
+      <div mat-dialog-content>
+        <form
+          class="text-center"
+          ngNativeValidate
+          (ngSubmit)="onResetUserPassword($event.target.emailAddress.value)"
+        >
+          <mat-form-field>
+            <mat-label>Introduzca su email, por favor</mat-label>
+            <input matInput type="text" name="emailAddress" required />
+          </mat-form-field>
+          <div mat-dialog-actions>
+            <button mat-stroked-button class="btn-block">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </mat-card>
 </div>

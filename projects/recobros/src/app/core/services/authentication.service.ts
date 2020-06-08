@@ -6,6 +6,7 @@ import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { AlertService } from '../../core/services/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -16,8 +17,9 @@ export class AuthenticationService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private userService: UserService
-  ) {
+    private userService: UserService,
+    private alertService: AlertService
+    ) {
     this.isUserLoggedIn$ = new BehaviorSubject<boolean>(
       this.currentUserToken !== null
     );
@@ -26,18 +28,27 @@ export class AuthenticationService {
   }
 
   public get currentUserToken() {
-    let token = localStorage.getItem('token');
-    if (token !== null && !this.tokenExpirationDate) {
-      this.tokenExpirationDate =
-        Number(JSON.parse(atob(token.split('.')[1]))['exp']) * 1000;
+    try {
+      let token = localStorage.getItem('token');
+      if (token !== null && !this.tokenExpirationDate) {
+        this.tokenExpirationDate =
+          Number(JSON.parse(atob(token.split('.')[1]))['exp']) * 1000;
+      }
+      if (token !== null && new Date(this.tokenExpirationDate) < new Date()) {
+        localStorage.removeItem('token');
+        this.tokenExpirationDate = null;
+        return null;
+      }
+      return token;
+    } catch (error) {
+      console.log(error);
+      this.alertService.error('LocalStorage blocked by browser. Please enable cookies.');
+      //this.alertService.subscribe(arg => this.property = arg);
+      
     }
-    if (token !== null && new Date(this.tokenExpirationDate) < new Date()) {
-      localStorage.removeItem('token');
-      this.tokenExpirationDate = null;
-      return null;
-    }
-    return token;
+    return null;
   }
+
 
   public get isUserLoggedIn() {
     return this.isUserLoggedIn$.value;

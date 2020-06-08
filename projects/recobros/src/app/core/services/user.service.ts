@@ -80,7 +80,11 @@ export class UserService {
         .get<User>(`${Config.apiURL}/api/manager/user`)
         .toPromise();
     }
-
     return this._currentUser;
+  }
+
+  resetUserPassword(emailAddress: string): Promise<any> {
+    console.log(emailAddress);
+    return this.http.post('url', emailAddress).toPromise();
   }
 }

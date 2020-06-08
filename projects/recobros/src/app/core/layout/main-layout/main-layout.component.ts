@@ -42,7 +42,7 @@ export class MainLayoutComponent implements OnInit {
 
     this.alertService.getAlert().subscribe((message) => {
       message &&
-        this._snackBar.open(message.text, '', {
+        this._snackBar.open(message.text, 'close', {
           duration: 2500,
           panelClass: `snackbar-${message.type}`,
         });

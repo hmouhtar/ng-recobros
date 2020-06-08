@@ -2,20 +2,27 @@
   <mat-toolbar *ngIf="!isUserLoggedIn; else loggedInNav" color="primary">
     Recobros
     <span class="spacer"></span>
-    <button mat-flat-button color="primary" routerLink="login">Log in</button>
+    <button mat-flat-button color="primary" routerLink="login">
+      Inciar sesión
+    </button>
   </mat-toolbar>
   <ng-template #loggedInNav>
     <mat-toolbar color="primary">
       Recobros
       <span class="spacer"></span>
-      <p *ngIf="currentUser">Bienvenido, {{currentUser.name}}</p>
+      <p *ngIf="currentUser">Bienvenido, {{ currentUser.name }}</p>
     </mat-toolbar>
   </ng-template>
 </header>
 
 <section id="main">
   <mat-sidenav-container>
-    <mat-sidenav fixedInViewport="true" id="sidenav" mode="side" [opened]="isUserLoggedIn">
+    <mat-sidenav
+      fixedInViewport="true"
+      id="sidenav"
+      mode="side"
+      [opened]="isUserLoggedIn"
+    >
       <mat-toolbar>
         <mat-toolbar-row>
           <h2>Recobros</h2>
@@ -24,8 +31,12 @@
       <mat-nav-list *ngIf="sidenavLinks">
         <div *ngFor="let key of objectKeys(sidenavLinks)">
           <h2 matSubheader>{{ key }}</h2>
-          <a *ngFor="let element of sidenavLinks[key]" mat-list-item routerLink="{{ element.path }}"
-            routerLinkActive="list-item-active">
+          <a
+            *ngFor="let element of sidenavLinks[key]"
+            mat-list-item
+            routerLink="{{ element.path }}"
+            routerLinkActive="list-item-active"
+          >
             <mat-icon matListIcon>{{ element.icon }}</mat-icon>
             {{ element.title }}
           </a>
@@ -41,7 +52,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
       <div class="container">
-        <router-outlet></router-outlet>
+        <router-outlet class="alert alert-success"></router-outlet>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
