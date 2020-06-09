@@ -54,7 +54,9 @@ export class RecobrosService {
 
   createRecobro(data) {
     return this.http
-      .post(`${Config.apiURL}/api/manager/recovery`, data)
+      .post(`${Config.apiURL}/api/manager/recovery`, data, {
+        responseType: 'text',
+      })
       .toPromise();
   }
 }

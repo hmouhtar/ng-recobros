@@ -21,7 +21,7 @@ export class Field {
     | (() => Promise<{ label: string; value: string }[]>);
   displayOnTable?: boolean;
   capability?: string | string[];
-  displayCondition?: () => boolean;
+  displayCondition?: any;
   value?: (() => string) | string;
   valuePath?: string;
   context?: string;
@@ -33,11 +33,13 @@ export class Field {
       fields.map((field) => {
         return Promise.all(
           // If any of the field properties is a function, call it with the current scope.
-          Object.keys(field).map((key) => {
-            if ('function' === typeof field[key]) {
-              return field[key].call(this).then((res) => (field[key] = res));
-            }
-          })
+          Object.keys(field)
+            .filter((key) => key !== 'displayCondition')
+            .map((key) => {
+              if ('function' === typeof field[key]) {
+                return field[key].call(this).then((res) => (field[key] = res));
+              }
+            })
         );
       })
     )

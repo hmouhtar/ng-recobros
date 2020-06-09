@@ -1,8 +1,7 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
-import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
-import { Subject, Observable } from 'rxjs';
+import { NgForm } from '@angular/forms';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { groupBy } from 'lodash';
 @Component({
@@ -11,47 +10,43 @@ import { groupBy } from 'lodash';
   styleUrls: ['./new-recobro.component.scss'],
 })
 export class NewRecobroComponent implements OnInit {
-  _newRecobroFields: Field[];
-  recobroFields$: Subject<Field[]>;
-  recobroFieldsO: Observable<Field[]>;
+  newRecobroFields: Field[] = [];
   roles: Promise<string[]>;
   loadingAction: boolean = false;
   incidentTypologies: any[];
-
+  @ViewChild('newRecobroForm') newRecobroForm: NgForm;
   @HostListener('change', ['$event']) async loadRoleFields(event) {
-    if ('branch' === event.target.getAttribute('ng-reflect-name')) {
-      this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-        let fields = this._newRecobroFields.slice();
-        let incidentTypologyField = fields.find(
-          (field) => field.name === 'incidentTypology'
-        );
-        if (incidentTypologyField) {
-          incidentTypologyField.options = groupBy(
-            autoComplete['incidentTypologySelect'],
-            'branch'
-          )[event.target.value].map((element) => {
-            return { label: element.nature, value: element.id };
-          });
-        }
-
-        this.recobroFields$.next(fields);
-      });
+    switch (event.target.getAttribute('ng-reflect-name')) {
+      case 'branch':
+        this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+          let incidentTypologyField = this.newRecobroFields.find(
+            (field) => field.name === 'incidentTypology'
+          );
+          if (incidentTypologyField) {
+            incidentTypologyField.options = groupBy(
+              autoComplete['incidentTypologySelect'],
+              'branch'
+            )[event.target.value].map((element) => {
+              return { label: element.nature, value: element.id };
+            });
+          }
+        });
+        break;
+      default:
+        break;
     }
   }
 
   constructor(
     private recobrosService: RecobrosService,
     private alertService: AlertService
-  ) {
-    this.recobroFields$ = new Subject();
-    this.recobroFieldsO = this.recobroFields$.asObservable();
-  }
+  ) {}
 
   ngOnInit(): void {
+    console.log(this.newRecobroForm);
     this.recobrosService.getRecobroAutoComplete().then(console.log);
     this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
-      this._newRecobroFields = fields;
-      this.recobroFields$.next(this._newRecobroFields);
+      this.newRecobroFields = fields;
     });
   }
 
