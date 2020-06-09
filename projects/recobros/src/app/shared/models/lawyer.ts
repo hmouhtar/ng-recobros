@@ -26,7 +26,6 @@ export class Lawyer {
         type: 'text',
         label: 'Segundo Apellido',
         name: 'surname2',
-        required: true,
       },
       {
         type: 'text',

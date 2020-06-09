@@ -15,7 +15,7 @@ export class ListLawyersComponent implements OnInit {
   loadingAction: boolean = false;
   dataSource: MatTableDataSource<Lawyer>;
   displayedColumns: string[] = [
-    'id',
+    // 'id',
     'fullName',
     'location',
     'active',
@@ -35,6 +35,15 @@ export class ListLawyersComponent implements OnInit {
   ngOnInit(): void {
     this.lawyersService.getLawyers().then((lawyers) => {
       this.dataSource.data = lawyers;
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'fullName': {
+            return item.name;
+          }
+          default:
+            return item[property];
+        }
+      };
       this.dataSource.sort = this.sort;
     });
   }

@@ -20,8 +20,8 @@ export class ListUsersComponent implements OnInit {
     'fullName',
     'emailAddress',
     'phone',
-    // 'companyScope',
-    // 'companyName',
+    'companyScope',
+    'companyName',
     'edit',
     'delete',
   ];
@@ -36,8 +36,21 @@ export class ListUsersComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit(): void {
-    this.userService.getUsers().then((users) => {
-      this.dataSource.data = users;
+    Promise.all([
+      this.userService.getCurrentUser(),
+      this.userService.getUsers(),
+    ]).then((res) => {
+      let [currentUser, allUsers] = res;
+      if (
+        ['RECOVERY_ADMINISTRATOR', 'COMPANY_RECOVERY_MANAGER '].includes(
+          currentUser.rol
+        )
+      ) {
+        this.displayedColumns = this.displayedColumns.filter((column) => {
+          return !['companyScope', 'companyName'].includes(column);
+        });
+      }
+      this.dataSource.data = allUsers;
       this.dataSource.sort = this.sort;
     });
   }
