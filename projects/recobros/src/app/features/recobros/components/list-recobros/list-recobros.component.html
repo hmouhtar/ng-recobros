@@ -1,4 +1,5 @@
-<button [disabled]="loadingAction" id="addNewRecobroButton" routerLink="new" mat-raised-button color="primary">Nuevo
+<button *ngIf="canCreateRecobro" [disabled]="loadingAction" id="addNewRecobroButton" routerLink="new" mat-raised-button
+  color="primary">Nuevo
   recobro</button>
 
 
