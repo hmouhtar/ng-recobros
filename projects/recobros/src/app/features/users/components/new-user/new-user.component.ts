@@ -53,7 +53,7 @@ export class NewUserComponent implements OnInit {
         this.alertService.success('Yay!');
         this.router.navigate(['/users'], {});
       })
-      .catch((err) => this.alertService.error(err.message))
+      .catch((err) => this.alertService.error(err.error.errors[0]))
       .finally(() => {
         this.loadingAction = false;
       });

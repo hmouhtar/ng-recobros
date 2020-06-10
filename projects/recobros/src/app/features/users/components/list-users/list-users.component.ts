@@ -14,17 +14,9 @@ export class ListUsersComponent implements OnInit {
   users: Promise<User[]>;
   loadingAction: boolean = false;
   dataSource: MatTableDataSource<User>;
-  displayedColumns: string[] = [
-    //'username',
-    'role',
-    'fullName',
-    'emailAddress',
-    'phone',
-    // 'companyScope',
-    // 'companyName',
-    'edit',
-    'delete',
-  ];
+  displayedColumns: string[];
+
+  currentUser: User;
 
   constructor(
     private userService: UserService,
@@ -36,10 +28,16 @@ export class ListUsersComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit(): void {
-    this.userService.getUsers().then((users) => {
-      this.dataSource.data = users;
-      this.dataSource.sort = this.sort;
-    });
+    Promise.all([
+      this.userService.getUsers().then((users) => {
+        this.dataSource.data = users;
+        this.dataSource.sort = this.sort;
+        console.log(users);
+      }),
+      this.userService.getCurrentUser().then((user) => {
+        this.displayedColumns = this.generateDisplayedColumns(user.rol);
+      }),
+    ]);
   }
 
   deleteUser(username) {
@@ -67,5 +65,21 @@ export class ListUsersComponent implements OnInit {
           this.loadingAction = false;
         });
     }
+  }
+
+  generateDisplayedColumns(rol: string): string[] {
+    if (rol == 'COMPANY_MANAGER') {
+      return [
+        'role',
+        'companyName',
+        'scope',
+        'fullName',
+        'emailAddress',
+        'phone',
+        'edit',
+        'delete',
+      ];
+    }
+    return ['role', 'fullName', 'emailAddress', 'phone', 'edit', 'delete'];
   }
 }

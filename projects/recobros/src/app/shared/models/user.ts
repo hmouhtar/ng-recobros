@@ -133,6 +133,7 @@ export class User {
             type: 'select',
             label: 'Tipo Empresa / Departamento',
             name: 'companyScope',
+            required: true,
             valuePath: 'company',
 
             options: [
