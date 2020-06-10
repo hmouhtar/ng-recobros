@@ -39,7 +39,7 @@ export class SidenavService {
 
     {
       title: 'Gestión de Usuarios',
-      capability: '',
+      capability: 'DISPLAY_USERS',
       path: 'users',
       icon: 'account_circle',
       category: 'Administración',
@@ -53,7 +53,7 @@ export class SidenavService {
     // },
     {
       title: 'Gestión de Abogados',
-      capability: '',
+      capability: 'DISPLAY_LAWYER_LIST',
       path: 'lawyers',
       icon: 'supervised_user_circle',
       category: 'Administración',

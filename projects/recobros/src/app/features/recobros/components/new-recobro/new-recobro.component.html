@@ -1,7 +1,9 @@
 <h1>Nuevo Recobro</h1>
+
 <form ngNativeValidate #newRecobroForm="ngForm" (submit)="createNewRecobro(newRecobroForm)">
-  <ng-container *ngFor="let field of recobroFieldsO | async">
-    <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
+  <ng-container *ngFor="let field of newRecobroFields">
+    <alvea-dynamic-field *ngIf="field.displayCondition ? field.displayCondition.call(this) : true" [field]="field">
+    </alvea-dynamic-field>
   </ng-container>
   <br>
   <button [disabled]="!newRecobroForm.form.valid || loadingAction" mat-raised-button color="primary">Crear recobro

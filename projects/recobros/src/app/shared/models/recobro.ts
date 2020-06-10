@@ -3,6 +3,7 @@ import { Company } from './company';
 import { RolesService } from '../../core/services/roles.service';
 import { RecobrosService } from '../../core/services/recobros.service';
 import { groupBy } from 'lodash';
+import { FormControl, NgForm } from '@angular/forms';
 
 export class Recobro {
   amountCondemned: number;
@@ -64,7 +65,7 @@ export class Recobro {
         label: 'N. Encargo',
         name: 'codSinister',
         required: true,
-        displayOnTable: true,
+
         context: 'edit',
       },
       {
@@ -72,7 +73,7 @@ export class Recobro {
         label: 'Inicio Recobro',
         name: 'initDate',
         required: true,
-        displayOnTable: true,
+
         context: 'edit',
       },
       {
@@ -90,8 +91,6 @@ export class Recobro {
           },
         ],
         required: true,
-        order: 4,
-        displayOnTable: true,
       },
       {
         type: 'select',
@@ -110,7 +109,7 @@ export class Recobro {
             });
         },
         required: true,
-        displayOnTable: true,
+
         order: 2,
       },
       {
@@ -174,25 +173,52 @@ export class Recobro {
               });
             });
         },
-        displayOnTable: true,
+      },
+      {
+        type: 'number',
+        label: 'Potencial Compañía',
+        name: 'potentialInitialCompany',
+        context: 'new',
+        order: 4,
+        required: true,
+        displayCondition: function () {
+          let inNameOfControl = (this['newRecobroForm'].form as NgForm)
+            .controls['inNameOf'];
+
+          if (inNameOfControl) {
+            return (
+              inNameOfControl.value === '1' || inNameOfControl.value === '3'
+            );
+          } else {
+            return false;
+          }
+        },
+      },
+      {
+        type: 'number',
+        label: 'Potencial Asegurado',
+        name: 'initialPersonalPotential',
+        order: 4,
+        required: true,
+        displayCondition: function () {
+          let inNameOfControl = (this['newRecobroForm'].form as NgForm)
+            .controls['inNameOf'];
+
+          if (inNameOfControl) {
+            return (
+              inNameOfControl.value === '2' || inNameOfControl.value === '3'
+            );
+          } else {
+            return false;
+          }
+        },
       },
       {
         type: 'text',
         label: 'Administrador Recobrador',
         name: 'employer',
         required: true,
-        displayOnTable: true,
         context: 'edit',
-      },
-      {
-        type: 'number',
-        label: 'Potencial Compañía',
-        name: 'potentialInitialCompany',
-      },
-      {
-        type: 'number',
-        label: 'Potencial Asegurado',
-        name: 'initialPersonalPotential',
       },
 
       {
@@ -248,7 +274,6 @@ export class Recobro {
         name: 'motive',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -256,7 +281,6 @@ export class Recobro {
         name: 'situationDate',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -264,7 +288,6 @@ export class Recobro {
         name: 'partialType',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -272,7 +295,6 @@ export class Recobro {
         name: 'lawyerName',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -280,7 +302,6 @@ export class Recobro {
         name: 'resolution',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -288,7 +309,6 @@ export class Recobro {
         name: 'judicialSituation',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -296,7 +316,6 @@ export class Recobro {
         name: 'judicialDate',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
 
       {
@@ -305,7 +324,6 @@ export class Recobro {
         name: 'jurisdiction',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'select',
@@ -314,7 +332,6 @@ export class Recobro {
         options: [],
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
       {
         type: 'text',
@@ -322,7 +339,6 @@ export class Recobro {
         name: 'judicialApproval',
         required: true,
         context: 'edit',
-        displayOnTable: true,
       },
     ];
   }

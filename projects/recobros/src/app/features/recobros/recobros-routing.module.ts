@@ -6,6 +6,7 @@ import { AuthGuard } from '../../core/guards/auth.guard';
 import { RoleGuard } from '../../core/guards/role.guard';
 import { NewRecobroComponent } from './components/new-recobro/new-recobro.component';
 import { ListRecobrosComponent } from './components/list-recobros/list-recobros.component';
+import { EditRecobroComponent } from './components/edit-recobro/edit-recobro.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,11 @@ import { ListRecobrosComponent } from './components/list-recobros/list-recobros.
           {
             path: 'new',
             component: NewRecobroComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'edit/:sinisterNumber/:codSinister',
+            component: EditRecobroComponent,
             canActivate: [AuthGuard],
           },
         ],

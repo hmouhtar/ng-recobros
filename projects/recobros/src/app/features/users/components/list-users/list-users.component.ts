@@ -14,9 +14,17 @@ export class ListUsersComponent implements OnInit {
   users: Promise<User[]>;
   loadingAction: boolean = false;
   dataSource: MatTableDataSource<User>;
-  displayedColumns: string[];
-
-  currentUser: User;
+  displayedColumns: string[] = [
+    //'username',
+    'role',
+    'fullName',
+    'emailAddress',
+    'phone',
+    'scope',
+    'companyName',
+    'edit',
+    'delete',
+  ];
 
   constructor(
     private userService: UserService,
@@ -29,15 +37,23 @@ export class ListUsersComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.all([
-      this.userService.getUsers().then((users) => {
-        this.dataSource.data = users;
-        this.dataSource.sort = this.sort;
-        console.log(users);
-      }),
-      this.userService.getCurrentUser().then((user) => {
-        this.displayedColumns = this.generateDisplayedColumns(user.rol);
-      }),
-    ]);
+      this.userService.getCurrentUser(),
+      this.userService.getUsers(),
+    ]).then((res) => {
+      console.log(res);
+      let [currentUser, allUsers] = res;
+      if (
+        ['RECOVERY_ADMINISTRATOR', 'COMPANY_RECOVERY_MANAGER '].includes(
+          currentUser.rol
+        )
+      ) {
+        this.displayedColumns = this.displayedColumns.filter((column) => {
+          return !['scope', 'companyName'].includes(column);
+        });
+      }
+      this.dataSource.data = allUsers;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   deleteUser(username) {
@@ -65,21 +81,5 @@ export class ListUsersComponent implements OnInit {
           this.loadingAction = false;
         });
     }
-  }
-
-  generateDisplayedColumns(rol: string): string[] {
-    if (rol == 'COMPANY_MANAGER') {
-      return [
-        'role',
-        'companyName',
-        'scope',
-        'fullName',
-        'emailAddress',
-        'phone',
-        'edit',
-        'delete',
-      ];
-    }
-    return ['role', 'fullName', 'emailAddress', 'phone', 'edit', 'delete'];
   }
 }

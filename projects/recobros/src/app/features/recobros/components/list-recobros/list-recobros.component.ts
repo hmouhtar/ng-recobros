@@ -5,6 +5,7 @@ import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { RolesService } from 'projects/recobros/src/app/core/services/roles.service';
 
 @Component({
   selector: 'alvea-list-recobros',
@@ -14,6 +15,7 @@ import { MatSort } from '@angular/material/sort';
 export class ListRecobrosComponent implements OnInit {
   dataSource: MatTableDataSource<Recobro>;
   loadingAction: boolean = false;
+  canCreateRecobro: boolean;
   displayedColumns: string[] = [
     //'username',
     'sinisterNumber',
@@ -30,12 +32,16 @@ export class ListRecobrosComponent implements OnInit {
 
   constructor(
     private recobrosService: RecobrosService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private rolesService: RolesService
   ) {
     this.dataSource = new MatTableDataSource();
   }
 
   ngOnInit(): void {
+    this.rolesService
+      .currentUserCan('CREATE_RECOVERY')
+      .then((res) => (this.canCreateRecobro = res));
     this.recobrosService.getAllRecobros().then((recobros) => {
       this.dataSource.data = recobros;
       this.dataSource.sort = this.sort;

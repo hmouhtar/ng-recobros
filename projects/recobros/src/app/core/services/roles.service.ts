@@ -67,7 +67,9 @@ export class RolesService {
 
       // Check if the object exists and has the referenced capability.
       return (
-        currentUserRolObj && currentUserRolObj.capabilities.includes(capability)
+        (currentUserRolObj &&
+          currentUserRolObj.capabilities.includes(capability)) ||
+        false
       );
     });
   }

@@ -11,7 +11,8 @@ import { map } from 'rxjs/operators';
 export class RecobrosService {
   constructor(private http: HttpClient) {}
   private _autoComplete;
-  public getAllRecobros(
+
+  getAllRecobros(
     page: number = 0,
     size: number = 25,
     sort: string = 'id,asc'
@@ -25,6 +26,14 @@ export class RecobrosService {
         },
       })
       .pipe(map((getUsersRequest) => getUsersRequest['content']))
+      .toPromise();
+  }
+
+  getRecobro(sinisterNumber: string, codSinister: string): Promise<Recobro> {
+    return this.http
+      .get<Recobro>(
+        `${Config.apiURL}/api/manager/recovery/info/${sinisterNumber}/${codSinister}`
+      )
       .toPromise();
   }
 
@@ -54,7 +63,9 @@ export class RecobrosService {
 
   createRecobro(data) {
     return this.http
-      .post(`${Config.apiURL}/api/manager/recovery`, data)
+      .post(`${Config.apiURL}/api/manager/recovery`, data, {
+        responseType: 'text',
+      })
       .toPromise();
   }
 }
