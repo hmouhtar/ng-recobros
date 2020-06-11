@@ -19,7 +19,7 @@ export class AuthenticationService {
     private router: Router,
     private userService: UserService,
     private alertService: AlertService
-    ) {
+  ) {
     this.isUserLoggedIn$ = new BehaviorSubject<boolean>(
       this.currentUserToken !== null
     );
@@ -28,27 +28,29 @@ export class AuthenticationService {
   }
 
   public get currentUserToken() {
+    let token;
     try {
-      let token = localStorage.getItem('token');
-      if (token !== null && !this.tokenExpirationDate) {
-        this.tokenExpirationDate =
-          Number(JSON.parse(atob(token.split('.')[1]))['exp']) * 1000;
-      }
-      if (token !== null && new Date(this.tokenExpirationDate) < new Date()) {
-        localStorage.removeItem('token');
-        this.tokenExpirationDate = null;
-        return null;
-      }
-      return token;
+      token = localStorage.getItem('token');
     } catch (error) {
-      console.log(error);
-      this.alertService.error('LocalStorage blocked by browser. Please enable cookies.');
-      //this.alertService.subscribe(arg => this.property = arg);
-      
+      token = null;
+      console.error(error);
+      this.alertService.error(
+        'LocalStorage blocked by browser. Please enable cookies.'
+      );
     }
-    return null;
-  }
 
+    if (token !== null && !this.tokenExpirationDate) {
+      this.tokenExpirationDate =
+        Number(JSON.parse(atob(token.split('.')[1]))['exp']) * 1000;
+    }
+    if (token !== null && new Date(this.tokenExpirationDate) < new Date()) {
+      localStorage.removeItem('token');
+      this.tokenExpirationDate = null;
+      return null;
+    }
+
+    return token;
+  }
 
   public get isUserLoggedIn() {
     return this.isUserLoggedIn$.value;
@@ -56,22 +58,17 @@ export class AuthenticationService {
 
   login(userCredential: string, password: string) {
     return this.http
-      .post(
-        `${Config.apiURL}/api/login/user/doLogin`,
-        {
-          userCredential,
-          password,
-        },
-        {
-          responseType: 'text',
-        }
-      )
+      .post(`${Config.apiURL}/api/login/user/doLogin`, {
+        userCredential,
+        password,
+      })
       .pipe(
         tap((res) => {
-          localStorage.setItem('token', res);
+          localStorage.setItem('token', res['data']);
           this.isUserLoggedIn$.next(true);
         })
-      );
+      )
+      .toPromise();
   }
 
   logout() {

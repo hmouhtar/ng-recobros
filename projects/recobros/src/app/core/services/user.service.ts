@@ -23,9 +23,7 @@ export class UserService {
 
   deleteUser(username: string) {
     return this.http
-      .delete(`${Config.apiURL}/api/login/user?username=${username}`, {
-        responseType: 'text',
-      })
+      .delete(`${Config.apiURL}/api/login/user?username=${username}`)
       .toPromise();
   }
 
@@ -71,6 +69,7 @@ export class UserService {
   getUser(username: string): Promise<User> {
     return this.http
       .get<User>(`${Config.apiURL}/api/login/user/${username}`)
+      .pipe(map((user) => user['data']))
       .toPromise();
   }
 
@@ -78,6 +77,7 @@ export class UserService {
     if (!this._currentUser) {
       this._currentUser = this.http
         .get<User>(`${Config.apiURL}/api/manager/user`)
+        .pipe(map((user) => user['data']))
         .toPromise();
     }
     return this._currentUser;

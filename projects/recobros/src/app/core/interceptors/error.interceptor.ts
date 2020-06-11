@@ -9,10 +9,14 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../services/authentication.service';
+import { AlertService } from '../services/alert.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private alertService: AlertService
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -22,11 +26,11 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((err) => {
         if (err.status === 401) {
           // auto logout if 401 response returned from api
-          this.authenticationService.logout();
-          location.reload(true);
+          // this.authenticationService.logout();
+          // location.reload(true);
         }
-
-        return throwError(err.error);
+        this.alertService.error(err.error.message);
+        return throwError(err);
       })
     );
   }

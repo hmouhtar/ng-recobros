@@ -43,8 +43,6 @@ export class NewRecobroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.newRecobroForm);
-    this.recobrosService.getRecobroAutoComplete().then(console.log);
     this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
       this.newRecobroFields = fields;
     });

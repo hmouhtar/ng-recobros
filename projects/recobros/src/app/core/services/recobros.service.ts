@@ -25,7 +25,7 @@ export class RecobrosService {
           sort,
         },
       })
-      .pipe(map((getUsersRequest) => getUsersRequest['content']))
+      .pipe(map((getUsersRequest) => getUsersRequest['data']['content']))
       .toPromise();
   }
 
@@ -34,6 +34,7 @@ export class RecobrosService {
       .get<Recobro>(
         `${Config.apiURL}/api/manager/recovery/info/${sinisterNumber}/${codSinister}`
       )
+      .pipe(map((recobro) => recobro['data']))
       .toPromise();
   }
 
@@ -55,6 +56,7 @@ export class RecobrosService {
     if (!this._autoComplete) {
       this._autoComplete = this.http
         .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
+        .pipe(map((data) => data['data']))
         .toPromise();
     }
 
@@ -68,4 +70,6 @@ export class RecobrosService {
       })
       .toPromise();
   }
+
+  editRecobro() {}
 }

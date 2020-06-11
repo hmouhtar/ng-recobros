@@ -21,7 +21,7 @@ export class RolesService {
         .get(`${Config.apiURL}/api/capabilities/`)
         .pipe(
           map((roles: Array<any>) => {
-            roles.map((role) => {
+            return roles['data'].map((role) => {
               role.capabilities = role.capabilities.reduce(
                 (a, b) => a.concat([b.name]),
                 []
@@ -59,7 +59,7 @@ export class RolesService {
       this.getAllRoles(),
     ]).then((res) => {
       let [currentUser, allRoles] = res;
-
+      console.log(allRoles);
       // Find current user's role object to get a list of all the capabilities belonging to that role.
       let currentUserRolObj = allRoles.find(
         (role) => role.rolName === currentUser.rol

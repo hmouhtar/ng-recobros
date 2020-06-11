@@ -1,13 +1,22 @@
 <h1>Editar abogado</h1>
-<form ngNativeValidate #editLawyerForm="ngForm" (ngSubmit)="editUser(editLawyerForm)">
+<form
+  ngNativeValidate
+  #editLawyerForm="ngForm"
+  (ngSubmit)="editUser(editLawyerForm)"
+>
   <fieldset [disabled]="loadingAction">
     <ng-container *ngFor="let field of lawyerFieldsO | async">
       <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
     </ng-container>
-    <br>
-    <button [disabled]="!editLawyerForm.form.valid || loadingAction" mat-raised-button color="primary">Editar usuario
+    <br />
+    <button
+      [disabled]="!editLawyerForm.form.valid || loadingAction"
+      mat-raised-button
+      color="primary"
+    >
+      Editar usuario
       <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-      </mat-spinner> </button>
+      </mat-spinner>
+    </button>
   </fieldset>
-
 </form>

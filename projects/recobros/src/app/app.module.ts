@@ -7,13 +7,12 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { UsersModule } from './features/users/users.module';
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [AppRoutingModule, HttpClientModule, CoreModule, UsersModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

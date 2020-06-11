@@ -49,14 +49,14 @@ export class EditUserComponent implements OnInit {
     this.userFields$.next(this._userFields);
   }
 
-  async editUser(form: NgForm) {
+  editUser(form: NgForm) {
     this.loadingAction = true;
     this.userService
       .editUser(this.user.id, form.value)
       .then((res) => {
         this.alertService.success('Yay!');
       })
-      .catch((err) => this.alertService.error(err.message))
+      .catch(console.error)
       .finally(() => {
         this.loadingAction = false;
       });

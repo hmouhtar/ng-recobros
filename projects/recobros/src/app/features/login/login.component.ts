@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AlertService } from '../../core/services/alert.service';
@@ -8,7 +8,6 @@ import { AuthenticationService } from '../../core/services/authentication.servic
 
 import { UserService } from '../../core/services/user.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { User } from '../../shared/models/user';
 
 @Component({
   templateUrl: 'login.component.html',
@@ -25,7 +24,6 @@ export class LoginComponent implements OnInit {
   currentDialog: MatDialogRef<any>;
 
   constructor(
-    private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
@@ -40,47 +38,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
-
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || 'home';
   }
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
-  }
+  onSubmit(form: NgForm) {
+    // this.alertService.clear();
 
-  onSubmit() {
-    this.submitted = true;
-
-    // reset alerts on submit
-    this.alertService.clear();
-
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
-      return;
-    }
-
-    this.loading = true;
+    // this.loading = true;
     this.authenticationService
-      .login(this.f.username.value, this.f.password.value)
-      .pipe(first())
-      .subscribe(
-        (data) => {
-          this.router.navigate([this.returnUrl]);
-        },
-        (error) => {
-          console.log(JSON.parse(error.error).message);
-          this.alertService.error(
-            'ERROR: El nombre de usuario o contraseña ingresado es incorrecto'
-          );
-          this.loading = false;
-        }
-      );
+      .login(form.controls.username.value, form.controls.password.value)
+      .then((res) => this.router.navigate([this.returnUrl]))
+      .catch(console.warn);
   }
 
   openDialog(): void {
@@ -93,6 +62,7 @@ export class LoginComponent implements OnInit {
       console.log(`The dialog was closed ${txt}`);
     });
   }
+
   onResetUserPassword(emailAddress): void {
     this.currentDialog.close();
     this.userService

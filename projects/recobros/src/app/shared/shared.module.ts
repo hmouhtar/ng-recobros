@@ -29,6 +29,8 @@ import { DynamicFieldComponent } from './components/dynamic-field/dynamic-field.
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 
+import { MatTabsModule } from '@angular/material/tabs';
+
 @NgModule({
   declarations: [DynamicFieldComponent],
   imports: [
@@ -57,6 +59,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
+    MatTabsModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -84,6 +87,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
+    MatTabsModule,
     DynamicFieldComponent,
   ],
 })

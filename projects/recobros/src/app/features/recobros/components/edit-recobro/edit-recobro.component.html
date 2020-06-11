@@ -1,1 +1,31 @@
-<p>edit-recobro works!</p>
+<h1>Datos del recobro</h1>
+<mat-tab-group>
+  <mat-tab label="First">
+    <form
+      ngNativeValidate
+      #editRecobroForm="ngForm"
+      (ngSubmit)="editRecobro(editRecobroForm)"
+    >
+      <fieldset [disabled]="loadingAction">
+        <ng-container *ngFor="let field of editRecobroFields">
+          <alvea-dynamic-field
+            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
+            [field]="field"
+          ></alvea-dynamic-field>
+        </ng-container>
+        <br />
+        <button
+          [disabled]="!editRecobroForm.form.valid || loadingAction"
+          mat-raised-button
+          color="primary"
+        >
+          Editar usuario
+          <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+          </mat-spinner>
+        </button>
+      </fieldset>
+    </form>
+  </mat-tab>
+  <mat-tab label="Second"> </mat-tab>
+  <mat-tab label="Third"> Content 3 </mat-tab>
+</mat-tab-group>

@@ -4,23 +4,28 @@
       <mat-card-title>Iniciar sesión</mat-card-title>
     </mat-card-header>
 
-    <form class="text-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form
+      ngNativeValidate
+      class="text-center"
+      #loginForm="ngForm"
+      (ngSubmit)="onSubmit(loginForm)"
+    >
       <mat-card-content>
         <mat-form-field class="width-input">
           <input
-            [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
-            formControlName="username"
-            required
+            ngModel
             matInput
+            required
+            name="username"
             placeholder="Nombre de usuario"
           />
         </mat-form-field>
         <mat-form-field class="width-input">
           <input
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-            formControlName="password"
-            required
+            ngModel
             matInput
+            required
+            name="password"
             [type]="hide ? 'password' : 'text'"
             placeholder="Contraseña"
           />

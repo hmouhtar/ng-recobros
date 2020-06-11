@@ -29,6 +29,7 @@ export class Field {
 
   // If field value or options is a function, call it.
   static processField(fields: Field[], context, subject?: any) {
+    console.log(subject);
     return Promise.all(
       fields.map((field) => {
         return Promise.all(
@@ -37,7 +38,9 @@ export class Field {
             .filter((key) => key !== 'displayCondition')
             .map((key) => {
               if ('function' === typeof field[key]) {
-                return field[key].call(this).then((res) => (field[key] = res));
+                return field[key]
+                  .call(this, subject)
+                  .then((res) => (field[key] = res));
               }
             })
         );

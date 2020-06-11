@@ -25,6 +25,7 @@ export class Recobro {
   userAssignment: number;
   recoverySituation: 'PENDING' | 'FINISHED';
   incidentTypology: number;
+  key: { sinisterNumber: string; codSinister: number };
   assuredCashFlow?: number;
   allowEmptyValue?: false;
   causative?: string;
@@ -54,7 +55,7 @@ export class Recobro {
   static getRecobroFields(): Field[] {
     return [
       {
-        type: 'number',
+        type: 'text',
         label: 'N. Siniestro',
         name: 'sinisterNumber',
         required: true,
@@ -65,17 +66,17 @@ export class Recobro {
         label: 'N. Encargo',
         name: 'codSinister',
         required: true,
-
+        order: 2,
         context: 'edit',
       },
-      {
-        type: 'date',
-        label: 'Inicio Recobro',
-        name: 'initDate',
-        required: true,
+      // {
+      //   type: 'date',
+      //   label: 'Inicio Recobro',
+      //   name: 'initDate',
+      //   required: true,
 
-        context: 'edit',
-      },
+      //   context: 'edit',
+      // },
       {
         type: 'select',
         label: 'Situación de recobro',
@@ -145,6 +146,38 @@ export class Recobro {
             });
         },
         required: true,
+        context: 'new',
+        order: 5,
+      },
+      {
+        type: 'select',
+        label: 'Ramo',
+        name: 'branch',
+        value: function () {
+          if (arguments[0]) {
+            return (this['recobrosService'] as RecobrosService)
+              .getRecobroAutoComplete()
+              .then((autoComplete) => {
+                return autoComplete['incidentTypologySelect'].find(
+                  (incidentTypology) =>
+                    incidentTypology.id == arguments[0].incidentTypology
+                ).branch;
+              });
+          }
+          return '';
+        },
+        options: function () {
+          return (this['recobrosService'] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return Object.keys(
+                groupBy(autoComplete['incidentTypologySelect'], 'branch')
+              ).map((branchName) => {
+                return { label: branchName, value: branchName };
+              });
+            });
+        },
+        required: true,
         order: 5,
       },
       {
@@ -152,6 +185,16 @@ export class Recobro {
         label: 'Naturaleza',
         name: 'incidentTypology',
         options: [],
+        context: 'new',
+        required: true,
+        order: 6,
+      },
+      {
+        type: 'select',
+        label: 'Naturaleza',
+        name: 'incidentTypology',
+        options: [],
+        context: 'edit',
         required: true,
         order: 6,
       },
@@ -178,17 +221,17 @@ export class Recobro {
         type: 'number',
         label: 'Potencial Compañía',
         name: 'potentialInitialCompany',
-        context: 'new',
         order: 4,
         required: true,
         displayCondition: function () {
-          let inNameOfControl = (this['newRecobroForm'].form as NgForm)
-            .controls['inNameOf'];
+          let inNameOfControl = (arguments[0].form as NgForm).controls[
+            'inNameOf'
+          ];
 
           if (inNameOfControl) {
-            return (
-              inNameOfControl.value === '1' || inNameOfControl.value === '3'
-            );
+            console.log(inNameOfControl.value);
+
+            return inNameOfControl.value == '1' || inNameOfControl.value == '3';
           } else {
             return false;
           }
@@ -201,13 +244,12 @@ export class Recobro {
         order: 4,
         required: true,
         displayCondition: function () {
-          let inNameOfControl = (this['newRecobroForm'].form as NgForm)
-            .controls['inNameOf'];
+          let inNameOfControl = (arguments[0].form as NgForm).controls[
+            'inNameOf'
+          ];
 
           if (inNameOfControl) {
-            return (
-              inNameOfControl.value === '2' || inNameOfControl.value === '3'
-            );
+            return inNameOfControl.value == '2' || inNameOfControl.value == '3';
           } else {
             return false;
           }
@@ -217,7 +259,6 @@ export class Recobro {
         type: 'text',
         label: 'Administrador Recobrador',
         name: 'employer',
-        required: true,
         context: 'edit',
       },
 
@@ -272,49 +313,42 @@ export class Recobro {
         type: 'text',
         label: 'Motivo Cierre',
         name: 'motive',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Fecha Situación',
         name: 'situationDate',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Tipo Parcial',
         name: 'partialType',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Abogado',
         name: 'lawyerName',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Resolución Recobro',
         name: 'resolution',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Situación Judicial',
         name: 'judicialSituation',
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Fecha Fase Judicial',
         name: 'judicialDate',
-        required: true,
         context: 'edit',
       },
 
@@ -322,7 +356,6 @@ export class Recobro {
         type: 'text',
         label: 'Jurisdicción',
         name: 'jurisdiction',
-        required: true,
         context: 'edit',
       },
       {
@@ -330,14 +363,12 @@ export class Recobro {
         label: 'Estado Gestión',
         name: 'situationManagement',
         options: [],
-        required: true,
         context: 'edit',
       },
       {
         type: 'text',
         label: 'Aprobación Judicial',
         name: 'judicialApproval',
-        required: true,
         context: 'edit',
       },
     ];

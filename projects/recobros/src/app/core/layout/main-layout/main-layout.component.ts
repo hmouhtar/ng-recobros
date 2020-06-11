@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertService } from '../../services/alert.service';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -25,18 +25,17 @@ export class MainLayoutComponent implements OnInit {
     private sidenavService: SidenavService,
     private userService: UserService
   ) {}
-
   ngOnInit(): void {
-    this.sidenavService.getAccesibleRoutes().then((routes) => {
-      this.sidenavLinks = routes;
-    });
-
     this.authenticationService.isUserLoggedInO.subscribe((res) => {
       this.isUserLoggedIn = res;
-      if (res) {
+      if (this.isUserLoggedIn) {
+        this.sidenavService.getAccesibleRoutes().then((routes) => {
+          this.sidenavLinks = routes;
+        });
         this.userService
           .getCurrentUser()
-          .then((user) => (this.currentUser = user));
+          .then((user) => (this.currentUser = user))
+          .catch(console.warn);
       }
     });
 
