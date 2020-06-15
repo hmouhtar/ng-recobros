@@ -4,9 +4,15 @@
   #newUserForm="ngForm"
   (ngSubmit)="createNewUser(newUserForm)"
 >
-  <ng-container *ngFor="let field of userFieldsO | async">
-    <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
-  </ng-container>
+  <div fxLayout="row wrap" fxLayoutGap="1%">
+    <ng-container *ngFor="let field of userFieldsO | async">
+      <alvea-dynamic-field
+        fxFlex="0 0 30%"
+        [field]="field"
+      ></alvea-dynamic-field>
+    </ng-container>
+  </div>
+
   <br />
   <button
     [disabled]="!newUserForm.form.valid || loadingAction"

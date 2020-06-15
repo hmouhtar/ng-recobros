@@ -1,33 +1,36 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../../shared/models/user';
-import { Config } from 'projects/recobros/src/constants';
-import { shareReplay, map } from 'rxjs/operators';
-import { Field } from '../../shared/models/field';
-import { RolesService } from './roles.service';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { User } from "../../shared/models/user";
+import { Config } from "projects/recobros/src/constants";
+import { map } from "rxjs/operators";
+import { Field } from "../../shared/models/field";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class UserService {
   private _currentUser: Promise<User>;
   constructor(private http: HttpClient) {}
 
-  register(data) {
+  register(data): Promise<any> {
     return this.http.post(`${Config.apiURL}/api/login/user`, data).toPromise();
   }
 
-  editUser(userID: number, data) {
+  editUser(userID: number, data): Promise<any> {
     return this.http
       .put(`${Config.apiURL}/api/manager/user/${userID}`, data)
       .toPromise();
   }
 
-  deleteUser(username: string) {
+  deleteUser(username: string): Promise<any> {
     return this.http
       .delete(`${Config.apiURL}/api/login/user?username=${username}`)
       .toPromise();
   }
 
-  getRoleFields(role: string, context: 'new' | 'edit', user?: User) {
+  getRoleFields(
+    role: string,
+    context: "new" | "edit",
+    user?: User
+  ): Promise<Field[]> {
     return Field.processField.call(
       this,
       User.getRoleFields(role).filter(
@@ -38,7 +41,7 @@ export class UserService {
     );
   }
 
-  getUserFields(context: 'new' | 'edit', user?: User): Promise<Field[]> {
+  getUserFields(context: "new" | "edit", user?: User): Promise<Field[]> {
     return Field.processField.call(
       this,
       User.getUserFields().filter(
@@ -49,11 +52,7 @@ export class UserService {
     );
   }
 
-  getUsers(
-    page: number = 0,
-    size: number = 25,
-    sort: string = 'name,asc'
-  ): Promise<User[]> {
+  getUsers(page = 0, size = 25, sort = "name,asc"): Promise<User[]> {
     return this.http
       .get<User[]>(`${Config.apiURL}/api/manager/ownerUsers`, {
         params: {
@@ -62,14 +61,14 @@ export class UserService {
           sort,
         },
       })
-      .pipe(map((getUsersRequest) => getUsersRequest['content']))
+      .pipe(map((getUsersRequest) => getUsersRequest["content"]))
       .toPromise();
   }
 
   getUser(username: string): Promise<User> {
     return this.http
       .get<User>(`${Config.apiURL}/api/login/user/${username}`)
-      .pipe(map((user) => user['data']))
+      .pipe(map((user) => user["data"]))
       .toPromise();
   }
 
@@ -77,7 +76,7 @@ export class UserService {
     if (!this._currentUser) {
       this._currentUser = this.http
         .get<User>(`${Config.apiURL}/api/manager/user`)
-        .pipe(map((user) => user['data']))
+        .pipe(map((user) => user["data"]))
         .toPromise();
     }
     return this._currentUser;
@@ -85,6 +84,6 @@ export class UserService {
 
   resetUserPassword(emailAddress: string): Promise<any> {
     console.log(emailAddress);
-    return this.http.post('url', emailAddress).toPromise();
+    return this.http.post("url", emailAddress).toPromise();
   }
 }

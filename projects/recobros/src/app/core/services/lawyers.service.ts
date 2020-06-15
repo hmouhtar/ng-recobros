@@ -11,11 +11,7 @@ export class LawyersService {
   constructor(private http: HttpClient) {}
 
   createLawyer(data) {
-    return this.http
-      .post(`${Config.apiURL}/api/lawyer`, data, {
-        responseType: 'text',
-      })
-      .toPromise();
+    return this.http.post(`${Config.apiURL}/api/lawyer`, data).toPromise();
   }
 
   getLawyers(): Promise<Lawyer[]> {
@@ -23,19 +19,11 @@ export class LawyersService {
   }
 
   deleteLawyer(id) {
-    return this.http
-      .delete(`${Config.apiURL}/api/lawyer/${id}`, {
-        responseType: 'text',
-      })
-      .toPromise();
+    return this.http.delete(`${Config.apiURL}/api/lawyer/${id}`).toPromise();
   }
 
   editLawyer(id: number, data) {
-    return this.http
-      .put(`${Config.apiURL}/api/lawyer/${id}`, data, {
-        responseType: 'text',
-      })
-      .toPromise();
+    return this.http.put(`${Config.apiURL}/api/lawyer/${id}`, data).toPromise();
   }
 
   getLawyerFields(context: 'new' | 'edit', lawyer?: Lawyer): Promise<Field[]> {

@@ -5,19 +5,23 @@
   #editUserForm="ngForm"
   (ngSubmit)="editUser(editUserForm)"
 >
-  <fieldset [disabled]="loadingAction">
+  <div fxLayout="row wrap" fxLayoutGap="1%">
     <ng-container *ngFor="let field of userFieldsO | async">
-      <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
+      <alvea-dynamic-field
+        fxFlex="0 0 30%"
+        [field]="field"
+      ></alvea-dynamic-field>
     </ng-container>
-    <br />
-    <button
-      [disabled]="!editUserForm.form.valid || loadingAction"
-      mat-raised-button
-      color="primary"
-    >
-      Editar usuario
-      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-      </mat-spinner>
-    </button>
-  </fieldset>
+  </div>
+
+  <br />
+  <button
+    [disabled]="!editUserForm.form.valid || loadingAction"
+    mat-raised-button
+    color="primary"
+  >
+    Editar usuario
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+    </mat-spinner>
+  </button>
 </form>

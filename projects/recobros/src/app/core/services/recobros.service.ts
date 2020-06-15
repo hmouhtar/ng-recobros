@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Config } from 'projects/recobros/src/constants';
-import { Field } from '../../shared/models/field';
-import { Recobro } from '../../shared/models/recobro';
-import { map } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Config } from "projects/recobros/src/constants";
+import { Field } from "../../shared/models/field";
+import { Recobro } from "../../shared/models/recobro";
+import { map } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class RecobrosService {
   constructor(private http: HttpClient) {}
@@ -15,7 +15,7 @@ export class RecobrosService {
   getAllRecobros(
     page: number = 0,
     size: number = 25,
-    sort: string = 'id,asc'
+    sort: string = "id,asc"
   ): Promise<Recobro[]> {
     return this.http
       .get<Recobro[]>(`${Config.apiURL}/api/manager/recoveries`, {
@@ -25,7 +25,7 @@ export class RecobrosService {
           sort,
         },
       })
-      .pipe(map((getUsersRequest) => getUsersRequest['data']['content']))
+      .pipe(map((getUsersRequest) => getUsersRequest["data"]["content"]))
       .toPromise();
   }
 
@@ -34,12 +34,12 @@ export class RecobrosService {
       .get<Recobro>(
         `${Config.apiURL}/api/manager/recovery/info/${sinisterNumber}/${codSinister}`
       )
-      .pipe(map((recobro) => recobro['data']))
+      .pipe(map((recobro) => recobro["data"]))
       .toPromise();
   }
 
   getRecobrosFields(
-    context: 'new' | 'edit',
+    context: "new" | "edit",
     recobro?: Recobro
   ): Promise<Field[]> {
     return Field.processField.call(
@@ -56,7 +56,7 @@ export class RecobrosService {
     if (!this._autoComplete) {
       this._autoComplete = this.http
         .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
-        .pipe(map((data) => data['data']))
+        .pipe(map((data) => data["data"]))
         .toPromise();
     }
 
@@ -65,11 +65,13 @@ export class RecobrosService {
 
   createRecobro(data) {
     return this.http
-      .post(`${Config.apiURL}/api/manager/recovery`, data, {
-        responseType: 'text',
-      })
+      .post(`${Config.apiURL}/api/manager/recovery`, data)
       .toPromise();
   }
 
-  editRecobro() {}
+  editRecobro(data) {
+    return this.http
+      .put(`${Config.apiURL}/api/manager/recovery/edit`, data)
+      .toPromise();
+  }
 }

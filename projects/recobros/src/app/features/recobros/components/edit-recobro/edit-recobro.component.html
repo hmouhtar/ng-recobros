@@ -1,31 +1,62 @@
-<h1>Datos del recobro</h1>
 <mat-tab-group>
-  <mat-tab label="First">
+  <mat-tab label="Datos del Recobro">
+    <br />
     <form
       ngNativeValidate
       #editRecobroForm="ngForm"
       (ngSubmit)="editRecobro(editRecobroForm)"
     >
-      <fieldset [disabled]="loadingAction">
+      <div fxLayout="row wrap" fxLayoutGap="1%">
         <ng-container *ngFor="let field of editRecobroFields">
           <alvea-dynamic-field
+            fxFlex="0 0 30%"
             *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
             [field]="field"
           ></alvea-dynamic-field>
         </ng-container>
-        <br />
-        <button
-          [disabled]="!editRecobroForm.form.valid || loadingAction"
-          mat-raised-button
-          color="primary"
-        >
-          Editar usuario
-          <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-          </mat-spinner>
-        </button>
-      </fieldset>
+      </div>
+
+      <br />
+      <button
+        [disabled]="!editRecobroForm.form.valid || loadingAction"
+        mat-raised-button
+        color="primary"
+      >
+        Editar recobro
+        <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+        </mat-spinner>
+      </button>
     </form>
   </mat-tab>
-  <mat-tab label="Second"> </mat-tab>
-  <mat-tab label="Third"> Content 3 </mat-tab>
+  <mat-tab label="Estado del Recobro">
+    <br />
+    <form
+      ngNativeValidate
+      #editRecobroForm="ngForm"
+      (ngSubmit)="editRecobro(editRecobroForm)"
+    >
+      <div fxLayout="row wrap" fxLayoutGap="1%">
+        <ng-container *ngFor="let field of editStatusFields">
+          <alvea-dynamic-field
+            fxFlex="0 0 30%"
+            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
+            [field]="field"
+          ></alvea-dynamic-field>
+        </ng-container>
+      </div>
+
+      <br />
+      <button
+        [disabled]="!editRecobroForm.form.valid || loadingAction"
+        mat-raised-button
+        color="primary"
+      >
+        Editar recobro
+        <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+        </mat-spinner>
+      </button>
+    </form>
+  </mat-tab>
+  <mat-tab label="Situación Judicial"> Content 3 </mat-tab>
+  <mat-tab label="Cierre del Recobro / Minutas"> Content 3 </mat-tab>
 </mat-tab-group>

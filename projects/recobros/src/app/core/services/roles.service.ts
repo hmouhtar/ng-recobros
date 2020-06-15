@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Config } from 'projects/recobros/src/constants';
-import { UserService } from './user.service';
-import * as _ from 'lodash';
-import { Role } from '../../shared/models/role';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { map } from "rxjs/operators";
+import { Config } from "projects/recobros/src/constants";
+import { UserService } from "./user.service";
+import * as _ from "lodash";
+import { Role } from "../../shared/models/role";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class RolesService {
   private _roles: any;
@@ -21,7 +21,7 @@ export class RolesService {
         .get(`${Config.apiURL}/api/capabilities/`)
         .pipe(
           map((roles: Array<any>) => {
-            return roles['data'].map((role) => {
+            return roles["data"].map((role) => {
               role.capabilities = role.capabilities.reduce(
                 (a, b) => a.concat([b.name]),
                 []
@@ -59,7 +59,6 @@ export class RolesService {
       this.getAllRoles(),
     ]).then((res) => {
       let [currentUser, allRoles] = res;
-      console.log(allRoles);
       // Find current user's role object to get a list of all the capabilities belonging to that role.
       let currentUserRolObj = allRoles.find(
         (role) => role.rolName === currentUser.rol

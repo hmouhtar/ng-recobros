@@ -1,41 +1,19 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
-import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
-import { Field } from 'projects/recobros/src/app/shared/models/field';
-import { NgForm } from '@angular/forms';
-import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
-import { groupBy } from 'lodash';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { RecobrosService } from "projects/recobros/src/app/core/services/recobros.service";
+import { Field } from "projects/recobros/src/app/shared/models/field";
+import { NgForm } from "@angular/forms";
+import { AlertService } from "projects/recobros/src/app/core/services/alert.service";
 @Component({
-  selector: 'alvea-new-recobro',
-  templateUrl: './new-recobro.component.html',
-  styleUrls: ['./new-recobro.component.scss'],
+  selector: "alvea-new-recobro",
+  templateUrl: "./new-recobro.component.html",
+  styleUrls: ["./new-recobro.component.scss"],
 })
 export class NewRecobroComponent implements OnInit {
   newRecobroFields: Field[] = [];
   roles: Promise<string[]>;
-  loadingAction: boolean = false;
+  loadingAction = false;
   incidentTypologies: any[];
-  @ViewChild('newRecobroForm') newRecobroForm: NgForm;
-  @HostListener('change', ['$event']) async loadRoleFields(event) {
-    switch (event.target.getAttribute('ng-reflect-name')) {
-      case 'branch':
-        this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-          let incidentTypologyField = this.newRecobroFields.find(
-            (field) => field.name === 'incidentTypology'
-          );
-          if (incidentTypologyField) {
-            incidentTypologyField.options = groupBy(
-              autoComplete['incidentTypologySelect'],
-              'branch'
-            )[event.target.value].map((element) => {
-              return { label: element.nature, value: element.id };
-            });
-          }
-        });
-        break;
-      default:
-        break;
-    }
-  }
+  @ViewChild("newRecobroForm") newRecobroForm: NgForm;
 
   constructor(
     private recobrosService: RecobrosService,
@@ -43,23 +21,20 @@ export class NewRecobroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
+    this.recobrosService.getRecobrosFields.call(this, "new").then((fields) => {
       this.newRecobroFields = fields;
     });
   }
 
-  createNewRecobro(form: NgForm) {
+  createNewRecobro(form: NgForm): void {
     this.loadingAction = true;
     this.recobrosService
       .createRecobro(form.value)
-      .then((res) => {
-        this.alertService.success('Yay!');
+      .then(() => {
+        this.alertService.success("Yay!");
         //this.router.navigate(['/users'], {});
       })
-      .catch((err) => {
-        console.log(err);
-        this.alertService.error(`Oops. ${err.message}`);
-      })
+      .catch(console.error)
       .finally(() => {
         this.loadingAction = false;
       });

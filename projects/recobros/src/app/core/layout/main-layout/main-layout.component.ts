@@ -1,20 +1,18 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AlertService } from '../../services/alert.service';
-import { AuthenticationService } from '../../services/authentication.service';
-import { MatIconRegistry } from '@angular/material/icon';
-import { MatSidenav } from '@angular/material/sidenav';
-import { SidenavService } from '../../services/sidenav.service';
-import { UserService } from '../../services/user.service';
+import { Component, OnInit } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { AlertService } from "../../services/alert.service";
+import { AuthenticationService } from "../../services/authentication.service";
+import { SidenavService } from "../../services/sidenav.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
-  selector: 'alvea-main-layout',
-  templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.scss'],
+  selector: "alvea-main-layout",
+  templateUrl: "./main-layout.component.html",
+  styleUrls: ["./main-layout.component.scss"],
 })
 export class MainLayoutComponent implements OnInit {
   public isUserLoggedIn: boolean;
-  public sidenavLinks: object;
+  public sidenavLinks: any;
   public currentUser;
   public objectValues = Object.values;
   public objectKeys = Object.keys;
@@ -41,14 +39,14 @@ export class MainLayoutComponent implements OnInit {
 
     this.alertService.getAlert().subscribe((message) => {
       message &&
-        this._snackBar.open(message.text, 'close', {
+        this._snackBar.open(message.text, "close", {
           duration: 2500,
           panelClass: `snackbar-${message.type}`,
         });
     });
   }
 
-  logout() {
-    if (confirm('Deseas cerrar sesión?')) this.authenticationService.logout();
+  logout(): void {
+    if (confirm("Deseas cerrar sesión?")) this.authenticationService.logout();
   }
 }
