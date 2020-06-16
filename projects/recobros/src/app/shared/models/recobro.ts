@@ -129,25 +129,25 @@ export class Recobro {
         required: true,
         order: 7,
       },
-      {
-        type: "select",
-        label: "Ramo",
-        name: "branch",
-        options: function () {
-          return (this["recobrosService"] as RecobrosService)
-            .getRecobroAutoComplete()
-            .then((autoComplete) => {
-              return Object.keys(
-                groupBy(autoComplete["incidentTypologySelect"], "branch")
-              ).map((branchName) => {
-                return { label: branchName, value: branchName };
-              });
-            });
-        },
-        required: true,
-        context: "new",
-        order: 5,
-      },
+      // {
+      //   type: "select",
+      //   label: "Ramo",
+      //   name: "branch",
+      //   options: function () {
+      //     return (this["recobrosService"] as RecobrosService)
+      //       .getRecobroAutoComplete()
+      //       .then((autoComplete) => {
+      //         return Object.keys(
+      //           groupBy(autoComplete["incidentTypologySelect"], "branch")
+      //         ).map((branchName) => {
+      //           return { label: branchName, value: branchName };
+      //         });
+      //       });
+      //   },
+      //   required: true,
+      //   context: "new",
+      //   order: 5,
+      // },
       {
         type: "select",
         label: "Ramo",
@@ -163,7 +163,6 @@ export class Recobro {
                 ).branch;
               });
           }
-          return Promise.resolve("");
         },
         options: function () {
           return (this["recobrosService"] as RecobrosService)
@@ -184,19 +183,10 @@ export class Recobro {
         label: "Naturaleza",
         name: "incidentTypology",
         options: [],
-        context: "new",
         required: true,
         order: 6,
       },
-      {
-        type: "select",
-        label: "Naturaleza",
-        name: "incidentTypology",
-        options: [],
-        context: "edit",
-        required: true,
-        order: 6,
-      },
+
       {
         type: "select",
         label: "En Nombre De",
@@ -252,7 +242,7 @@ export class Recobro {
         },
       },
       {
-        type: "text",
+        type: "select",
         label: "Administrador Recobrador",
         name: "employer",
         context: "edit",
@@ -267,6 +257,13 @@ export class Recobro {
         type: "date",
         label: "Fecha Nueva Prescripción",
         name: "newPrescriptionDate",
+        displayCondition: function () {
+          const prescriptionDiscontinued = (arguments[0].form as NgForm)
+            .controls["prescriptionDiscontinued"];
+          return (
+            prescriptionDiscontinued && prescriptionDiscontinued.value == true
+          );
+        },
       },
       {
         type: "text",
@@ -324,6 +321,7 @@ export class Recobro {
         label: "Tipo Parcial",
         name: "partialType",
         context: "edit",
+        section: "recoveryClose",
       },
       {
         type: "text",

@@ -19,7 +19,8 @@
         [required]="field.required"
         matNativeControl
       >
-        <option *ngFor="let option of field.options" value="{{ option.value }}">
+        <option value="" disabled></option>
+        <option *ngFor="let option of field.options" [ngValue]="option.value">
           {{ option.label }}
         </option>
       </select>

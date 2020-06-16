@@ -6,7 +6,6 @@ import { NgForm } from "@angular/forms";
 import { Field } from "projects/recobros/src/app/shared/models/field";
 import { groupBy } from "lodash";
 import { Subscription } from "rxjs";
-import { fileURLToPath } from "url";
 
 @Component({
   selector: "alvea-edit-recobro",
@@ -15,6 +14,7 @@ import { fileURLToPath } from "url";
 })
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
+  allFields = {};
   editRecobroFields: Field[] = [];
   editStatusFields: Field[] = [];
   editSituationFields: Field[] = [];
@@ -37,9 +37,13 @@ export class EditRecobroComponent implements OnInit {
       this.recobrosService.getRecobrosFields
         .call(this, "edit", this.recobro)
         .then((fields) => {
-          this.editRecobroFields = fields.filter((field) => !field.section);
-          this.editStatusFields = fields.filter(
-            (field) => field.section === "recoveryStatus"
+          this.allFields = groupBy(
+            fields.map(
+              (field) => (
+                (field.section = field.section || "recoveryInfo"), field
+              )
+            ),
+            "section"
           );
         });
     })();
@@ -50,7 +54,7 @@ export class EditRecobroComponent implements OnInit {
       (formValues) => {
         if (formValues.branch !== this.lastFormValues["branch"]) {
           this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-            const incidentTypologyField = this.editRecobroFields.find(
+            const incidentTypologyField = this.allFields["recoveryInfo"].find(
               (field) => field.name === "incidentTypology"
             );
             if (incidentTypologyField) {
@@ -67,7 +71,9 @@ export class EditRecobroComponent implements OnInit {
                     option.value == String(this.recobro.incidentTypology)
                 )
               ) {
-                incidentTypologyField.value = "";
+                this.editRecobroForm.form.controls["incidentTypology"].setValue(
+                  ""
+                );
               }
             }
           });
