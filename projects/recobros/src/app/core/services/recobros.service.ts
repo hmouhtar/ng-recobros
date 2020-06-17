@@ -12,11 +12,7 @@ export class RecobrosService {
   constructor(private http: HttpClient) {}
   private _autoComplete;
 
-  getAllRecobros(
-    page: number = 0,
-    size: number = 25,
-    sort: string = "id,asc"
-  ): Promise<Recobro[]> {
+  getAllRecobros(page: number = 0, size: number = 25, sort: string = "id,asc"): Promise<Recobro[]> {
     return this.http
       .get<Recobro[]>(`${Config.apiURL}/api/manager/recoveries`, {
         params: {
@@ -29,19 +25,14 @@ export class RecobrosService {
       .toPromise();
   }
 
-  getRecobro(sinisterNumber: string, codSinister: string): Promise<Recobro> {
+  getRecobro(id): Promise<Recobro> {
     return this.http
-      .get<Recobro>(
-        `${Config.apiURL}/api/manager/recovery/info/${sinisterNumber}/${codSinister}`
-      )
+      .get<Recobro>(`${Config.apiURL}/api/manager/recovery/info/${id}`)
       .pipe(map((recobro) => recobro["data"]))
       .toPromise();
   }
 
-  getRecobrosFields(
-    context: "new" | "edit",
-    recobro?: Recobro
-  ): Promise<Field[]> {
+  getRecobrosFields(context: "new" | "edit", recobro?: Recobro): Promise<Field[]> {
     return Field.processField.call(
       this,
       Recobro.getRecobroFields().filter(
@@ -64,14 +55,10 @@ export class RecobrosService {
   }
 
   createRecobro(data) {
-    return this.http
-      .post(`${Config.apiURL}/api/manager/recovery`, data)
-      .toPromise();
+    return this.http.post(`${Config.apiURL}/api/manager/recovery`, data).toPromise();
   }
 
   editRecobro(data) {
-    return this.http
-      .put(`${Config.apiURL}/api/manager/recovery/edit`, data)
-      .toPromise();
+    return this.http.put(`${Config.apiURL}/api/manager/recovery/edit`, data).toPromise();
   }
 }

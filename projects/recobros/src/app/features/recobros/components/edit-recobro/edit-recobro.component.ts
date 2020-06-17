@@ -23,7 +23,7 @@ export class EditRecobroComponent implements OnInit {
   editSituationFields: Field[] = [];
   formChangesSubscription: Subscription;
   lastFormValues = {};
-  recobro;
+  recobro: Recobro;
   constructor(
     private recobrosService: RecobrosService,
     private route: ActivatedRoute,
@@ -34,11 +34,9 @@ export class EditRecobroComponent implements OnInit {
   @ViewChild("editRecobroForm") editRecobroForm: NgForm;
   ngOnInit(): void {
     (async () => {
-      // this.recobro = await this.recobrosService.getRecobro(
-      //   this.route.snapshot.paramMap.get("sinisterNumber") || "",
-      //   this.route.snapshot.paramMap.get("codSinister") || ""
-      // ).catc;
-      this.recobro = {};
+      this.recobro = await this.recobrosService.getRecobro(
+        this.route.snapshot.paramMap.get("id") || ""
+      );
       this.recobrosService.getRecobrosFields.call(this, "edit", this.recobro).then((fields) => {
         this.allFields = groupBy(
           fields.map((field) => ((field.section = field.section || "recoveryInfo"), field)),
