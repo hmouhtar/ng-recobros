@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [DynamicFieldComponent],
@@ -55,6 +56,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     FormsModule,
     ReactiveFormsModule,
     MatTabsModule,
+    MatSlideToggleModule,
     FlexLayoutModule,
   ],
   exports: [
@@ -85,6 +87,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     ReactiveFormsModule,
     MatTabsModule,
     DynamicFieldComponent,
+    MatSlideToggleModule,
     FlexLayoutModule,
   ],
 })

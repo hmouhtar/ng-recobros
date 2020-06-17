@@ -1,6 +1,7 @@
 <div>
   <ng-container [ngSwitch]="field.type">
-    <mat-form-field *ngSwitchCase="'textarea'" appearance="fill">
+    <label style="display: block;">{{ field.label }}</label>
+    <mat-form-field [floatLabel]="'always'" *ngSwitchCase="'textarea'" appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
       <textarea
         name="{{ field.name }}"
@@ -11,7 +12,7 @@
       ></textarea>
     </mat-form-field>
     <!--  -->
-    <mat-form-field *ngSwitchCase="'select'" appearance="fill">
+    <mat-form-field [floatLabel]="'always'" *ngSwitchCase="'select'" appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
       <select
         name="{{ field.name }}"
@@ -27,17 +28,12 @@
     </mat-form-field>
     <!--  -->
     <ng-container *ngSwitchCase="'checkbox'">
-      <mat-checkbox
-        name="{{ field.name }}"
-        [ngModel]="field.value || false"
-        value="true"
-      >
-        {{ field.label }}
+      <mat-checkbox name="{{ field.name }}" [ngModel]="field.value || false" value="true">
       </mat-checkbox>
     </ng-container>
 
     <!--  -->
-    <mat-form-field *ngSwitchDefault appearance="fill">
+    <mat-form-field [floatLabel]="'always'" *ngSwitchDefault appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
       <input
         name="{{ field.name }}"

@@ -22,10 +22,7 @@ export class RolesService {
         .pipe(
           map((roles: Array<any>) => {
             return roles["data"].map((role) => {
-              role.capabilities = role.capabilities.reduce(
-                (a, b) => a.concat([b.name]),
-                []
-              );
+              role.capabilities = role.capabilities.reduce((a, b) => a.concat([b.name]), []);
               return role;
             });
             return roles;
@@ -54,22 +51,13 @@ export class RolesService {
     }
 
     // Get the current user and all the roles.
-    return Promise.all([
-      this.userService.getCurrentUser(),
-      this.getAllRoles(),
-    ]).then((res) => {
+    return Promise.all([this.userService.getCurrentUser(), this.getAllRoles()]).then((res) => {
       let [currentUser, allRoles] = res;
       // Find current user's role object to get a list of all the capabilities belonging to that role.
-      let currentUserRolObj = allRoles.find(
-        (role) => role.rolName === currentUser.rol
-      );
+      let currentUserRolObj = allRoles.find((role) => role.rolName === currentUser.rol);
 
       // Check if the object exists and has the referenced capability.
-      return (
-        (currentUserRolObj &&
-          currentUserRolObj.capabilities.includes(capability)) ||
-        false
-      );
+      return (currentUserRolObj && currentUserRolObj.capabilities.includes(capability)) || false;
     });
   }
 }

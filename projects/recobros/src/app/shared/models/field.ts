@@ -37,11 +37,7 @@ export class Field {
   section?: string;
 
   // If field value or options is a function, call it.
-  static processField(
-    fields: Field[],
-    context: "new" | "edit",
-    subject?
-  ): Promise<Field[]> {
+  static processField(fields: Field[], context: "new" | "edit", subject?): Promise<Field[]> {
     return Promise.all(
       fields.map((field) =>
         Promise.all(
@@ -61,11 +57,7 @@ export class Field {
     )
       .then(() => {
         return fields.map((field) => {
-          if (
-            subject !== undefined &&
-            field.value === undefined &&
-            "edit" === context
-          ) {
+          if (subject !== undefined && field.value === undefined && "edit" === context) {
             field.value = field.valuePath
               ? subject[field.valuePath][field.name]
               : subject[field.name];

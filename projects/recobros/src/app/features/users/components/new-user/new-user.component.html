@@ -1,26 +1,14 @@
 <h1>Nuevo usuario</h1>
-<form
-  ngNativeValidate
-  #newUserForm="ngForm"
-  (ngSubmit)="createNewUser(newUserForm)"
->
-  <div fxLayout="row wrap" fxLayoutGap="1%">
+<form ngNativeValidate #newUserForm="ngForm" (ngSubmit)="createNewUser(newUserForm)">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between">
     <ng-container *ngFor="let field of userFieldsO | async">
-      <alvea-dynamic-field
-        fxFlex="0 0 30%"
-        [field]="field"
-      ></alvea-dynamic-field>
+      <alvea-dynamic-field fxFlex="0 0 48%" [field]="field"></alvea-dynamic-field>
     </ng-container>
   </div>
 
   <br />
-  <button
-    [disabled]="!newUserForm.form.valid || loadingAction"
-    mat-raised-button
-    color="primary"
-  >
+  <button [disabled]="!newUserForm.form.valid || loadingAction" mat-raised-button color="primary">
     Crear usuario
-    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-    </mat-spinner>
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
   </button>
 </form>

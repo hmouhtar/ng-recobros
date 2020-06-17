@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, ViewChild } from "@angular/core";
 import { UserService } from "projects/recobros/src/app/core/services/user.service";
 import { RolesService } from "projects/recobros/src/app/core/services/roles.service";
 import { Field } from "projects/recobros/src/app/shared/models/field";
@@ -17,17 +17,22 @@ export class NewUserComponent implements OnInit {
   _userFields: Field[];
   userFields$: Subject<Field[]>;
   userFieldsO: Observable<Field[]>;
+  formChangesSubscription;
+  lastFormValues = {};
   loadingAction = false;
+  @ViewChild("newUserForm") newUserForm: NgForm;
 
-  @HostListener("change", ["$event"]) async loadRoleFields(event) {
-    if ("rol" === event.target.getAttribute("ng-reflect-name")) {
-      let role = event.target.value;
-      let roleFields = await this.userService.getRoleFields(role, "new");
-      let fields = this._userFields.slice();
-      fields.splice(-1, 0, ...roleFields);
-      this.userFields$.next(fields);
-    }
-  }
+  // @HostListener("change", ["$event"]) async loadRoleFields(event) {
+  //   if ("rol" === event.target.getAttribute("ng-reflect-name")) {
+  //     console.log("Changed");
+  //     let role = event.target.value;
+  //     let roleFields = await this.userService.getRoleFields(role, "new");
+  //     console.log(role);
+  //     let fields = this._userFields.slice();
+  //     fields.splice(-1, 0, ...roleFields);
+  //     this.userFields$.next(fields);
+  //   }
+  // }
 
   constructor(
     private userService: UserService,
@@ -42,10 +47,28 @@ export class NewUserComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUserFields.call(this, "new").then((fields) => {
       this._userFields = fields;
+      console.log(this._userFields);
       this.userFields$.next(this._userFields);
     });
   }
 
+  ngAfterViewInit(): void {
+    this.formChangesSubscription = this.newUserForm.form.valueChanges.subscribe((formValues) => {
+      if (formValues.rol !== this.lastFormValues["rol"]) {
+        console.log("Value is:", formValues.rol);
+        this.userService.getRoleFields(formValues.rol, "new").then((fields) => {
+          console.log("Fields are:", fields);
+          this.userFields$.next(
+            this._userFields.concat(fields).sort((a, b) => {
+              return (a.order || 999) - (b.order || 999);
+            })
+          );
+        });
+      }
+
+      this.lastFormValues = formValues;
+    });
+  }
   createNewUser(form: NgForm): void {
     this.loadingAction = true;
     this.userService

@@ -82,25 +82,24 @@ export class User {
         required: true,
 
         options: function () {
-          return (this["rolesService"] as RolesService)
-            .getEditableRoles()
-            .then((editableRoles) =>
-              editableRoles.map((role) => {
-                let label = "";
-                switch (role) {
-                  case "COMPANY_MANAGER":
-                    label = "Administrador de Compañía";
-                    break;
-                  case "RECOVERY_ADMINISTRATOR":
-                    label = "Administrador Recobrador";
-                    break;
-                  case "RECOVERY_EMPLOYEE":
-                    label = "Empleado Recobrador";
-                    break;
-                }
-                return { label: label, value: role };
-              })
-            );
+          return (this["rolesService"] as RolesService).getEditableRoles().then((editableRoles) =>
+            editableRoles.map((role) => {
+              let label = "";
+              switch (role) {
+                case "COMPANY_MANAGER":
+                  label = "Administrador de Compañía";
+                  break;
+                case "RECOVERY_ADMINISTRATOR":
+                  label = "Administrador Recobrador";
+                  break;
+                case "RECOVERY_EMPLOYEE":
+                  label = "Empleado Recobrador";
+                  break;
+              }
+
+              return { label: label, value: role };
+            })
+          );
         },
       },
 
@@ -110,6 +109,7 @@ export class User {
         name: "password",
         required: true,
         context: "new",
+        order: 1000,
       },
     ];
   }

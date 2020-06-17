@@ -6,6 +6,8 @@ import { NgForm } from "@angular/forms";
 import { Field } from "projects/recobros/src/app/shared/models/field";
 import { groupBy } from "lodash";
 import { Subscription } from "rxjs";
+import { LawyersService } from "projects/recobros/src/app/core/services/lawyers.service";
+import { UserService } from "projects/recobros/src/app/core/services/user.service";
 
 @Component({
   selector: "alvea-edit-recobro",
@@ -15,37 +17,34 @@ import { Subscription } from "rxjs";
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
   allFields = {};
+  sortedFieldLabels = ["recoveryInfo", "recoveryStatus", "recoverySituation", "recoveryClose"];
   editRecobroFields: Field[] = [];
   editStatusFields: Field[] = [];
   editSituationFields: Field[] = [];
-
   formChangesSubscription: Subscription;
   lastFormValues = {};
-  recobro: Recobro;
+  recobro;
   constructor(
     private recobrosService: RecobrosService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private lawyersService: LawyersService,
+    private userService: UserService
   ) {}
 
   @ViewChild("editRecobroForm") editRecobroForm: NgForm;
   ngOnInit(): void {
     (async () => {
-      this.recobro = await this.recobrosService.getRecobro(
-        this.route.snapshot.paramMap.get("sinisterNumber") || "",
-        this.route.snapshot.paramMap.get("codSinister") || ""
-      );
-      this.recobrosService.getRecobrosFields
-        .call(this, "edit", this.recobro)
-        .then((fields) => {
-          this.allFields = groupBy(
-            fields.map(
-              (field) => (
-                (field.section = field.section || "recoveryInfo"), field
-              )
-            ),
-            "section"
-          );
-        });
+      // this.recobro = await this.recobrosService.getRecobro(
+      //   this.route.snapshot.paramMap.get("sinisterNumber") || "",
+      //   this.route.snapshot.paramMap.get("codSinister") || ""
+      // ).catc;
+      this.recobro = {};
+      this.recobrosService.getRecobrosFields.call(this, "edit", this.recobro).then((fields) => {
+        this.allFields = groupBy(
+          fields.map((field) => ((field.section = field.section || "recoveryInfo"), field)),
+          "section"
+        );
+      });
     })();
   }
 
@@ -67,13 +66,10 @@ export class EditRecobroComponent implements OnInit {
 
               if (
                 !incidentTypologyField.options.find(
-                  (option) =>
-                    option.value == String(this.recobro.incidentTypology)
+                  (option) => option.value == String(this.recobro.incidentTypology)
                 )
               ) {
-                this.editRecobroForm.form.controls["incidentTypology"].setValue(
-                  ""
-                );
+                this.editRecobroForm.form.controls["incidentTypology"].setValue("");
               }
             }
           });

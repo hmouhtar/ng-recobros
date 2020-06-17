@@ -1,27 +1,15 @@
 <h1>Editar usuario</h1>
 
-<form
-  ngNativeValidate
-  #editUserForm="ngForm"
-  (ngSubmit)="editUser(editUserForm)"
->
-  <div fxLayout="row wrap" fxLayoutGap="1%">
+<form ngNativeValidate #editUserForm="ngForm" (ngSubmit)="editUser(editUserForm)">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between">
     <ng-container *ngFor="let field of userFieldsO | async">
-      <alvea-dynamic-field
-        fxFlex="0 0 30%"
-        [field]="field"
-      ></alvea-dynamic-field>
+      <alvea-dynamic-field fxFlex="0 0 48%" [field]="field"></alvea-dynamic-field>
     </ng-container>
   </div>
 
   <br />
-  <button
-    [disabled]="!editUserForm.form.valid || loadingAction"
-    mat-raised-button
-    color="primary"
-  >
+  <button [disabled]="!editUserForm.form.valid || loadingAction" mat-raised-button color="primary">
     Editar usuario
-    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-    </mat-spinner>
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
   </button>
 </form>

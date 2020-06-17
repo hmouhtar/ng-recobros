@@ -15,22 +15,15 @@ export class UserService {
   }
 
   editUser(userID: number, data): Promise<any> {
-    return this.http
-      .put(`${Config.apiURL}/api/manager/user/${userID}`, data)
-      .toPromise();
+    return this.http.put(`${Config.apiURL}/api/manager/user/${userID}`, data).toPromise();
   }
 
   deleteUser(username: string): Promise<any> {
-    return this.http
-      .delete(`${Config.apiURL}/api/login/user?username=${username}`)
-      .toPromise();
+    return this.http.delete(`${Config.apiURL}/api/login/user?username=${username}`).toPromise();
   }
 
-  getRoleFields(
-    role: string,
-    context: "new" | "edit",
-    user?: User
-  ): Promise<Field[]> {
+  getRoleFields(role: string, context: "new" | "edit", user?: User): Promise<Field[]> {
+    console.log(role);
     return Field.processField.call(
       this,
       User.getRoleFields(role).filter(

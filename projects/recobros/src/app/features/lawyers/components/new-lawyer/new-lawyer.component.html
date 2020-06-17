@@ -1,20 +1,14 @@
 <h1>Nuevo abogado</h1>
-<form
-  ngNativeValidate
-  #newLawyerForm="ngForm"
-  (ngSubmit)="createLawyer(newLawyerForm)"
->
-  <ng-container *ngFor="let field of lawyerFieldsO | async">
-    <alvea-dynamic-field [field]="field"></alvea-dynamic-field>
-  </ng-container>
+<form ngNativeValidate #newLawyerForm="ngForm" (ngSubmit)="createLawyer(newLawyerForm)">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between">
+    <ng-container *ngFor="let field of lawyerFieldsO | async">
+      <alvea-dynamic-field fxFlex="0 0 48%" [field]="field"></alvea-dynamic-field>
+    </ng-container>
+  </div>
+
   <br />
-  <button
-    [disabled]="!newLawyerForm.form.valid || loadingAction"
-    mat-raised-button
-    color="primary"
-  >
+  <button [disabled]="!newLawyerForm.form.valid || loadingAction" mat-raised-button color="primary">
     Crear abogado
-    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-    </mat-spinner>
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
   </button>
 </form>

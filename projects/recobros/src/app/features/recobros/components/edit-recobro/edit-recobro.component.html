@@ -1,78 +1,28 @@
+<h1>Administrar Recobro</h1>
 {{ editRecobroForm.form.value | json }}
-<form
-  ngNativeValidate
-  #editRecobroForm="ngForm"
-  (ngSubmit)="editRecobro(editRecobroForm)"
->
+<form ngNativeValidate #editRecobroForm="ngForm" (ngSubmit)="editRecobro(editRecobroForm)">
   <mat-tab-group>
-    <mat-tab label="Datos del Recobro">
-      <br />
+    <ng-container *ngFor="let section of sortedFieldLabels">
+      <mat-tab>
+        <ng-template mat-tab-label [ngSwitch]="section">
+          <ng-container *ngSwitchCase="'recoveryInfo'">Datos del Recobro</ng-container>
+          <ng-container *ngSwitchCase="'recoveryStatus'">Estado del Recobro</ng-container>
+          <ng-container *ngSwitchCase="'recoverySituation'">Situación Judicial</ng-container>
+          <ng-container *ngSwitchCase="'recoveryClose'">Cierre del Recobro / Minutas</ng-container>
+        </ng-template>
 
-      <div
-        *ngIf="allFields['recoveryInfo']"
-        fxLayout="row wrap"
-        fxLayoutGap="1%"
-      >
-        <ng-container *ngFor="let field of allFields['recoveryInfo']">
-          <alvea-dynamic-field
-            fxFlex="0 0 30%"
-            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
-            [field]="field"
-          ></alvea-dynamic-field>
-        </ng-container>
-      </div>
-    </mat-tab>
-    <mat-tab label="Estado del Recobro">
-      <br />
-
-      <div
-        *ngIf="allFields['recoveryStatus']"
-        fxLayout="row wrap"
-        fxLayoutGap="1%"
-      >
-        <ng-container *ngFor="let field of allFields['recoveryStatus']">
-          <alvea-dynamic-field
-            fxFlex="0 0 30%"
-            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
-            [field]="field"
-          ></alvea-dynamic-field>
-        </ng-container>
-      </div>
-    </mat-tab>
-    <mat-tab label="Situación Judicial">
-      <br />
-
-      <div
-        *ngIf="allFields['recoverySituation']"
-        fxLayout="row wrap"
-        fxLayoutGap="1%"
-      >
-        <ng-container *ngFor="let field of allFields['recoverySituation']">
-          <alvea-dynamic-field
-            fxFlex="0 0 30%"
-            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
-            [field]="field"
-          ></alvea-dynamic-field>
-        </ng-container>
-      </div>
-    </mat-tab>
-    <mat-tab label="Cierre del Recobro / Minutas">
-      <br />
-
-      <div
-        *ngIf="allFields['recoveryClose']"
-        fxLayout="row wrap"
-        fxLayoutGap="1%"
-      >
-        <ng-container *ngFor="let field of allFields['recoveryClose']">
-          <alvea-dynamic-field
-            fxFlex="0 0 30%"
-            *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
-            [field]="field"
-          ></alvea-dynamic-field>
-        </ng-container>
-      </div>
-    </mat-tab>
+        <br />
+        <div *ngIf="allFields[section]" fxLayout="row wrap" fxLayoutAlign="space-between">
+          <ng-container *ngFor="let field of allFields[section]">
+            <alvea-dynamic-field
+              fxFlex="0 0 48%"
+              *ngIf="field.displayCondition ? field.displayCondition.call(this, editRecobroForm) : true"
+              [field]="field"
+            ></alvea-dynamic-field>
+          </ng-container>
+        </div>
+      </mat-tab>
+    </ng-container>
   </mat-tab-group>
   <button
     [disabled]="!editRecobroForm.form.valid || loadingAction"
@@ -80,7 +30,6 @@
     color="primary"
   >
     Editar recobro
-    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-    </mat-spinner>
+    <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
   </button>
 </form>

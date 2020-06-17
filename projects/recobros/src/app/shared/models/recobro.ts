@@ -3,6 +3,8 @@ import { Company } from "./company";
 import { RecobrosService } from "../../core/services/recobros.service";
 import { groupBy } from "lodash";
 import { NgForm } from "@angular/forms";
+import { LawyersService } from "../../core/services/lawyers.service";
+import { UserService } from "../../core/services/user.service";
 
 export class Recobro {
   amountCondemned: number;
@@ -26,7 +28,6 @@ export class Recobro {
   incidentTypology: number;
   key: { sinisterNumber: string; codSinister: number };
   assuredCashFlow?: number;
-  allowEmptyValue?: false;
   causative?: string;
   companyCashReceipt?: number;
   costAmount?: number;
@@ -50,6 +51,7 @@ export class Recobro {
   resolutionDate?: Date;
   situationManagement: number;
   suppliesFee?: number;
+  recoveryCode?: number;
 
   static getRecobroFields(): Field[] {
     return [
@@ -66,6 +68,55 @@ export class Recobro {
         name: "codSinister",
         required: true,
         order: 2,
+        context: "edit",
+      },
+      {
+        type: "date",
+        label: "Fecha de Resolución",
+        name: "resolutionDate",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "number",
+        label: "Minutas - Suplidos",
+        name: "suppliesFee",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "number",
+        label: "Minutas - Procurador",
+        name: "attorneyFee",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "number",
+        label: "Minutas - Abogado Judicial",
+        name: "lawyerFee",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "number",
+        label: "Minutas - Recobrador Amistoso",
+        name: "recoveryFee",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "number",
+        label: "Cobro asegurado",
+        name: "assuredCashFlow",
+        section: "recoveryClose",
+        context: "edit",
+      },
+      {
+        type: "checkbox",
+        label: "Importe aplazado",
+        name: "deferredAmount",
+        section: "recoveryClose",
         context: "edit",
       },
       // {
@@ -157,10 +208,10 @@ export class Recobro {
             return (this["recobrosService"] as RecobrosService)
               .getRecobroAutoComplete()
               .then((autoComplete) => {
-                return autoComplete["incidentTypologySelect"].find(
-                  (incidentTypology) =>
-                    incidentTypology.id == arguments[0].incidentTypology
-                ).branch;
+                const branchField = autoComplete["incidentTypologySelect"].find(
+                  (incidentTypology) => incidentTypology.id == arguments[0].incidentTypology
+                );
+                return branchField ? branchField.branch : "";
               });
           }
         },
@@ -168,11 +219,11 @@ export class Recobro {
           return (this["recobrosService"] as RecobrosService)
             .getRecobroAutoComplete()
             .then((autoComplete) => {
-              return Object.keys(
-                groupBy(autoComplete["incidentTypologySelect"], "branch")
-              ).map((branchName) => {
-                return { label: branchName, value: branchName };
-              });
+              return Object.keys(groupBy(autoComplete["incidentTypologySelect"], "branch")).map(
+                (branchName) => {
+                  return { label: branchName, value: branchName };
+                }
+              );
             });
         },
         required: true,
@@ -213,9 +264,7 @@ export class Recobro {
         order: 4,
         required: true,
         displayCondition: function () {
-          let inNameOfControl = (arguments[0].form as NgForm).controls[
-            "inNameOf"
-          ];
+          let inNameOfControl = (arguments[0].form as NgForm).controls["inNameOf"];
           if (inNameOfControl) {
             return inNameOfControl.value == "1" || inNameOfControl.value == "3";
           } else {
@@ -230,9 +279,7 @@ export class Recobro {
         order: 4,
         required: true,
         displayCondition: function () {
-          let inNameOfControl = (arguments[0].form as NgForm).controls[
-            "inNameOf"
-          ];
+          let inNameOfControl = (arguments[0].form as NgForm).controls["inNameOf"];
 
           if (inNameOfControl) {
             return inNameOfControl.value == "2" || inNameOfControl.value == "3";
@@ -245,6 +292,18 @@ export class Recobro {
         type: "select",
         label: "Administrador Recobrador",
         name: "employer",
+        options: function () {
+          return (this["userService"] as UserService).getUsers().then((users) =>
+            users
+              .filter((user) => user.rol === "RECOVERY_ADMINISTRATOR")
+              .map((user) => {
+                return {
+                  label: user["fullName"],
+                  value: String(user.id),
+                };
+              })
+          );
+        },
         context: "edit",
       },
 
@@ -258,11 +317,10 @@ export class Recobro {
         label: "Fecha Nueva Prescripción",
         name: "newPrescriptionDate",
         displayCondition: function () {
-          const prescriptionDiscontinued = (arguments[0].form as NgForm)
-            .controls["prescriptionDiscontinued"];
-          return (
-            prescriptionDiscontinued && prescriptionDiscontinued.value == true
-          );
+          const prescriptionDiscontinued = (arguments[0].form as NgForm).controls[
+            "prescriptionDiscontinued"
+          ];
+          return prescriptionDiscontinued && prescriptionDiscontinued.value == true;
         },
       },
       {
@@ -303,49 +361,68 @@ export class Recobro {
         name: "observations",
       },
       {
-        type: "text",
+        type: "select",
         label: "Motivo Cierre",
         name: "motive",
         context: "edit",
+        options: [],
         section: "recoveryClose",
       },
       {
-        type: "text",
+        type: "date",
         label: "Fecha Situación",
         name: "situationDate",
         context: "edit",
         section: "recoveryStatus",
       },
       {
-        type: "text",
+        type: "select",
         label: "Tipo Parcial",
+        options: [],
+        displayCondition: function () {
+          return true;
+        },
         name: "partialType",
         context: "edit",
         section: "recoveryClose",
       },
       {
-        type: "text",
+        type: "select",
         label: "Abogado",
         name: "lawyerName",
         context: "edit",
+        options: function () {
+          return (this["lawyersService"] as LawyersService).getLawyers().then((lawyers) =>
+            lawyers
+              .filter((lawyer) => lawyer.active)
+              .map((lawyer) => {
+                return {
+                  label: [lawyer.name, lawyer.surname1, lawyer.surname2].join(" "),
+                  value: String(lawyer.id),
+                };
+              })
+          );
+        },
         section: "recoverySituation",
       },
       {
-        type: "text",
+        type: "select",
         label: "Resolución Recobro",
         name: "resolution",
+        options: [],
         context: "edit",
         section: "recoveryClose",
       },
       {
-        type: "text",
+        type: "select",
         label: "Situación Judicial",
         name: "judicialSituation",
         context: "edit",
+        options: [],
         section: "recoverySituation",
       },
       {
-        type: "text",
+        type: "date",
         label: "Fecha Fase Judicial",
         name: "judicialDate",
         context: "edit",
@@ -353,9 +430,10 @@ export class Recobro {
       },
 
       {
-        type: "text",
+        type: "select",
         label: "Jurisdicción",
         name: "jurisdiction",
+        options: [],
         context: "edit",
         section: "recoverySituation",
       },

@@ -19,7 +19,7 @@
 
   <ng-container matColumnDef="codSinister">
     <th mat-sort-header mat-header-cell *matHeaderCellDef>N. Encargo</th>
-    <td mat-cell *matCellDef="let recobro">{{ recobro.codSinister }}</td>
+    <td mat-cell *matCellDef="let recobro">{{ recobro.recoveryCode }}</td>
   </ng-container>
 
   <ng-container matColumnDef="initDate">
@@ -69,7 +69,7 @@
     <th mat-sort-header mat-header-cell *matHeaderCellDef>Editar</th>
     <td mat-cell *matCellDef="let recobro">
       <button
-        [routerLink]="['edit', recobro.sinisterNumber, recobro.key.codSinister]"
+        [routerLink]="['edit', recobro.sinisterNumber, recobro.codSinister]"
         mat-icon-button
         color="primary"
       >
