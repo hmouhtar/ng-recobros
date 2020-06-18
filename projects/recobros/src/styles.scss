@@ -10,8 +10,17 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #ededeb;
+}
+.section-title {
+  background-color: #04284e;
+  padding: 30px;
+  color: white;
 }
 
+form {
+  padding: 0 2.5%;
+}
 .snackbar-error {
   background: #ea3a64;
 }

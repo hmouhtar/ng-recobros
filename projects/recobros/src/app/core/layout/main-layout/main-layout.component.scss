@@ -21,13 +21,33 @@ button {
 .mat-drawer-content {
   overflow: visible;
   margin-top: 60px;
-
 }
 
+.mat-sidenav {
+  background-color: #04284e;
+}
+.mat-toolbar.mat-primary {
+  background-color: lighten($color: #04284e, $amount: 20%);
+}
 .mat-drawer-container {
-  background-color: white;
+  background-color: transparent;
+  .container {
+    background-color: white;
+    padding: 0;
+  }
   padding-top: 60px;
   padding-bottom: 60px;
+  .mat-list-item {
+    color: white;
+  }
+  .mat-subheader {
+    color: #3d96f5;
+    font-weight: lighter;
+  }
+  mat-divider {
+    border-top-color: #3d96f5;
+    margin: 20px;
+  }
 }
 
 mat-toolbar p {
