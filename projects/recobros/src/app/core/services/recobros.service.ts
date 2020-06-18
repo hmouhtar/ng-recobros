@@ -58,7 +58,7 @@ export class RecobrosService {
     return this.http.post(`${Config.apiURL}/api/manager/recovery`, data).toPromise();
   }
 
-  editRecobro(data) {
-    return this.http.put(`${Config.apiURL}/api/manager/recovery/edit`, data).toPromise();
+  editRecobro(data, id) {
+    return this.http.put(`${Config.apiURL}/api/manager/recovery/edit/${id}`, data).toPromise();
   }
 }

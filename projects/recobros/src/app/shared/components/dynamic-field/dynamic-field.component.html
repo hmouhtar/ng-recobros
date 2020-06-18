@@ -35,11 +35,13 @@
     <!--  -->
     <mat-form-field [floatLabel]="'always'" *ngSwitchDefault appearance="fill">
       <mat-label>{{ field.label }}</mat-label>
+      <span *ngIf="field.prefix" matPrefix>{{ field.prefix }}</span>
       <input
         name="{{ field.name }}"
         [ngModel]="field.value"
         [required]="field.required"
         [disabled]="field.disabled"
+        [attr.step]="field.type === 'number' ? 'any' : null"
         class="{{ field.type }}"
         type="{{ field.type }}"
         matInput

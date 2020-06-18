@@ -1,4 +1,4 @@
-<h1>Nuevo usuario</h1>
+<h1 class="section-title">Nuevo usuario</h1>
 <form ngNativeValidate #newUserForm="ngForm" (ngSubmit)="createNewUser(newUserForm)">
   <div fxLayout="row wrap" fxLayoutAlign="space-between">
     <ng-container *ngFor="let field of userFieldsO | async">

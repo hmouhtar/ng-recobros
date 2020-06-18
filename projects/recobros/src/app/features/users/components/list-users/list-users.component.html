@@ -1,4 +1,4 @@
-<h1>Lista de Usuarios</h1>
+<h1 class="section-title">Lista de Usuarios</h1>
 
 <button
   [disabled]="loadingAction"
@@ -15,9 +15,7 @@
     <th mat-header-cell *matHeaderCellDef>Perfil</th>
     <td mat-cell *matCellDef="let user" [ngSwitch]="user.rol">
       <span *ngSwitchCase="'COMPANY_MANAGER'"> Administrador de Compañía</span>
-      <span *ngSwitchCase="'RECOVERY_ADMINISTRATOR'">
-        Administrador Recobrador</span
-      >
+      <span *ngSwitchCase="'RECOVERY_ADMINISTRATOR'"> Administrador Recobrador</span>
       <span *ngSwitchCase="'RECOVERY_EMPLOYEE'"> Empleado Recobrador </span>
     </td>
   </ng-container>
@@ -64,11 +62,7 @@
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef>Eliminar</th>
     <td mat-cell *matCellDef="let user">
-      <button
-        (click)="deleteUser(user.username)"
-        mat-icon-button
-        color="primary"
-      >
+      <button (click)="deleteUser(user.username)" mat-icon-button color="primary">
         <mat-icon>delete</mat-icon>
       </button>
     </td>

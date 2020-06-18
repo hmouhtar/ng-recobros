@@ -8,6 +8,8 @@ import { groupBy } from "lodash";
 import { Subscription } from "rxjs";
 import { LawyersService } from "projects/recobros/src/app/core/services/lawyers.service";
 import { UserService } from "projects/recobros/src/app/core/services/user.service";
+import { RolesService } from "projects/recobros/src/app/core/services/roles.service";
+import { AlertService } from "projects/recobros/src/app/core/services/alert.service";
 
 @Component({
   selector: "alvea-edit-recobro",
@@ -17,27 +19,31 @@ import { UserService } from "projects/recobros/src/app/core/services/user.servic
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
   allFields = {};
-  sortedFieldLabels = ["recoveryInfo", "recoveryStatus", "recoverySituation", "recoveryClose"];
+  sortedFieldLabels = ["recoveryInfo", "recoveryStatus", "recoverySituation", "recoveryClose"]; //];
   editRecobroFields: Field[] = [];
   editStatusFields: Field[] = [];
   editSituationFields: Field[] = [];
   formChangesSubscription: Subscription;
   lastFormValues = {};
   recobro: Recobro;
+  id;
+  promiseResolve = Promise.resolve;
   constructor(
     private recobrosService: RecobrosService,
     private route: ActivatedRoute,
     private lawyersService: LawyersService,
-    private userService: UserService
+    private userService: UserService,
+    private rolesService: RolesService,
+    private alertService: AlertService
   ) {}
 
   @ViewChild("editRecobroForm") editRecobroForm: NgForm;
   ngOnInit(): void {
     (async () => {
-      this.recobro = await this.recobrosService.getRecobro(
-        this.route.snapshot.paramMap.get("id") || ""
-      );
+      this.id = this.route.snapshot.paramMap.get("id") || "";
+      this.recobro = await this.recobrosService.getRecobro(this.id);
       this.recobrosService.getRecobrosFields.call(this, "edit", this.recobro).then((fields) => {
+        console.warn(fields);
         this.allFields = groupBy(
           fields.map((field) => ((field.section = field.section || "recoveryInfo"), field)),
           "section"
@@ -79,15 +85,15 @@ export class EditRecobroComponent implements OnInit {
   }
 
   editRecobro(form: NgForm): void {
-    // this.loadingAction = true;
-    // this.userService
-    //   .editUser(this.user.id, form.value)
-    //   .then((res) => {
-    //     this.alertService.success('Yay!');
-    //   })
-    //   .catch(console.error)
-    //   .finally(() => {
-    //     this.loadingAction = false;
-    //   });
+    this.loadingAction = true;
+    this.recobrosService
+      .editRecobro(form.value, this.id)
+      .then((res) => {
+        this.alertService.success("Yay!");
+      })
+      .catch(console.error)
+      .finally(() => {
+        this.loadingAction = false;
+      });
   }
 }

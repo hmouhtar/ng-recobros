@@ -1,4 +1,4 @@
-<h1>Nuevo abogado</h1>
+<h1 class="section-title">Nuevo abogado</h1>
 <form ngNativeValidate #newLawyerForm="ngForm" (ngSubmit)="createLawyer(newLawyerForm)">
   <div fxLayout="row wrap" fxLayoutAlign="space-between">
     <ng-container *ngFor="let field of lawyerFieldsO | async">

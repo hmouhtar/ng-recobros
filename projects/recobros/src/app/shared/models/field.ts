@@ -8,6 +8,7 @@ export class Field {
     | "radio"
     | "select"
     | "date"
+    | "datetime"
     | "textarea"
     | "hidden";
   label: string;
@@ -30,11 +31,13 @@ export class Field {
   displayOnTable?: boolean;
   capability?: string | string[];
   displayCondition?: any;
+  displayConditionFixed?: boolean;
   value?: (() => string) | string;
   valuePath?: string;
   context?: string;
   order?: number;
   section?: string;
+  prefix?: string;
 
   // If field value or options is a function, call it.
   static processField(fields: Field[], context: "new" | "edit", subject?): Promise<Field[]> {
@@ -42,7 +45,7 @@ export class Field {
       fields.map((field) =>
         Promise.all(
           Object.keys(field)
-            .filter((key) => key !== "displayCondition")
+            .filter((key) => key !== "displayCondition" || field["displayConditionFixed"])
             .map((key) => {
               if ("function" === typeof field[key]) {
                 return Promise.resolve(field[key].call(this, subject)).then(
@@ -52,6 +55,7 @@ export class Field {
                 return field[key];
               }
             })
+            .filter((key) => key !== "displayCondition")
         )
       )
     )
