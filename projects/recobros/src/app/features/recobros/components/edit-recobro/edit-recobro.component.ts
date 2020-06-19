@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { RecobrosService } from "projects/recobros/src/app/core/services/recobros.service";
 import { Recobro } from "projects/recobros/src/app/shared/models/recobro";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
 import { Field } from "projects/recobros/src/app/shared/models/field";
 import { groupBy } from "lodash";
@@ -34,7 +34,8 @@ export class EditRecobroComponent implements OnInit {
     private lawyersService: LawyersService,
     private userService: UserService,
     private rolesService: RolesService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   @ViewChild("editRecobroForm") editRecobroForm: NgForm;
