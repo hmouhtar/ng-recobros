@@ -309,7 +309,7 @@ export class Recobro {
               .map((user) => {
                 return {
                   label: user["fullName"],
-                  value: String(user.id),
+                  value: (user.id as unknown) as string,
                 };
               })
           );
