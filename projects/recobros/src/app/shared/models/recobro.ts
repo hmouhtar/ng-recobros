@@ -64,9 +64,11 @@ export class Recobro {
         //disabled: true,
         order: 1,
         disabled: function () {
-          return (this["rolesService"] as RolesService)
-            .currentUserCan("CREATE_RECOVERY")
-            .then((res) => !res);
+          return this["router"].url === "/recobros/new"
+            ? false
+            : (this["rolesService"] as RolesService)
+                .currentUserCan("CREATE_RECOVERY")
+                .then((res) => !res);
         },
       },
       {
