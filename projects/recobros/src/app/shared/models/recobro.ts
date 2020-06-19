@@ -61,8 +61,13 @@ export class Recobro {
         label: "N. Siniestro",
         name: "sinisterNumber",
         required: true,
-        disabled: true,
+        //disabled: true,
         order: 1,
+        disabled: function () {
+          return (this["rolesService"] as RolesService)
+            .currentUserCan("CREATE_RECOVERY")
+            .then((res) => !res);
+        },
       },
       {
         type: "text",
@@ -77,7 +82,7 @@ export class Recobro {
         context: "edit",
       },
       {
-        type: "datetime",
+        type: "date",
         label: "Fecha de Resolución",
         name: "resolutionDate",
         section: "recoveryClose",
@@ -131,7 +136,7 @@ export class Recobro {
         context: "edit",
       },
       {
-        type: "datetime",
+        type: "date",
         label: "Inicio Recobro",
         name: "initDate",
         required: true,
@@ -190,6 +195,8 @@ export class Recobro {
               });
             });
         },
+        displayConditionFixed: true,
+        displayCondition: function () {},
         required: true,
         order: 3,
       },
@@ -288,6 +295,7 @@ export class Recobro {
         type: "select",
         label: "Empleado Recobrador",
         name: "userAssignment",
+        required: true,
         displayCondition: function () {
           return (this["rolesService"] as RolesService)
             .currentUserCan("ASSIGNMENT_RECOVERY_EMPLOYEE_RECOVERY")
@@ -313,6 +321,7 @@ export class Recobro {
         type: "select",
         label: "Administrador Recobrador",
         name: "userAssignment",
+        required: true,
         displayCondition: function () {
           return (this["rolesService"] as RolesService)
             .currentUserCan("ASSIGNMENT_RECOVERY_ADMINISTRATOR_RECOVERY")
@@ -326,7 +335,7 @@ export class Recobro {
               .map((user) => {
                 return {
                   label: user["companyName"],
-                  value: String(user.id),
+                  value: (user.id as unknown) as string,
                 };
               })
           );
@@ -342,7 +351,7 @@ export class Recobro {
         order: 12,
       },
       {
-        type: "datetime",
+        type: "date",
         label: "Fecha Nueva Prescripción",
         name: "newPrescriptionDate",
         required: true,
@@ -405,11 +414,12 @@ export class Recobro {
         section: "recoveryClose",
       },
       {
-        type: "datetime",
+        type: "datetime-local",
         label: "Fecha Situación",
         name: "situationDate",
         context: "edit",
         section: "recoveryStatus",
+        order: 2,
       },
       {
         type: "select",
@@ -458,7 +468,7 @@ export class Recobro {
         section: "recoverySituation",
       },
       {
-        type: "datetime",
+        type: "date",
         label: "Fecha Fase Judicial",
         name: "judicialDate",
         context: "edit",
@@ -476,6 +486,7 @@ export class Recobro {
       {
         type: "select",
         label: "Estado Gestión",
+        order: 1,
         name: "situationManagement",
         options: function () {
           return (this["recobrosService"] as RecobrosService)
@@ -498,6 +509,12 @@ export class Recobro {
         name: "judicialApproval",
         context: "edit",
         section: "recoveryStatus",
+        order: 3,
+        disabled: function () {
+          return (this["rolesService"] as RolesService)
+            .currentUserCan("CREATE_RECOVERY")
+            .then((res) => !(res && (this["recobro"] as Recobro).situationManagement == 6));
+        },
       },
     ];
   }

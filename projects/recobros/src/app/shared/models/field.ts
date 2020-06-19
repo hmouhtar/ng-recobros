@@ -1,3 +1,5 @@
+import { DatePipe } from "@angular/common";
+
 export class Field {
   type:
     | "text"
@@ -8,14 +10,14 @@ export class Field {
     | "radio"
     | "select"
     | "date"
-    | "datetime"
+    | "datetime-local"
     | "textarea"
     | "hidden";
   label: string;
   required?: boolean;
   readonly?: boolean;
   hidden?: boolean;
-  disabled?: boolean;
+  disabled?;
   name: string;
   options?:
     | {
@@ -62,9 +64,18 @@ export class Field {
       .then(() => {
         return fields.map((field) => {
           if (subject !== undefined && field.value === undefined && "edit" === context) {
+            console.log(field.name, subject[field.name]);
             field.value = field.valuePath
               ? subject[field.valuePath][field.name]
               : subject[field.name];
+            console.log(field.name, field.value);
+          }
+          if (field.type === "date" && field.value) {
+            field.value = new Date(field.value as string).toISOString().split("T")[0];
+          } else if (field.type === "datetime-local" && field.value) {
+            field.value = new Date(field.value as string).toISOString().substring(0, 16);
+
+            console.log(field.value);
           }
           return field;
         });

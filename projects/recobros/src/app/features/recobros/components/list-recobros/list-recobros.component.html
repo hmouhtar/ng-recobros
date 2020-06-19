@@ -25,7 +25,7 @@
   <ng-container matColumnDef="initDate">
     <th mat-sort-header mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
     <td mat-cell *matCellDef="let recobro">
-      {{ recobro.initDate }}
+      {{ recobro.initDate | date: "dd/MM/yyyy" }}
     </td>
   </ng-container>
 
@@ -33,7 +33,7 @@
     <th mat-sort-header mat-header-cell *matHeaderCellDef>Situación Recobro</th>
     <td mat-cell *matCellDef="let recobro" [ngSwitch]="recobro.recoverySituation">
       <span *ngSwitchCase="'PENDING'"> PENDIENTE </span>
-      <span *ngSwitchCase="'FINISHED'"> FINALIZADO </span>
+      <span *ngSwitchCase="'FINISHED'"> TERMINADO </span>
     </td>
   </ng-container>
 
@@ -52,7 +52,7 @@
   <ng-container matColumnDef="situationDate">
     <th mat-sort-header mat-header-cell *matHeaderCellDef>Fecha Situación</th>
     <td mat-cell *matCellDef="let recobro">
-      {{ recobro.situationDate }}
+      {{ recobro.situationDate | date: "dd/MM/yyyy" }}
     </td>
   </ng-container>
 

@@ -19,7 +19,7 @@ import { AlertService } from "projects/recobros/src/app/core/services/alert.serv
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
   allFields = {};
-  sortedFieldLabels = ["recoveryInfo", "recoveryStatus", "recoverySituation", "recoveryClose"]; //];
+  sortedFieldLabels = ["recoveryInfo", "recoveryStatus"]; //];"recoverySituation", "recoveryClose"
   editRecobroFields: Field[] = [];
   editStatusFields: Field[] = [];
   editSituationFields: Field[] = [];
@@ -43,7 +43,6 @@ export class EditRecobroComponent implements OnInit {
       this.id = this.route.snapshot.paramMap.get("id") || "";
       this.recobro = await this.recobrosService.getRecobro(this.id);
       this.recobrosService.getRecobrosFields.call(this, "edit", this.recobro).then((fields) => {
-        console.warn(fields);
         this.allFields = groupBy(
           fields.map((field) => ((field.section = field.section || "recoveryInfo"), field)),
           "section"
