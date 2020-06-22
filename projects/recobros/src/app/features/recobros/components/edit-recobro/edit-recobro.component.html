@@ -1,5 +1,5 @@
 <h1 class="section-title">Administrar Recobro</h1>
-{{ editRecobroForm.form.value | json }}
+<!-- {{ editRecobroForm.form.value | json }} -->
 <form ngNativeValidate #editRecobroForm="ngForm" (ngSubmit)="editRecobro(editRecobroForm)">
   <mat-tab-group>
     <ng-container *ngFor="let section of sortedFieldLabels">
