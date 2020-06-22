@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "recobros";
+    // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "recobros";
   }
 
   onSubmit(form: NgForm) {
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
     // this.loading = true;
     this.authenticationService
       .login(form.controls.username.value, form.controls.password.value)
-      .then((res) => this.router.navigate([this.returnUrl]))
+      .then((res) => this.router.navigate(["recobros"]))
       .catch(console.warn);
   }
 
