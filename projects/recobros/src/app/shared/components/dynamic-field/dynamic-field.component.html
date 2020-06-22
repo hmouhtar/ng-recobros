@@ -51,6 +51,7 @@
         type="{{ field.type }}"
         matInput
       />
+      <mat-hint *ngIf="field.hint">{{ field.hint }}</mat-hint>
     </mat-form-field>
   </ng-container>
 </div>

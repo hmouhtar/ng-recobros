@@ -40,6 +40,7 @@ export class Field {
   order?: number;
   section?: string;
   prefix?: string;
+  hint?: string;
 
   // If field value or options is a function, call it.
   static processField(fields: Field[], context: "new" | "edit", subject?): Promise<Field[]> {
@@ -64,18 +65,20 @@ export class Field {
       .then(() => {
         return fields.map((field) => {
           if (subject !== undefined && field.value === undefined && "edit" === context) {
-            console.log(field.name, subject[field.name]);
             field.value = field.valuePath
               ? subject[field.valuePath][field.name]
               : subject[field.name];
-            console.log(field.name, field.value);
           }
-          if (field.type === "date" && field.value) {
-            field.value = new Date(field.value as string).toISOString().split("T")[0];
-          } else if (field.type === "datetime-local" && field.value) {
-            field.value = new Date(field.value as string).toISOString().substring(0, 16);
+          console.log(field.name, field.value);
 
-            console.log(field.value);
+          if (field.type === "date" && field.value) {
+            field.value = new Date(`${field.value}+02:00`).toISOString().split("T")[0];
+          } else if (field.type === "datetime-local" && field.value) {
+            //console.log("Date", new Date(`${field.value}+02:00`).toISOString());
+            let date = new Date(`${field.value}+02:00`);
+            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+            field.value = date.toISOString().substring(0, 16);
           }
           return field;
         });

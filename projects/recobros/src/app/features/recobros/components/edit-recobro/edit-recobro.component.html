@@ -3,7 +3,7 @@
 <form ngNativeValidate #editRecobroForm="ngForm" (ngSubmit)="editRecobro(editRecobroForm)">
   <mat-tab-group>
     <ng-container *ngFor="let section of sortedFieldLabels">
-      <mat-tab>
+      <mat-tab [disabled]="'recoverySituation' === section && recobro.recoveryRoute != 2">
         <ng-template mat-tab-label [ngSwitch]="section">
           <ng-container *ngSwitchCase="'recoveryInfo'">Datos del Recobro</ng-container>
           <ng-container *ngSwitchCase="'recoveryStatus'">Estado del Recobro</ng-container>

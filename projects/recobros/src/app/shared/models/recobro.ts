@@ -198,7 +198,13 @@ export class Recobro {
             });
         },
         displayConditionFixed: true,
-        displayCondition: function () {},
+        displayCondition: function () {
+          return (this["recobrosService"] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return () => autoComplete["companySelect"]["belongCompanyGroup"];
+            });
+        },
         required: true,
         order: 3,
       },
@@ -419,9 +425,11 @@ export class Recobro {
         type: "datetime-local",
         label: "Fecha Situación",
         name: "situationDate",
+        disabled: true,
         context: "edit",
         section: "recoveryStatus",
         order: 2,
+        hint: "Hora representada en zona horaria GMT+2",
       },
       {
         type: "select",
@@ -451,6 +459,7 @@ export class Recobro {
               })
           );
         },
+        order: 4,
         section: "recoverySituation",
       },
       {
@@ -466,24 +475,58 @@ export class Recobro {
         label: "Situación Judicial",
         name: "judicialSituation",
         context: "edit",
-        options: [],
+        options: function () {
+          return (this["recobrosService"] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete["judicialSituationSelect"].map((element) => {
+                return {
+                  label: element["judicialSituation"],
+                  value: element["id"],
+                };
+              });
+            });
+        },
         section: "recoverySituation",
+        order: 2,
       },
       {
         type: "date",
         label: "Fecha Fase Judicial",
-        name: "judicialDate",
+        name: "courtDate",
         context: "edit",
         section: "recoverySituation",
+        order: 3,
+      },
+      {
+        type: "date",
+        label: "Fecha Encargo",
+        section: "recoverySituation",
+        disabled: true,
+        name: "judicialDate",
+        context: "edit",
+        order: 1,
       },
 
       {
         type: "select",
         label: "Jurisdicción",
         name: "jurisdiction",
-        options: [],
+        options: function () {
+          return (this["recobrosService"] as RecobrosService)
+            .getRecobroAutoComplete()
+            .then((autoComplete) => {
+              return autoComplete["jurisdictionSelect"].map((element) => {
+                return {
+                  label: element["type"],
+                  value: element["id"],
+                };
+              });
+            });
+        },
         context: "edit",
         section: "recoverySituation",
+        order: 5,
       },
       {
         type: "select",

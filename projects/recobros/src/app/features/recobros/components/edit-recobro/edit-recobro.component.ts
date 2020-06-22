@@ -19,7 +19,7 @@ import { AlertService } from "projects/recobros/src/app/core/services/alert.serv
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
   allFields = {};
-  sortedFieldLabels = ["recoveryInfo", "recoveryStatus"]; //];"recoverySituation", "recoveryClose"
+  sortedFieldLabels = ["recoveryInfo", "recoveryStatus", "recoverySituation"]; //];"recoverySituation", "recoveryClose"
   editRecobroFields: Field[] = [];
   editStatusFields: Field[] = [];
   editSituationFields: Field[] = [];

@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { Component, OnInit, ViewChild, TemplateRef } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
+import { FormBuilder, FormGroup, Validators, NgForm } from "@angular/forms";
+import { first } from "rxjs/operators";
 
-import { AlertService } from '../../core/services/alert.service';
-import { AuthenticationService } from '../../core/services/authentication.service';
+import { AlertService } from "../../core/services/alert.service";
+import { AuthenticationService } from "../../core/services/authentication.service";
 
-import { UserService } from '../../core/services/user.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { UserService } from "../../core/services/user.service";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  templateUrl: 'login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: "login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   hide = true;
 
-  @ViewChild('dialogRef') dialogRef: TemplateRef<any>;
+  @ViewChild("dialogRef") dialogRef: TemplateRef<any>;
   currentDialog: MatDialogRef<any>;
 
   constructor(
@@ -33,13 +33,13 @@ export class LoginComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserToken) {
-      this.router.navigate(['/']);
+      this.router.navigate(["/"]);
     }
   }
 
   ngOnInit() {
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || 'home';
+    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "recobros";
   }
 
   onSubmit(form: NgForm) {
@@ -54,8 +54,8 @@ export class LoginComponent implements OnInit {
 
   openDialog(): void {
     this.currentDialog = this.dialog.open(this.dialogRef, {
-      width: '250px',
-      data: { info: '' },
+      width: "250px",
+      data: { info: "" },
     });
 
     this.currentDialog.afterClosed().subscribe((txt) => {
