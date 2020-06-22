@@ -9,3 +9,43 @@
 .width-input {
   width: 80%;
 }
+
+mat-card {
+  padding: 0;
+}
+
+mat-card-content {
+  padding: 15px 0;
+  margin: 0;
+}
+
+mat-card-header {
+  width: 100%;
+  &::ng-deep {
+    .mat-card-header-text {
+      width: 100%;
+      margin: 0;
+    }
+  }
+  mat-card-title {
+    font-weight: lighter;
+    margin: 0;
+  }
+}
+.container {
+  background-color: transparent;
+}
+button {
+  color: white;
+  mat-icon {
+    background-color: white;
+    border-radius: 50%;
+    color: var(--color-primary);
+    margin-right: 10px;
+  }
+}
+#forgotPassword {
+  margin-top: 5px;
+  font-weight: lighter;
+  display: block;
+}

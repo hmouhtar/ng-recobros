@@ -23,12 +23,9 @@
             "polyfills": "projects/recobros/src/polyfills.ts",
             "tsConfig": "projects/recobros/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/recobros/src/favicon.ico",
-              "projects/recobros/src/assets"
-            ],
+            "assets": ["projects/recobros/src/favicon.ico", "projects/recobros/src/assets"],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "projects/recobros/src/custom-theme.scss",
               "projects/recobros/src/styles.scss"
             ],
             "scripts": []
@@ -88,10 +85,7 @@
             "polyfills": "projects/recobros/src/polyfills.ts",
             "tsConfig": "projects/recobros/tsconfig.spec.json",
             "karmaConfig": "projects/recobros/karma.conf.js",
-            "assets": [
-              "projects/recobros/src/favicon.ico",
-              "projects/recobros/src/assets"
-            ],
+            "assets": ["projects/recobros/src/favicon.ico", "projects/recobros/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "projects/recobros/src/styles.scss"
@@ -107,9 +101,7 @@
               "projects/recobros/tsconfig.spec.json",
               "projects/recobros/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {

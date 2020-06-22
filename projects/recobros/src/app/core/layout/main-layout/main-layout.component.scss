@@ -24,15 +24,12 @@ button {
 }
 
 .mat-sidenav {
-  background-color: #04284e;
+  background-color: var(--color-accent);
 }
-.mat-toolbar.mat-primary {
-  background-color: lighten($color: #04284e, $amount: 20%);
-}
+
 .mat-drawer-container {
   background-color: transparent;
   .container {
-    background-color: white;
     padding: 0;
   }
   padding-top: 60px;

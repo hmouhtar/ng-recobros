@@ -1,19 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/scss/bootstrap-reboot";
-@import "~bootstrap/scss/bootstrap-grid";
+
+@import "~@angular/material/theming";
+@import "custom-theme.scss";
 
 html,
 body {
   height: 100%;
 }
-
+button {
+  border-radius: 0px !important;
+  padding: 2px 16px 2px 16px !important;
+}
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: #ededeb;
+  &.\/login {
+    background-color: var(--color-primary);
+  }
+}
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  background-color: white;
+  padding-bottom: 60px;
 }
 .section-title {
-  background-color: #04284e;
+  background-color: var(--color-accent);
   padding: 30px;
   color: white;
 }
@@ -32,4 +45,13 @@ form {
 
 .mat-form-field {
   width: 100%;
+}
+
+// .mat-form-field-flex {
+//   background: #ededeb;
+//   padding: 10px 0 0 10px;
+// }
+.mat-form-field-label {
+  color: #04284e;
+  text-transform: uppercase;
 }

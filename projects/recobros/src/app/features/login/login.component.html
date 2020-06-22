@@ -1,46 +1,44 @@
 <div class="container" id="loginWrapper">
   <mat-card class="box">
     <mat-card-header class="justify-content-center">
-      <mat-card-title>Iniciar sesión</mat-card-title>
+      <mat-card-title class="section-title">Iniciar sesión</mat-card-title>
     </mat-card-header>
 
-    <form
-      ngNativeValidate
-      class="text-center"
-      #loginForm="ngForm"
-      (ngSubmit)="onSubmit(loginForm)"
-    >
-      <mat-card-content>
-        <mat-form-field class="width-input">
-          <input
-            ngModel
-            matInput
-            required
-            name="username"
-            placeholder="Nombre de usuario"
-          />
-        </mat-form-field>
-        <mat-form-field class="width-input">
-          <input
-            ngModel
-            matInput
-            required
-            name="password"
-            [type]="hide ? 'password' : 'text'"
-            placeholder="Contraseña"
-          />
-          <mat-icon matSuffix (click)="hide = !hide">{{
-            hide ? 'visibility_off' : 'visibility'
-          }}</mat-icon>
-        </mat-form-field>
-      </mat-card-content>
-      <button mat-stroked-button class="btn-block">Iniciar sesión</button>
-    </form>
-
     <mat-card-content class="forgot-password">
-      <button mat-stroked-button class="btn-block" (click)="openDialog()">
+      <form
+        ngNativeValidate
+        class="text-center"
+        #loginForm="ngForm"
+        (ngSubmit)="onSubmit(loginForm)"
+      >
+        <mat-card-content>
+          <mat-form-field appearance="fill" [floatLabel]="'always'" class="width-input">
+            <mat-label>Nombre de usuario</mat-label>
+            <input ngModel matInput required name="username" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" [floatLabel]="'always'" class="width-input">
+            <input ngModel matInput required name="password" [type]="hide ? 'password' : 'text'" />
+            <mat-label>
+              Contraseña
+            </mat-label>
+            <mat-icon matSuffix (click)="hide = !hide">{{
+              hide ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </mat-form-field>
+        </mat-card-content>
+        <button mat-flat-button color="primary" class="btn-block">
+          <mat-icon>chevron_right</mat-icon> Iniciar sesión
+        </button>
+      </form>
+      <a
+        href="javascript:void(0)"
+        id="forgotPassword"
+        color="primary"
+        class="btn-block"
+        (click)="openDialog()"
+      >
         ¿Olvidó su contraseña?
-      </button>
+      </a>
     </mat-card-content>
 
     <ng-template #dialogRef let-data>
@@ -50,12 +48,12 @@
           ngNativeValidate
           (ngSubmit)="onResetUserPassword($event.target.emailAddress.value)"
         >
-          <mat-form-field>
+          <mat-form-field [floatLabel]="'always'">
             <mat-label>Introduzca su email, por favor</mat-label>
             <input matInput type="text" name="emailAddress" required />
           </mat-form-field>
           <div mat-dialog-actions>
-            <button mat-stroked-button class="btn-block">Enviar</button>
+            <button mat-flat-button color="primary" class="btn-block">Enviar</button>
           </div>
         </form>
       </div>

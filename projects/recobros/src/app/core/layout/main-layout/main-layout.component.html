@@ -17,12 +17,7 @@
 
 <section id="main">
   <mat-sidenav-container>
-    <mat-sidenav
-      fixedInViewport="true"
-      id="sidenav"
-      mode="side"
-      [opened]="isUserLoggedIn"
-    >
+    <mat-sidenav fixedInViewport="true" id="sidenav" mode="side" [opened]="isUserLoggedIn">
       <mat-toolbar>
         <mat-toolbar-row>
           <h2>Recobros</h2>
@@ -51,9 +46,7 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-      <div class="container">
-        <router-outlet class="alert alert-success"></router-outlet>
-      </div>
+      <router-outlet class="alert alert-success"></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </section>
