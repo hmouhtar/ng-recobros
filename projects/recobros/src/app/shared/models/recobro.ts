@@ -192,7 +192,7 @@ export class Recobro {
           return (this["recobrosService"] as RecobrosService)
             .getRecobroAutoComplete()
             .then((autoComplete) => {
-              return autoComplete["companySelect"].map((company: Company) => {
+              return autoComplete["companySelect"]["values"].map((company: Company) => {
                 return { label: company.companyName, value: company.id };
               });
             });
