@@ -71,15 +71,18 @@ export class Field {
           }
           console.log(field.name, field.value);
 
-          if (field.type === "date" && field.value) {
-            field.value = new Date(`${field.value}+02:00`).toISOString().split("T")[0];
-          } else if (field.type === "datetime-local" && field.value) {
-            //console.log("Date", new Date(`${field.value}+02:00`).toISOString());
+          if (["date", "datetime-local"].includes(field.type) && field.value) {
             let date = new Date(`${field.value}+02:00`);
             date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
-            field.value = date.toISOString().substring(0, 16);
+            if ("date" === field.type) {
+              field.value = date.toISOString().split("T")[0];
+            }
+            if ("datetime-local" === field.type) {
+              field.value = date.toISOString().substring(0, 16);
+            }
           }
+
           return field;
         });
       })

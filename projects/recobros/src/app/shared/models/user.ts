@@ -16,6 +16,7 @@ export class User {
   surname2: string;
   username: string;
   password: string;
+  scope: string;
 
   static getUserFields(): Field[] {
     return [

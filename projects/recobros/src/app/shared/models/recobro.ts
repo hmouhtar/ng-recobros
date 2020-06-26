@@ -78,7 +78,9 @@ export class Recobro {
         disabled: true,
         required: true,
         value: function () {
-          return `${arguments[0]["sinisterNumber"]}_${arguments[0]["codSinister"]}`;
+          const zeroPad = (num, places) => String(num).padStart(places, "0");
+
+          return `${arguments[0]["sinisterNumber"]}_${zeroPad(arguments[0]["codSinister"], 3)}`;
         },
         order: 2,
         context: "edit",
@@ -322,7 +324,6 @@ export class Recobro {
               })
           );
         },
-        context: "edit",
         order: 18,
       },
       {
@@ -348,7 +349,7 @@ export class Recobro {
               })
           );
         },
-        context: "edit",
+
         order: 18,
       },
 
@@ -411,6 +412,11 @@ export class Recobro {
         type: "textarea",
         label: "Observaciones",
         name: "observations",
+        disabled: function () {
+          return (this["userService"] as UserService)
+            .getCurrentUser()
+            .then((user) => ["RECOVERY_EMPLOYEE", "RECOVERY_ADMINISTRATOR"].includes(user.rol));
+        },
         order: 19,
       },
       {
@@ -491,11 +497,12 @@ export class Recobro {
         order: 2,
       },
       {
-        type: "date",
+        type: "datetime-local",
         label: "Fecha Fase Judicial",
         name: "courtDate",
         context: "edit",
         section: "recoverySituation",
+        disabled: true,
         order: 3,
       },
       {

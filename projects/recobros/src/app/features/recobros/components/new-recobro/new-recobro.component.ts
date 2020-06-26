@@ -7,6 +7,8 @@ import { groupBy } from "lodash";
 import { Subscription } from "rxjs";
 import { delay } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { RolesService } from "projects/recobros/src/app/core/services/roles.service";
+import { UserService } from "projects/recobros/src/app/core/services/user.service";
 @Component({
   selector: "alvea-new-recobro",
   templateUrl: "./new-recobro.component.html",
@@ -24,6 +26,8 @@ export class NewRecobroComponent implements OnInit {
   constructor(
     private recobrosService: RecobrosService,
     private alertService: AlertService,
+    private rolesService: RolesService,
+    private userService: UserService,
     private cdRef: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -35,35 +39,28 @@ export class NewRecobroComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe(
-      (formValues) => {
-        if (
-          formValues.branch &&
-          formValues.branch !== this.lastFormValues["branch"]
-        ) {
-          this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-            const incidentTypologyField = this.newRecobroFields.find(
-              (field) => field.name === "incidentTypology"
-            );
+    this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe((formValues) => {
+      if (formValues.branch && formValues.branch !== this.lastFormValues["branch"]) {
+        this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+          const incidentTypologyField = this.newRecobroFields.find(
+            (field) => field.name === "incidentTypology"
+          );
 
-            if (incidentTypologyField) {
-              incidentTypologyField.options = groupBy(
-                autoComplete["incidentTypologySelect"],
-                "branch"
-              )[formValues.branch].map((element) => {
-                return { label: element.nature, value: element.id };
-              });
+          if (incidentTypologyField) {
+            incidentTypologyField.options = groupBy(
+              autoComplete["incidentTypologySelect"],
+              "branch"
+            )[formValues.branch].map((element) => {
+              return { label: element.nature, value: element.id };
+            });
 
-              this.newRecobroForm.form.controls["incidentTypology"].setValue(
-                ""
-              );
-            }
-          });
-        }
-
-        this.lastFormValues = formValues;
+            this.newRecobroForm.form.controls["incidentTypology"].setValue("");
+          }
+        });
       }
-    );
+
+      this.lastFormValues = formValues;
+    });
   }
 
   createNewRecobro(form: NgForm): void {
