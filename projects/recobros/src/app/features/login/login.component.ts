@@ -1,26 +1,23 @@
-import { Component, OnInit, ViewChild, TemplateRef } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators, NgForm } from "@angular/forms";
-import { first } from "rxjs/operators";
-
-import { AlertService } from "../../core/services/alert.service";
-import { AuthenticationService } from "../../core/services/authentication.service";
-
-import { UserService } from "../../core/services/user.service";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, NgForm } from '@angular/forms';
+import { AlertService } from '../../core/services/alert.service';
+import { AuthenticationService } from '../../core/services/authentication.service';
+import { UserService } from '../../core/services/user.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  templateUrl: "login.component.html",
-  styleUrls: ["./login.component.scss"],
+  templateUrl: 'login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
   returnUrl: string;
   hide = true;
 
-  @ViewChild("dialogRef") dialogRef: TemplateRef<any>;
+  @ViewChild('dialogRef') dialogRef: TemplateRef<any>;
   currentDialog: MatDialogRef<any>;
 
   constructor(
@@ -33,29 +30,24 @@ export class LoginComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserToken) {
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     }
   }
 
-  ngOnInit() {
-    // get return url from route parameters or default to '/'
-    // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "recobros";
-  }
-
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm): void {
     // this.alertService.clear();
 
     // this.loading = true;
     this.authenticationService
       .login(form.controls.username.value, form.controls.password.value)
-      .then((res) => this.router.navigate(["recobros"]))
+      .then(() => this.router.navigate(['recobros']))
       .catch(console.warn);
   }
 
   openDialog(): void {
     this.currentDialog = this.dialog.open(this.dialogRef, {
-      width: "250px",
-      data: { info: "" },
+      width: '250px',
+      data: { info: '' }
     });
 
     this.currentDialog.afterClosed().subscribe((txt) => {
@@ -63,7 +55,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onResetUserPassword(emailAddress): void {
+  onResetUserPassword(emailAddress: string): void {
     this.currentDialog.close();
     this.userService
       .resetUserPassword(emailAddress)

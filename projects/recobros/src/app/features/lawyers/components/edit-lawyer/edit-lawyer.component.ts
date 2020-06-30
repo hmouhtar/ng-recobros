@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Lawyer } from 'projects/recobros/src/app/shared/models/lawyer';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { Subject, Observable } from 'rxjs';
@@ -10,14 +10,14 @@ import { AlertService } from 'projects/recobros/src/app/core/services/alert.serv
 @Component({
   selector: 'alvea-edit-lawyer',
   templateUrl: './edit-lawyer.component.html',
-  styleUrls: ['./edit-lawyer.component.scss'],
+  styleUrls: ['./edit-lawyer.component.scss']
 })
 export class EditLawyerComponent implements OnInit {
   lawyer: Lawyer;
   _lawyerFields: Field[];
   lawyerFields$: Subject<Field[]>;
   lawyerFieldsO: Observable<Field[]>;
-  loadingAction: boolean = false;
+  loadingAction = false;
   constructor(
     private lawyersService: LawyersService,
     private route: ActivatedRoute,
@@ -28,32 +28,34 @@ export class EditLawyerComponent implements OnInit {
     this.lawyerFieldsO = this.lawyerFields$.asObservable();
   }
 
-  async ngOnInit() {
-    let lawyer = (await this.lawyersService.getLawyers()).find(
-      (lawyer) => String(lawyer.id) == this.route.snapshot.paramMap.get('id')
-    );
+  ngOnInit(): void {
+    (async () => {
+      const lawyer = (await this.lawyersService.getLawyers()).find(
+        (lawyer) => String(lawyer.id) == this.route.snapshot.paramMap.get('id')
+      );
 
-    if (!lawyer) {
-      this.alertService.error('ID no válido.');
-      this.router.navigate(['/lawyers'], {});
-    }
+      if (!lawyer) {
+        this.alertService.error('ID no válido.');
+        this.router.navigate(['/lawyers'], {});
+      }
 
-    this.lawyer = lawyer as Lawyer;
+      this.lawyer = lawyer as Lawyer;
 
-    this.lawyersService.getLawyerFields
-      .call(this, 'edit', lawyer)
-      .then((fields) => {
-        console.log(fields);
-        this._lawyerFields = fields;
-        this.lawyerFields$.next(this._lawyerFields);
-      });
+      this.lawyersService.getLawyerFields
+        .call(this, 'edit', lawyer)
+        .then((fields) => {
+          console.log(fields);
+          this._lawyerFields = fields;
+          this.lawyerFields$.next(this._lawyerFields);
+        });
+    })();
   }
 
-  async editUser(form: NgForm) {
+  editUser(form: NgForm): void {
     this.loadingAction = true;
     this.lawyersService
       .editLawyer(this.lawyer.id, form.value)
-      .then((res) => {
+      .then(() => {
         this.alertService.success('Yay!');
       })
       .catch((err) => this.alertService.error(err.message))

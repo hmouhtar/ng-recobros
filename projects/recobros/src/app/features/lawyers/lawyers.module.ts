@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { LawyersRoutingModule } from './lawyers-routing.module';
 import { LawyersComponent } from './lawyers.component';
 import { ListLawyersComponent } from './components/list-lawyers/list-lawyers.component';
@@ -13,8 +12,8 @@ import { SharedModule } from '../../shared/shared.module';
     LawyersComponent,
     ListLawyersComponent,
     NewLawyerComponent,
-    EditLawyerComponent,
+    EditLawyerComponent
   ],
-  imports: [CommonModule, SharedModule, LawyersRoutingModule],
+  imports: [CommonModule, SharedModule, LawyersRoutingModule]
 })
 export class LawyersModule {}

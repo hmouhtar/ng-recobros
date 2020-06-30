@@ -1,6 +1,10 @@
 <div class="container">
   <h1 class="section-title">Nuevo Recobro</h1>
-  <form ngNativeValidate #newRecobroForm="ngForm" (submit)="createNewRecobro(newRecobroForm)">
+  <form
+    ngNativeValidate
+    #newRecobroForm="ngForm"
+    (submit)="createNewRecobro(newRecobroForm)"
+  >
     <div fxLayout="row wrap" fxLayoutAlign="space-between">
       <ng-container *ngFor="let field of newRecobroFields">
         <alvea-dynamic-field
@@ -20,7 +24,8 @@
       <mat-icon>add_circle</mat-icon>
 
       Crear recobro
-      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
+      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+      </mat-spinner>
     </button>
   </form>
 </div>

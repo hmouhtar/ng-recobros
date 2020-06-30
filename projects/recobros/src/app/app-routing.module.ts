@@ -1,61 +1,61 @@
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { AuthGuard } from "./core/guards/auth.guard";
-import { RoleGuard } from "./core/guards/role.guard";
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
 
 const routes = [
   {
-    path: "",
-    pathMatch: "full",
-    redirectTo: "home",
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'recobros'
   },
 
   {
-    path: "home",
+    path: 'home',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import("./features/home/home.module").then((m) => m.HomeModule),
+      import('./features/home/home.module').then((m) => m.HomeModule)
   },
   {
-    path: "recobros",
+    path: 'recobros',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import("./features/recobros/recobros.module").then(
+      import('./features/recobros/recobros.module').then(
         (m) => m.RecobrosModule
-      ),
+      )
   },
 
   {
-    path: "stats",
+    path: 'stats',
     canActivate: [AuthGuard, RoleGuard],
     loadChildren: () =>
-      import("./features/home/home.module").then((m) => m.HomeModule),
+      import('./features/home/home.module').then((m) => m.HomeModule)
   },
 
   {
-    path: "login",
+    path: 'login',
     loadChildren: () =>
-      import("./features/login/login.module").then((m) => m.LoginModule),
+      import('./features/login/login.module').then((m) => m.LoginModule)
   },
   {
-    path: "users",
+    path: 'users',
     loadChildren: () =>
-      import("./features/users/users.module").then((m) => m.UsersModule),
+      import('./features/users/users.module').then((m) => m.UsersModule)
   },
   {
-    path: "lawyers",
+    path: 'lawyers',
     loadChildren: () =>
-      import("./features/lawyers/lawyers.module").then((m) => m.LawyersModule),
+      import('./features/lawyers/lawyers.module').then((m) => m.LawyersModule)
   },
 
   {
-    path: "**",
-    redirectTo: "home",
-  },
+    path: '**',
+    redirectTo: 'home'
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

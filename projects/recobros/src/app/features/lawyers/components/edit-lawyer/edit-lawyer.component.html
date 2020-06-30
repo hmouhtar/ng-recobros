@@ -1,9 +1,16 @@
 <div class="container">
   <h1 class="section-title">Editar abogado</h1>
-  <form ngNativeValidate #editLawyerForm="ngForm" (ngSubmit)="editUser(editLawyerForm)">
+  <form
+    ngNativeValidate
+    #editLawyerForm="ngForm"
+    (ngSubmit)="editUser(editLawyerForm)"
+  >
     <div fxLayout="row wrap" fxLayoutAlign="space-between">
       <ng-container *ngFor="let field of lawyerFieldsO | async">
-        <alvea-dynamic-field fxFlex="0 0 48%" [field]="field"></alvea-dynamic-field>
+        <alvea-dynamic-field
+          fxFlex="0 0 48%"
+          [field]="field"
+        ></alvea-dynamic-field>
       </ng-container>
     </div>
 
@@ -15,7 +22,8 @@
     >
       <mat-icon>create</mat-icon>
       Editar abogado
-      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20"> </mat-spinner>
+      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+      </mat-spinner>
     </button>
   </form>
 </div>

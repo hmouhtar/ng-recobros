@@ -1,16 +1,16 @@
-import { Component, OnInit, Renderer2 } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { AlertService } from "../../services/alert.service";
-import { AuthenticationService } from "../../services/authentication.service";
-import { SidenavService } from "../../services/sidenav.service";
-import { UserService } from "../../services/user.service";
-import { Router, NavigationStart } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AlertService } from '../../services/alert.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { SidenavService } from '../../services/sidenav.service';
+import { UserService } from '../../services/user.service';
+import { Router, NavigationStart } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: "alvea-main-layout",
-  templateUrl: "./main-layout.component.html",
-  styleUrls: ["./main-layout.component.scss"],
+  selector: 'alvea-main-layout',
+  templateUrl: './main-layout.component.html',
+  styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnInit {
   private previousUrl: string;
@@ -33,12 +33,10 @@ export class MainLayoutComponent implements OnInit {
 
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((event) => {
-        event["url"] = event["url"].split("?")[0];
-        console.log(event);
-
-        this.renderer.addClass(document.body, event["url"]);
+        event['url'] = event['url'].split('?')[0];
+        this.renderer.addClass(document.body, event['url']);
         this.renderer.removeClass(document.body, this.previousUrl);
-        this.previousUrl = event["url"];
+        this.previousUrl = event['url'];
       });
 
     this.authenticationService.isUserLoggedInO.subscribe((res) => {
@@ -56,14 +54,14 @@ export class MainLayoutComponent implements OnInit {
 
     this.alertService.getAlert().subscribe((message) => {
       message &&
-        this._snackBar.open(message.text, "close", {
+        this._snackBar.open(message.text, 'close', {
           duration: 2500,
-          panelClass: `snackbar-${message.type}`,
+          panelClass: `snackbar-${message.type}`
         });
     });
   }
 
   logout(): void {
-    if (confirm("Deseas cerrar sesión?")) this.authenticationService.logout();
+    if (confirm('Deseas cerrar sesión?')) this.authenticationService.logout();
   }
 }

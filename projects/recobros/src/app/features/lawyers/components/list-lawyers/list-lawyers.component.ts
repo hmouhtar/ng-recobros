@@ -1,67 +1,68 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { LawyersService } from "projects/recobros/src/app/core/services/lawyers.service";
-import { AlertService } from "projects/recobros/src/app/core/services/alert.service";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatSort } from "@angular/material/sort";
-import { Lawyer } from "projects/recobros/src/app/shared/models/lawyer";
+import { Component, ViewChild } from '@angular/core';
+import { LawyersService } from 'projects/recobros/src/app/core/services/lawyers.service';
+import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
+import { MatSort } from '@angular/material/sort';
+import { Lawyer } from 'projects/recobros/src/app/shared/models/lawyer';
+import {
+  PaginatedDataSource,
+  Sort
+} from 'projects/recobros/src/app/core/services/paginated.datasource';
 
 @Component({
-  selector: "alvea-list-lawyers",
-  templateUrl: "./list-lawyers.component.html",
-  styleUrls: ["./list-lawyers.component.scss"],
+  selector: 'alvea-list-lawyers',
+  templateUrl: './list-lawyers.component.html',
+  styleUrls: ['./list-lawyers.component.scss']
 })
-export class ListLawyersComponent implements OnInit {
+export class ListLawyersComponent {
   users: Promise<any[]>;
   loadingAction = false;
-  dataSource: MatTableDataSource<Lawyer>;
+  initialSort: Sort<Lawyer> = { property: 'name', order: 'asc' };
+
+  dataSource: PaginatedDataSource<Lawyer>;
   displayedColumns: string[] = [
-    // 'id',
-    "fullName",
-    "location",
-    "active",
-    "edit",
-    "delete",
+    'fullName',
+    'location',
+    'active',
+    'edit',
+    'delete'
   ];
 
   constructor(
     private lawyersService: LawyersService,
     private alertService: AlertService
   ) {
-    this.dataSource = new MatTableDataSource();
+    this.dataSource = new PaginatedDataSource<Lawyer>(
+      (request) => this.lawyersService.getLawyersPage(request),
+      this.initialSort
+    );
   }
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  ngOnInit(): void {
-    this.lawyersService.getLawyers().then((lawyers) => {
-      this.dataSource.data = lawyers;
-      this.dataSource.sortingDataAccessor = (item, property) => {
-        switch (property) {
-          case "fullName": {
-            return item.name;
-          }
-          default:
-            return item[property];
-        }
-      };
-      this.dataSource.sort = this.sort;
-    });
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() =>
+      this.dataSource.sortBy({
+        property: this.sort.active as keyof Lawyer,
+        order: this.sort.direction
+      })
+    );
   }
 
   deleteUser(id): void {
     if (
       confirm(
-        "Procederás a eliminar al abogado. Esta acción no es reversible. ¿Estás seguro?"
+        'Procederás a eliminar al abogado. Esta acción no es reversible. ¿Estás seguro?'
       )
     ) {
       this.loadingAction = true;
       this.lawyersService
         .deleteLawyer(id)
         .then(() => {
-          this.dataSource.data = this.dataSource.data.filter(
-            (lawyer) => lawyer.id !== id
-          );
-          this.alertService.success("Se ha eliminado el usuario exitosamente.");
+          this.dataSource.sortBy({
+            property: this.sort.active as keyof Lawyer,
+            order: this.sort.direction
+          });
+          this.alertService.success('Se ha eliminado el usuario exitosamente.');
         })
         .catch(console.error)
         .finally(() => {

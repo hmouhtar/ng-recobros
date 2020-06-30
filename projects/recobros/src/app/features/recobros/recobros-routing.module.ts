@@ -1,39 +1,37 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule, Router } from "@angular/router";
-
-import { RecobrosComponent } from "./recobros.component";
-import { AuthGuard } from "../../core/guards/auth.guard";
-import { RoleGuard } from "../../core/guards/role.guard";
-import { NewRecobroComponent } from "./components/new-recobro/new-recobro.component";
-import { ListRecobrosComponent } from "./components/list-recobros/list-recobros.component";
-import { EditRecobroComponent } from "./components/edit-recobro/edit-recobro.component";
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { RecobrosComponent } from './recobros.component';
+import { AuthGuard } from '../../core/guards/auth.guard';
+import { NewRecobroComponent } from './components/new-recobro/new-recobro.component';
+import { ListRecobrosComponent } from './components/list-recobros/list-recobros.component';
+import { EditRecobroComponent } from './components/edit-recobro/edit-recobro.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
-        path: "",
+        path: '',
         component: RecobrosComponent,
         children: [
           {
-            path: "",
+            path: '',
             component: ListRecobrosComponent,
-            canActivate: [AuthGuard],
+            canActivate: [AuthGuard]
           },
           {
-            path: "new",
+            path: 'new',
             component: NewRecobroComponent,
-            canActivate: [AuthGuard],
+            canActivate: [AuthGuard]
           },
           {
-            path: "edit/:id",
+            path: 'edit/:id',
             component: EditRecobroComponent,
-            canActivate: [AuthGuard],
-          },
-        ],
-      },
-    ]),
+            canActivate: [AuthGuard]
+          }
+        ]
+      }
+    ])
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class RecobrosRoutingModule {}

@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { User } from '../../shared/models/user';
+import { tap } from 'rxjs/operators';
 import { Config } from 'projects/recobros/src/constants';
-import { Router } from '@angular/router';
-import { UserService } from './user.service';
 import { AlertService } from '../../core/services/alert.service';
 
 @Injectable({ providedIn: 'root' })
@@ -14,12 +11,7 @@ export class AuthenticationService {
   private isUserLoggedIn$: BehaviorSubject<boolean>;
   public isUserLoggedInO: Observable<boolean>;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private userService: UserService,
-    private alertService: AlertService
-  ) {
+  constructor(private http: HttpClient, private alertService: AlertService) {
     this.isUserLoggedIn$ = new BehaviorSubject<boolean>(
       this.currentUserToken !== null
     );
@@ -27,7 +19,7 @@ export class AuthenticationService {
     this.isUserLoggedInO = this.isUserLoggedIn$.asObservable();
   }
 
-  public get currentUserToken() {
+  public get currentUserToken(): string | null {
     let token;
     try {
       token = localStorage.getItem('token');
@@ -52,15 +44,15 @@ export class AuthenticationService {
     return token;
   }
 
-  public get isUserLoggedIn() {
+  public get isUserLoggedIn(): boolean {
     return this.isUserLoggedIn$.value;
   }
 
-  login(userCredential: string, password: string) {
+  login(userCredential: string, password: string): Promise<any> {
     return this.http
       .post(`${Config.apiURL}/api/login/user/doLogin`, {
         userCredential,
-        password,
+        password
       })
       .pipe(
         tap((res) => {
@@ -71,8 +63,7 @@ export class AuthenticationService {
       .toPromise();
   }
 
-  logout() {
-    // remove user from local storage and set current user to null
+  logout(): void {
     localStorage.removeItem('token');
     window.location.href = '/login';
   }

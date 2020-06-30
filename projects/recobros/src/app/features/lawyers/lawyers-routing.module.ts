@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { LawyersComponent } from './lawyers.component';
 import { ListLawyersComponent } from './components/list-lawyers/list-lawyers.component';
 import { AuthGuard } from '../../core/guards/auth.guard';
@@ -15,24 +14,24 @@ const routes: Routes = [
       {
         path: '',
         component: ListLawyersComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: 'new',
         component: NewLawyerComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: 'edit/:id',
         component: EditLawyerComponent,
-        canActivate: [AuthGuard],
-      },
-    ],
-  },
+        canActivate: [AuthGuard]
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class LawyersRoutingModule {}

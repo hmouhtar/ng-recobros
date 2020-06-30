@@ -1,7 +1,11 @@
 <div>
   <ng-container [ngSwitch]="field.type">
     <label style="display: block;">{{ field.label }}</label>
-    <mat-form-field [floatLabel]="'always'" *ngSwitchCase="'textarea'" appearance="fill">
+    <mat-form-field
+      [floatLabel]="'always'"
+      *ngSwitchCase="'textarea'"
+      appearance="fill"
+    >
       <mat-label>{{ field.label }}</mat-label>
       <textarea
         name="{{ field.name }}"
@@ -12,7 +16,11 @@
       ></textarea>
     </mat-form-field>
     <!--  -->
-    <mat-form-field [floatLabel]="'always'" *ngSwitchCase="'select'" appearance="fill">
+    <mat-form-field
+      [floatLabel]="'always'"
+      *ngSwitchCase="'select'"
+      appearance="fill"
+    >
       <mat-label>{{ field.label }}</mat-label>
       <select
         name="{{ field.name }}"

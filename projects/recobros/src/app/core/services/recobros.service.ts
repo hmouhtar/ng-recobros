@@ -1,38 +1,54 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Config } from "projects/recobros/src/constants";
-import { Field } from "../../shared/models/field";
-import { Recobro } from "../../shared/models/recobro";
-import { map } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Config } from 'projects/recobros/src/constants';
+import { Field } from '../../shared/models/field';
+import { Recobro } from '../../shared/models/recobro';
+import { map } from 'rxjs/operators';
+import { PageRequest, Page } from './paginated.datasource';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class RecobrosService {
   constructor(private http: HttpClient) {}
   private _autoComplete;
 
-  getAllRecobros(page: number = 0, size: number = 25, sort: string = "id,asc"): Promise<Recobro[]> {
+  getAllRecobros(page = 0, size = 25, sort = 'id,asc'): Promise<Recobro[]> {
     return this.http
       .get<Recobro[]>(`${Config.apiURL}/api/manager/recoveries`, {
         params: {
           page: String(page),
           size: String(size),
-          sort,
-        },
+          sort
+        }
       })
-      .pipe(map((getUsersRequest) => getUsersRequest["data"]["content"]))
+      .pipe(map((getUsersRequest) => getUsersRequest['data']['content']))
       .toPromise();
+  }
+
+  getRecobrosPage(request: PageRequest<Recobro>) {
+    return this.http
+      .get<Page<Recobro>>(`${Config.apiURL}/api/manager/recoveries`, {
+        params: {
+          size: String(request.size),
+          page: String(request.page),
+          sort: `${request.sort?.property},${request.sort?.order}`
+        }
+      })
+      .pipe(map((res) => res['data']));
   }
 
   getRecobro(id): Promise<Recobro> {
     return this.http
       .get<Recobro>(`${Config.apiURL}/api/manager/recovery/info/${id}`)
-      .pipe(map((recobro) => recobro["data"]))
+      .pipe(map((recobro) => recobro['data']))
       .toPromise();
   }
 
-  getRecobrosFields(context: "new" | "edit", recobro?: Recobro): Promise<Field[]> {
+  getRecobrosFields(
+    context: 'new' | 'edit',
+    recobro?: Recobro
+  ): Promise<Field[]> {
     return Field.processField.call(
       this,
       Recobro.getRecobroFields().filter(
@@ -47,7 +63,7 @@ export class RecobrosService {
     if (!this._autoComplete) {
       this._autoComplete = this.http
         .get(`${Config.apiURL}/api/manager/recovery/autocomplete`)
-        .pipe(map((data) => data["data"]))
+        .pipe(map((data) => data['data']))
         .toPromise();
     }
 
@@ -55,10 +71,14 @@ export class RecobrosService {
   }
 
   createRecobro(data) {
-    return this.http.post(`${Config.apiURL}/api/manager/recovery`, data).toPromise();
+    return this.http
+      .post(`${Config.apiURL}/api/manager/recovery`, data)
+      .toPromise();
   }
 
   editRecobro(data, id) {
-    return this.http.put(`${Config.apiURL}/api/manager/recovery/edit/${id}`, data).toPromise();
+    return this.http
+      .put(`${Config.apiURL}/api/manager/recovery/edit/${id}`, data)
+      .toPromise();
   }
 }

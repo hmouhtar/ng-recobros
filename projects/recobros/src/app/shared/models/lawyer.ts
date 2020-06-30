@@ -14,24 +14,24 @@ export class Lawyer {
         type: 'text',
         label: 'Nombres',
         name: 'name',
-        required: true,
+        required: true
       },
       {
         type: 'text',
         label: 'Primer Apellido',
         name: 'surname1',
-        required: true,
+        required: true
       },
       {
         type: 'text',
         label: 'Segundo Apellido',
-        name: 'surname2',
+        name: 'surname2'
       },
       {
         type: 'text',
         label: 'Población / Zona Geográfica',
         name: 'location',
-        required: true,
+        required: true
       },
       // {
       //   type: 'hidden',
@@ -44,8 +44,8 @@ export class Lawyer {
         type: 'checkbox',
         label: 'Asignable',
         name: 'active',
-        context: 'edit',
-      },
+        context: 'edit'
+      }
     ];
   }
 }

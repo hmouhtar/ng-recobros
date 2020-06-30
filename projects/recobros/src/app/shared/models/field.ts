@@ -1,18 +1,18 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe } from '@angular/common';
 
 export class Field {
   type:
-    | "text"
-    | "number"
-    | "email"
-    | "password"
-    | "checkbox"
-    | "radio"
-    | "select"
-    | "date"
-    | "datetime-local"
-    | "textarea"
-    | "hidden";
+    | 'text'
+    | 'number'
+    | 'email'
+    | 'password'
+    | 'checkbox'
+    | 'radio'
+    | 'select'
+    | 'date'
+    | 'datetime-local'
+    | 'textarea'
+    | 'hidden';
   label: string;
   required?: boolean;
   readonly?: boolean;
@@ -43,14 +43,21 @@ export class Field {
   hint?: string;
 
   // If field value or options is a function, call it.
-  static processField(fields: Field[], context: "new" | "edit", subject?): Promise<Field[]> {
+  static processField(
+    fields: Field[],
+    context: 'new' | 'edit',
+    subject?
+  ): Promise<Field[]> {
     return Promise.all(
       fields.map((field) =>
         Promise.all(
           Object.keys(field)
-            .filter((key) => key !== "displayCondition" || field["displayConditionFixed"])
+            .filter(
+              (key) =>
+                key !== 'displayCondition' || field['displayConditionFixed']
+            )
             .map((key) => {
-              if ("function" === typeof field[key]) {
+              if ('function' === typeof field[key]) {
                 return Promise.resolve(field[key].call(this, subject)).then(
                   (res) => (field[key] = res)
                 );
@@ -58,27 +65,31 @@ export class Field {
                 return field[key];
               }
             })
-            .filter((key) => key !== "displayCondition")
+            .filter((key) => key !== 'displayCondition')
         )
       )
     )
       .then(() => {
         return fields.map((field) => {
-          if (subject !== undefined && field.value === undefined && "edit" === context) {
+          if (
+            subject !== undefined &&
+            field.value === undefined &&
+            'edit' === context
+          ) {
             field.value = field.valuePath
               ? subject[field.valuePath][field.name]
               : subject[field.name];
           }
           console.log(field.name, field.value);
 
-          if (["date", "datetime-local"].includes(field.type) && field.value) {
-            let date = new Date(`${field.value}+02:00`);
+          if (['date', 'datetime-local'].includes(field.type) && field.value) {
+            const date = new Date(`${field.value}+02:00`);
             date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
-            if ("date" === field.type) {
-              field.value = date.toISOString().split("T")[0];
+            if ('date' === field.type) {
+              field.value = date.toISOString().split('T')[0];
             }
-            if ("datetime-local" === field.type) {
+            if ('datetime-local' === field.type) {
               field.value = date.toISOString().substring(0, 16);
             }
           }

@@ -1,22 +1,17 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor,
-} from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
-
-import { AuthenticationService } from "../services/authentication.service";
-import { AlertService } from "../services/alert.service";
+  HttpInterceptor
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AlertService } from '../services/alert.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private authenticationService: AuthenticationService,
-    private alertService: AlertService
-  ) {}
+  constructor(private alertService: AlertService) {}
 
   intercept(
     request: HttpRequest<any>,
