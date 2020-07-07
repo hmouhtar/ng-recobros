@@ -29,7 +29,7 @@ export class LawyersService {
   getLawyers(): Promise<Lawyer[]> {
     return this.http
       .get<Lawyer[]>(`${Config.apiURL}/api/lawyer`)
-      .pipe(map((lawyer) => lawyer['data']))
+      .pipe(map((lawyer) => lawyer['data']['content']))
       .toPromise();
   }
 

@@ -6,7 +6,7 @@
     (ngSubmit)="editUser(editLawyerForm)"
   >
     <div fxLayout="row wrap" fxLayoutAlign="space-between">
-      <ng-container *ngFor="let field of lawyerFieldsO | async">
+      <ng-container *ngFor="let field of editLawyerFields">
         <alvea-dynamic-field
           fxFlex="0 0 48%"
           [field]="field"

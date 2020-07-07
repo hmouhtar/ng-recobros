@@ -33,7 +33,7 @@ export interface Recobro {
   judicialApproval?: 'AUTHORIZED' | 'UNAUTHORIZED';
   judicialDate?: Date;
   jurisdiction?: number;
-  lawyer?: number;
+  lawyerName?: string;
   newPrescriptionDate?: Date;
   observations?: string;
   opposingCompany?: string;
@@ -44,4 +44,6 @@ export interface Recobro {
   situationManagement: number;
   suppliesFee?: number;
   recoveryCode?: number;
+  motive;
+  branch;
 }
