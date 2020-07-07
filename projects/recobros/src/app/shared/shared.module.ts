@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DynamicFieldComponent } from './components/dynamic-field/dynamic-field.component';
+
+// Material
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +23,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DynamicFieldComponent } from './components/dynamic-field/dynamic-field.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -31,7 +33,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   declarations: [DynamicFieldComponent],
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     CommonModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
@@ -53,21 +57,21 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
-    FormsModule,
-    ReactiveFormsModule,
     MatTabsModule,
-    MatSlideToggleModule,
-    FlexLayoutModule
+    MatSlideToggleModule
   ],
   exports: [
+    DynamicFieldComponent,
     ReactiveFormsModule,
+    FormsModule,
     CommonModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatBadgeModule,
-    MatProgressSpinnerModule,
     MatListModule,
     MatGridListModule,
     MatFormFieldModule,
@@ -79,16 +83,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatNativeDateModule,
     MatChipsModule,
     MatTooltipModule,
-    MatTableModule,
     MatSortModule,
+    MatTableModule,
     MatPaginatorModule,
     MatCardModule,
-    FormsModule,
-    ReactiveFormsModule,
     MatTabsModule,
-    DynamicFieldComponent,
-    MatSlideToggleModule,
-    FlexLayoutModule
+    MatSlideToggleModule
   ]
 })
 export class SharedModule {}

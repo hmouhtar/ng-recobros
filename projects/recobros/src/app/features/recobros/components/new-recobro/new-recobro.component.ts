@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { NgForm } from '@angular/forms';
@@ -6,18 +6,17 @@ import { AlertService } from 'projects/recobros/src/app/core/services/alert.serv
 import { groupBy } from 'lodash';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { RolesService } from 'projects/recobros/src/app/core/services/roles.service';
-import { UserService } from 'projects/recobros/src/app/core/services/user.service';
+import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
+import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 @Component({
   selector: 'alvea-new-recobro',
   templateUrl: './new-recobro.component.html',
   styleUrls: ['./new-recobro.component.scss']
 })
-export class NewRecobroComponent implements OnInit {
-  newRecobroFields: Field[] = [];
+export class NewRecobroComponent {
+  newRecobroFields: Field<Recobro>[] = [];
   roles: Promise<string[]>;
   loadingAction = false;
-  incidentTypologies: any[];
   formChangesSubscription: Subscription;
   lastFormValues = {};
   @ViewChild('newRecobroForm') newRecobroForm: NgForm;
@@ -25,19 +24,16 @@ export class NewRecobroComponent implements OnInit {
   constructor(
     private recobrosService: RecobrosService,
     private alertService: AlertService,
-    private rolesService: RolesService,
-    private userService: UserService,
-    private cdRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private fieldService: FieldService
   ) {}
 
-  ngOnInit(): void {
-    this.recobrosService.getRecobrosFields.call(this, 'new').then((fields) => {
-      this.newRecobroFields = fields;
-    });
-  }
-
   ngAfterViewInit(): void {
+    this.fieldService
+      .getRecobroFields('new', this.newRecobroForm)
+      .then((fields) => {
+        this.newRecobroFields = fields;
+      });
     this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe(
       (formValues) => {
         if (

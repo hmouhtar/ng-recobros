@@ -9,7 +9,14 @@
       <ng-container *ngFor="let field of newRecobroFields">
         <alvea-dynamic-field
           fxFlex="0 0 48%"
-          *ngIf="field.displayCondition ? field.displayCondition.call(this, newRecobroForm) : true"
+          *ngIf="
+            (field.fixedDisplayCondition !== undefined
+              ? field.fixedDisplayCondition
+              : true) &&
+            (field.dynamicDisplayCondition !== undefined
+              ? field.dynamicDisplayCondition(this.newRecobroForm)
+              : true)
+          "
           [field]="field"
         ></alvea-dynamic-field>
       </ng-container>

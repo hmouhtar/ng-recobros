@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from 'projects/recobros/src/constants';
-import { Field } from '../../shared/models/field';
 import { Recobro } from '../../shared/models/recobro';
 import { map } from 'rxjs/operators';
 import { PageRequest, Page } from './paginated.datasource';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class RecobrosService {
       .toPromise();
   }
 
-  getRecobrosPage(request: PageRequest<Recobro>) {
+  getRecobrosPage(request: PageRequest<Recobro>): Observable<Page<Recobro>> {
     return this.http
       .get<Page<Recobro>>(`${Config.apiURL}/api/manager/recoveries`, {
         params: {
@@ -43,20 +43,6 @@ export class RecobrosService {
       .get<Recobro>(`${Config.apiURL}/api/manager/recovery/info/${id}`)
       .pipe(map((recobro) => recobro['data']))
       .toPromise();
-  }
-
-  getRecobrosFields(
-    context: 'new' | 'edit',
-    recobro?: Recobro
-  ): Promise<Field[]> {
-    return Field.processField.call(
-      this,
-      Recobro.getRecobroFields().filter(
-        (field) => field.context === undefined || field.context === context
-      ),
-      context,
-      recobro
-    );
   }
 
   getRecobroAutoComplete() {

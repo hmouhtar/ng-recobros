@@ -11,6 +11,7 @@
         name="{{ field.name }}"
         [ngModel]="field.value"
         [required]="field.required"
+        [disabled]="field.disabled"
         matInput
         rows="1"
       ></textarea>
@@ -29,7 +30,11 @@
         matNativeControl
       >
         <option value="" disabled></option>
-        <option *ngFor="let option of field.options" [ngValue]="option.value">
+        <option
+          *ngFor="let option of field.options"
+          [ngValue]="option.value"
+          [disabled]="option.disabled"
+        >
           {{ option.label }}
         </option>
       </select>

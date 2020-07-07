@@ -1,6 +1,14 @@
-import { DatePipe } from '@angular/common';
+import { Injector } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { SelectOption } from './selectOption';
 
-export class Field {
+export type PropertyFunction<S, T> = (
+  serviceInjector: Injector,
+  form: NgForm,
+  subject: S
+) => T;
+
+export interface Field<T> {
   type:
     | 'text'
     | 'number'
@@ -14,93 +22,21 @@ export class Field {
     | 'textarea'
     | 'hidden';
   label: string;
-  required?: boolean;
-  readonly?: boolean;
-  hidden?: boolean;
-  disabled?;
-  name: string;
+  name: keyof T;
+  required?: boolean | PropertyFunction<T, boolean | Promise<boolean>>;
+  hidden?: boolean | PropertyFunction<T, boolean | Promise<boolean>>;
+  disabled?: boolean | PropertyFunction<T, boolean | Promise<boolean>>;
   options?:
-    | {
-        label: string;
-        value: string;
-      }[]
-    | (() => Promise<
-        {
-          label: string;
-          value: string;
-        }[]
-      >);
-  displayOnTable?: boolean;
+    | SelectOption[]
+    | PropertyFunction<T, SelectOption[] | Promise<SelectOption[]>>;
   capability?: string | string[];
-  displayCondition?: any;
-  displayConditionFixed?: boolean;
-  value?: (() => string) | string;
+  dynamicDisplayCondition?: (form: NgForm) => boolean;
+  fixedDisplayCondition?: PropertyFunction<T, boolean | Promise<boolean>>;
+  value?: string | PropertyFunction<T, string | Promise<string>>;
   valuePath?: string;
-  context?: string;
+  context?: 'new' | 'edit';
   order?: number;
   section?: string;
   prefix?: string;
   hint?: string;
-
-  // If field value or options is a function, call it.
-  static processField(
-    fields: Field[],
-    context: 'new' | 'edit',
-    subject?
-  ): Promise<Field[]> {
-    return Promise.all(
-      fields.map((field) =>
-        Promise.all(
-          Object.keys(field)
-            .filter(
-              (key) =>
-                key !== 'displayCondition' || field['displayConditionFixed']
-            )
-            .map((key) => {
-              if ('function' === typeof field[key]) {
-                return Promise.resolve(field[key].call(this, subject)).then(
-                  (res) => (field[key] = res)
-                );
-              } else {
-                return field[key];
-              }
-            })
-            .filter((key) => key !== 'displayCondition')
-        )
-      )
-    )
-      .then(() => {
-        return fields.map((field) => {
-          if (
-            subject !== undefined &&
-            field.value === undefined &&
-            'edit' === context
-          ) {
-            field.value = field.valuePath
-              ? subject[field.valuePath][field.name]
-              : subject[field.name];
-          }
-          console.log(field.name, field.value);
-
-          if (['date', 'datetime-local'].includes(field.type) && field.value) {
-            const date = new Date(`${field.value}+02:00`);
-            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-
-            if ('date' === field.type) {
-              field.value = date.toISOString().split('T')[0];
-            }
-            if ('datetime-local' === field.type) {
-              field.value = date.toISOString().substring(0, 16);
-            }
-          }
-
-          return field;
-        });
-      })
-      .then((fields) =>
-        fields.sort((a, b) => {
-          return (a.order || 999) - (b.order || 999);
-        })
-      );
-  }
 }

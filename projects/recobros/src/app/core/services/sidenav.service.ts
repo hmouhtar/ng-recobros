@@ -21,6 +21,13 @@ export class SidenavService {
       icon: 'library_books',
       category: 'Recobros'
     },
+    // {
+    //   title: 'Carga de Recobros',
+    //   capability: 'add_recobros',
+    //   path: 'recobros/new',
+    //   icon: 'library_add',
+    //   category: 'Gestión de Recobros',
+    // },
 
     {
       title: 'Cuadros de Mando',
@@ -37,7 +44,13 @@ export class SidenavService {
       icon: 'account_circle',
       category: 'Administración'
     },
-
+    // {
+    //   title: 'Configuración de Carga',
+    //   capability: 'manage_settings',
+    //   path: 'settings',
+    //   icon: 'settings',
+    //   category: 'Administración',
+    // },
     {
       title: 'Gestión de Abogados',
       capability: 'DISPLAY_LAWYER_LIST',
@@ -52,6 +65,7 @@ export class SidenavService {
     return groupBy(this.routes, 'category');
   }
 
+  // Returns routes accesible by the current user based on the role.
   getAccesibleRoutes(): Promise<any> {
     return Promise.all(
       this.routes.map((route) =>

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Config } from 'projects/recobros/src/constants';
 import { HttpClient } from '@angular/common/http';
 import { Lawyer } from '../../shared/models/lawyer';
-import { Field } from '../../shared/models/field';
 import { map } from 'rxjs/operators';
 import { PageRequest, Page } from './paginated.datasource';
 
@@ -40,16 +39,5 @@ export class LawyersService {
 
   editLawyer(id: number, data): Promise<any> {
     return this.http.put(`${Config.apiURL}/api/lawyer/${id}`, data).toPromise();
-  }
-
-  getLawyerFields(context: 'new' | 'edit', lawyer?: Lawyer): Promise<Field[]> {
-    return Field.processField.call(
-      this,
-      Lawyer.getLawyerFields().filter(
-        (field) => field.context === undefined || field.context === context
-      ),
-      context,
-      lawyer
-    );
   }
 }

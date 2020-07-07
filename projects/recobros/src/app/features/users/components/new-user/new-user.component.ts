@@ -1,22 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { UserService } from 'projects/recobros/src/app/core/services/user.service';
-import { RolesService } from 'projects/recobros/src/app/core/services/roles.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { Observable, Subject } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { Router } from '@angular/router';
+import { User } from 'projects/recobros/src/app/shared/models/user';
+import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
 
 @Component({
   selector: 'alvea-new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss']
 })
-export class NewUserComponent implements OnInit {
+export class NewUserComponent {
   roles: Promise<string[]>;
-  _userFields: Field[];
-  userFields$: Subject<Field[]>;
-  userFieldsO: Observable<Field[]>;
+  _userFields: Field<User>[];
+  userFields$: Subject<Field<User>[]>;
+  userFieldsO: Observable<Field<User>[]>;
   formChangesSubscription;
   lastFormValues = {};
   loadingAction = false;
@@ -24,31 +25,26 @@ export class NewUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private rolesService: RolesService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private fieldService: FieldService
   ) {
     this.userFields$ = new Subject();
     this.userFieldsO = this.userFields$.asObservable();
   }
 
-  ngOnInit(): void {
-    this.userService.getUserFields.call(this, 'new').then((fields) => {
+  ngAfterViewInit(): void {
+    this.fieldService.getUserFields('new', this.newUserForm).then((fields) => {
       this._userFields = fields;
-      console.log(this._userFields);
       this.userFields$.next(this._userFields);
     });
-  }
 
-  ngAfterViewInit(): void {
     this.formChangesSubscription = this.newUserForm.form.valueChanges.subscribe(
       (formValues) => {
         if (formValues.rol !== this.lastFormValues['rol']) {
-          console.log('Value is:', formValues.rol);
-          this.userService
-            .getRoleFields(formValues.rol, 'new')
+          this.fieldService
+            .getUserRoleFields(formValues.rol, 'new', this.newUserForm)
             .then((fields) => {
-              console.log('Fields are:', fields);
               this.userFields$.next(
                 this._userFields.concat(fields).sort((a, b) => {
                   return (a.order || 999) - (b.order || 999);
@@ -56,7 +52,6 @@ export class NewUserComponent implements OnInit {
               );
             });
         }
-
         this.lastFormValues = formValues;
       }
     );

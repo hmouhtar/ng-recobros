@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../../shared/models/user';
 import { Config } from 'projects/recobros/src/constants';
 import { map } from 'rxjs/operators';
-import { Field } from '../../shared/models/field';
 import { PageRequest, Page } from '../services/paginated.datasource';
 import { Observable } from 'rxjs';
 
@@ -28,44 +27,16 @@ export class UserService {
       .toPromise();
   }
 
-  getRoleFields(
-    role: string,
-    context: 'new' | 'edit',
-    user?: User
-  ): Promise<Field[]> {
-    console.log(role);
-    return Field.processField.call(
-      this,
-      User.getRoleFields(role).filter(
-        (field) => field.context === undefined || field.context === context
-      ),
-      context,
-      user
-    );
-  }
-
-  getUserFields(context: 'new' | 'edit', user?: User): Promise<Field[]> {
-    return Field.processField.call(
-      this,
-      User.getUserFields().filter(
-        (field) => field.context === undefined || field.context === context
-      ),
-      context,
-      user
-    );
-  }
   getUsersPage(request: PageRequest<User>): Observable<Page<User>> {
-    return this.http.get<Page<User>>(
-      `${Config.apiURL}/api/manager/ownerUsers`,
-      {
+    return this.http
+      .get<Page<User>>(`${Config.apiURL}/api/manager/ownerUsers`, {
         params: {
           size: String(request.size),
           page: String(request.page),
           sort: `${request.sort?.property},${request.sort?.order}`
         }
-      }
-    );
-    // .pipe(map((res) => res["data"]));
+      })
+      .pipe(map((res) => res['data']));
   }
 
   getUsers(page = 0, size = 25, sort = 'name,asc'): Promise<User[]> {
@@ -77,7 +48,7 @@ export class UserService {
           sort
         }
       })
-      .pipe(map((getUsersRequest) => getUsersRequest['content']))
+      .pipe(map((getUsersRequest) => getUsersRequest['data']['content']))
       .toPromise();
   }
 

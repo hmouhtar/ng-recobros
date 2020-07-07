@@ -47,7 +47,7 @@ export class RolesService {
   }
 
   // Check if current user has a capability.
-  async currentUserCan(capability: string) {
+  async currentUserCan(capability: string): Promise<boolean> {
     // Empty capability means all users can do it.
     if (!capability.length) {
       return true;

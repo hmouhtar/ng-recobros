@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { groupBy } from 'lodash';
 import { Subscription } from 'rxjs';
-import { LawyersService } from 'projects/recobros/src/app/core/services/lawyers.service';
-import { UserService } from 'projects/recobros/src/app/core/services/user.service';
-import { RolesService } from 'projects/recobros/src/app/core/services/roles.service';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
+import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
+import { SelectOption } from 'projects/recobros/src/app/shared/models/selectOption';
 
 @Component({
   selector: 'alvea-edit-recobro',
@@ -18,54 +17,54 @@ import { AlertService } from 'projects/recobros/src/app/core/services/alert.serv
 })
 export class EditRecobroComponent implements OnInit {
   loadingAction: boolean;
-  allFields = {};
-  sortedFieldLabels = ['recoveryInfo', 'recoveryStatus', 'recoverySituation']; //];"recoverySituation", "recoveryClose"
-  editRecobroFields: Field[] = [];
-  editStatusFields: Field[] = [];
-  editSituationFields: Field[] = [];
+  sortedFieldLabels = [
+    'recoveryInfo',
+    'recoveryStatus',
+    'recoverySituation',
+    'recoveryClose'
+  ];
+  allFields: { [key: string]: Field<Recobro>[] };
   formChangesSubscription: Subscription;
   lastFormValues = {};
+  recobroPromise: Promise<Recobro>;
   recobro: Recobro;
-  id;
-  promiseResolve = Promise.resolve;
+  recobroID: string;
   constructor(
     private recobrosService: RecobrosService,
     private route: ActivatedRoute,
-    private lawyersService: LawyersService,
-    private userService: UserService,
-    private rolesService: RolesService,
     private alertService: AlertService,
-    private router: Router
+    private fieldService: FieldService
   ) {}
 
   @ViewChild('editRecobroForm') editRecobroForm: NgForm;
+
   ngOnInit(): void {
-    (async () => {
-      this.id = this.route.snapshot.paramMap.get('id') || '';
-      this.recobro = await this.recobrosService.getRecobro(this.id);
-      this.recobrosService.getRecobrosFields
-        .call(this, 'edit', this.recobro)
-        .then((fields) => {
-          this.allFields = groupBy(
-            fields.map(
-              (field) => (
-                (field.section = field.section || 'recoveryInfo'), field
-              )
-            ),
-            'section'
-          );
-        });
-    })();
+    this.recobroID = this.route.snapshot.paramMap.get('id') || '';
   }
 
   ngAfterViewInit(): void {
+    (async () => {
+      this.recobro = await this.recobrosService.getRecobro(this.recobroID);
+      const fields = await this.fieldService.getRecobroFields(
+        'edit',
+        this.editRecobroForm,
+        this.recobro
+      );
+      this.allFields = groupBy(
+        fields.map(
+          (field) => ((field.section = field.section || 'recoveryInfo'), field)
+        ),
+        'section'
+      );
+    })();
+
     this.formChangesSubscription = this.editRecobroForm.form.valueChanges.subscribe(
       (formValues) => {
         if (formValues.branch !== this.lastFormValues['branch']) {
           this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
             const incidentTypologyField = this.allFields['recoveryInfo'].find(
               (field) => field.name === 'incidentTypology'
-            );
+            ) as Field<Recobro>;
             if (incidentTypologyField) {
               incidentTypologyField.options = groupBy(
                 autoComplete['incidentTypologySelect'],
@@ -75,7 +74,7 @@ export class EditRecobroComponent implements OnInit {
               });
 
               if (
-                !incidentTypologyField.options.find(
+                !(incidentTypologyField.options as SelectOption[]).find(
                   (option) =>
                     option.value == String(this.recobro.incidentTypology)
                 )
@@ -96,13 +95,13 @@ export class EditRecobroComponent implements OnInit {
   editRecobro(form: NgForm): void {
     this.loadingAction = true;
     this.recobrosService
-      .editRecobro(form.value, this.id)
-      .then((res) => {
+      .editRecobro(form.value, this.recobroID)
+      .then(() => {
         this.alertService.success('Yay!');
       })
       .catch(console.error)
       .finally(() => {
-        this.loadingAction = false;
+        window.location.reload(false);
       });
   }
 }

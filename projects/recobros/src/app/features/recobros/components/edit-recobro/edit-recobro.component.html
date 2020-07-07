@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="section-title">Administrar Recobro</h1>
-  <!-- {{ editRecobroForm.form.value | json }} -->
+  {{ editRecobroForm.form.value | json }}
   <form
     ngNativeValidate
     #editRecobroForm="ngForm"
@@ -10,7 +10,7 @@
       <ng-container *ngFor="let section of sortedFieldLabels">
         <mat-tab
           [disabled]="
-            'recoverySituation' === section && recobro.recoveryRoute != 2
+            'recoverySituation' === section && recobro?.recoveryRoute != 2
           "
         >
           <ng-template mat-tab-label [ngSwitch]="section">
@@ -30,14 +30,21 @@
 
           <br />
           <div
-            *ngIf="allFields[section]"
+            *ngIf="allFields && allFields[section]"
             fxLayout="row wrap"
             fxLayoutAlign="space-between"
           >
             <ng-container *ngFor="let field of allFields[section]">
               <alvea-dynamic-field
                 fxFlex="0 0 48%"
-                *ngIf="!field.displayCondition || field.displayCondition.call(this, editRecobroForm)"
+                *ngIf="
+                  (field.fixedDisplayCondition !== undefined
+                    ? field.fixedDisplayCondition
+                    : true) &&
+                  (field.dynamicDisplayCondition !== undefined
+                    ? field.dynamicDisplayCondition(this.editRecobroForm)
+                    : true)
+                "
                 [field]="field"
               ></alvea-dynamic-field>
             </ng-container>
