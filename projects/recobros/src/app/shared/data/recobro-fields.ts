@@ -350,7 +350,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
           .filter((user) => user.rol === 'RECOVERY_ADMINISTRATOR')
           .map((user) => {
             return {
-              label: user['fullName'],
+              label: user['companyName'],
               value: (user.id as unknown) as string
             };
           });

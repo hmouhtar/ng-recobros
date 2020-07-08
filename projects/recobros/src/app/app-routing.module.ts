@@ -7,7 +7,7 @@ const routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home'
+    redirectTo: 'recobros'
   },
 
   {

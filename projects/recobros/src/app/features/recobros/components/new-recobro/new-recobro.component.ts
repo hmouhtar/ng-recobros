@@ -32,6 +32,7 @@ export class NewRecobroComponent {
     this.fieldService
       .getRecobroFields('new', this.newRecobroForm)
       .then((fields) => {
+        console.log(fields);
         this.newRecobroFields = fields;
       });
     this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe(

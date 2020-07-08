@@ -4,11 +4,13 @@ import { RECOBRO_FIELDS } from '../../shared/data/recobro-fields';
 import { Field } from '../../shared/models/field';
 import { Recobro } from '../../shared/models/recobro';
 import { NgForm } from '@angular/forms';
-import { clone } from 'lodash';
+import { clone, cloneDeep } from 'lodash';
 import { RECOVERY_ADMINISTRATOR_FIELDS } from '../../shared/data/recovery_administrator-fields';
 import { USER_FIELDS } from '../../shared/data/user-fields';
 import { Lawyer } from '../../shared/models/lawyer';
 import { LAWYER_FIELDS } from '../../shared/data/lawyer-fields';
+import { RECOVERY_EMPLOYEE_FIELDS } from '../../shared/data/recovery_employee-fields';
+import { COMPANY_MANAGER_FIELDS } from '../../shared/data/company_manager-fields';
 
 @Injectable({ providedIn: 'root' })
 export class FieldService {
@@ -32,6 +34,15 @@ export class FieldService {
     switch (role) {
       case 'RECOVERY_ADMINISTRATOR': {
         fields = RECOVERY_ADMINISTRATOR_FIELDS;
+        break;
+      }
+      case 'RECOVERY_EMPLOYEE': {
+        fields = RECOVERY_EMPLOYEE_FIELDS;
+        break;
+      }
+      case 'COMPANY_MANAGER': {
+        fields = COMPANY_MANAGER_FIELDS;
+        break;
       }
     }
     return this.getFields<User>(fields, context, form, subject);
@@ -50,7 +61,6 @@ export class FieldService {
     form: NgForm,
     subject?: Recobro
   ): Promise<Field<Recobro>[]> {
-    console.log('IncidentTypology', subject?.incidentTypology);
     return this.getFields<Recobro>(RECOBRO_FIELDS, context, form, subject);
   }
 
@@ -83,7 +93,7 @@ export class FieldService {
     fields: Field<T>[],
     subject: T
   ): Field<T>[] {
-    fields = clone(fields);
+    fields = cloneDeep(fields);
     return fields.map((field) => {
       if (field.value === undefined) {
         field.value = field.valuePath
@@ -125,7 +135,7 @@ export class FieldService {
     form: NgForm,
     subject?: T
   ): Promise<Field<T>[]> {
-    fields = clone(fields);
+    fields = cloneDeep(fields);
     return Promise.all(
       fields.map((field) => {
         return Promise.all(
