@@ -27,6 +27,7 @@
         name="{{ field.name }}"
         [ngModel]="field.value"
         [required]="field.required"
+        [disabled]="field.disabled"
         matNativeControl
       >
         <option value="" disabled></option>

@@ -533,18 +533,30 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
       const recobrosService = injector.get<RecobrosService>(RecobrosService);
       const rolesService = injector.get<RolesService>(RolesService);
       return recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+        const JUDICIAL_STATE_ID = 7;
+        const PENDING_AUTHORIZATION_JUDICIAL_STATE_ID = 6;
         return Promise.all(
           autoComplete['situationManagementSelect'].map((element) => {
-            const JUDICIAL_STATE_ID = 7;
             const option: SelectOption = {
               label: element['resolution'],
               value: element['id']
             };
             if (Number(option.value) === JUDICIAL_STATE_ID) {
               return rolesService
-                .currentUserCan('CREATE_RECOVERY')
+                .currentUserCan('SELECT_JUDICIAL_PHASE_RECOVERY')
                 .then((currentUserCan) => {
-                  if (currentUserCan) {
+                  if (!currentUserCan) {
+                    option.disabled = true;
+                  }
+                  return option;
+                });
+            } else if (
+              Number(option.value) === PENDING_AUTHORIZATION_JUDICIAL_STATE_ID
+            ) {
+              return rolesService
+                .currentUserCan('SELECT_PENDING_AUTHORIZATION_COMPANY')
+                .then((currentUserCan) => {
+                  if (!currentUserCan) {
                     option.disabled = true;
                   }
                   return option;
@@ -585,9 +597,13 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
       recobro: Recobro
     ): Promise<boolean> => {
       const rolesService = injector.get<RolesService>(RolesService);
+      const PENDING_APPROVAL_STATE_ID = 6;
       return rolesService
-        .currentUserCan('CREATE_RECOVERY')
-        .then((res) => !(res && recobro.situationManagement == 6));
+        .currentUserCan('JUDICIAL_APPROVAL')
+        .then(
+          (res) =>
+            !(res && recobro.situationManagement == PENDING_APPROVAL_STATE_ID)
+        );
     }
   }
 ];
