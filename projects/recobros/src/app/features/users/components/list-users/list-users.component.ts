@@ -86,9 +86,7 @@ export class ListUsersComponent implements OnInit {
           });
           this.alertService.success('Se ha eliminado el usuario exitosamente.');
         })
-        .catch(() => {
-          this.alertService.error('Oops.');
-        })
+        .catch(console.error)
         .finally(() => {
           this.loadingAction = false;
         });
