@@ -2,6 +2,7 @@
   <div fxLayout="row" fxLayoutAlign="space-between" class="section-title">
     <h1>Lista de Recobros</h1>
     <button
+      *ngIf="canCreateRecobro"
       [disabled]="loadingAction"
       id="addNewUserButton"
       routerLink="new"
