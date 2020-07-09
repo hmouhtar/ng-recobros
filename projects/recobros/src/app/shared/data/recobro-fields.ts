@@ -106,6 +106,15 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     section: 'recoveryClose',
     context: 'edit',
     prefix: '€',
+    required: true,
+    dynamicDisplayCondition: (form: NgForm): boolean => {
+      const inNameOfControl = form.controls['inNameOf'];
+      if (inNameOfControl) {
+        return inNameOfControl.value == '1' || inNameOfControl.value == '3';
+      } else {
+        return false;
+      }
+    },
     order: 5
   },
   {
@@ -114,7 +123,16 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     name: 'assuredCashFlow',
     section: 'recoveryClose',
     context: 'edit',
+    required: true,
     prefix: '€',
+    dynamicDisplayCondition: (form: NgForm): boolean => {
+      const inNameOfControl = form.controls['inNameOf'];
+      if (inNameOfControl) {
+        return inNameOfControl.value == '2' || inNameOfControl.value == '3';
+      } else {
+        return false;
+      }
+    },
     order: 5
   },
   {
@@ -442,7 +460,20 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Tipo Parcial',
-    options: [],
+    options: (injector: Injector): Promise<SelectOption[]> =>
+      generateOptionsFromAutoComplete(
+        injector.get<RecobrosService>(RecobrosService),
+        'partialTypeSelect',
+        'partialNameType'
+      ),
+    dynamicDisplayCondition: (form: NgForm): boolean => {
+      const motiveControl = form.controls['motive'];
+      if (motiveControl) {
+        return motiveControl.value == '2' || motiveControl.value == '4';
+      } else {
+        return false;
+      }
+    },
     name: 'partialType',
     context: 'edit',
     section: 'recoveryClose',
@@ -473,7 +504,16 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     type: 'select',
     label: 'Resolución Recobro',
     name: 'resolution',
-    options: [],
+    options: (injector: Injector): SelectOption[] => {
+      const recobrosService = injector.get<RecobrosService>(RecobrosService);
+      return recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+        return Object.keys(
+          groupBy(autoComplete['resolutionSelect'], 'resolution')
+        ).map((branchName) => {
+          return { label: branchName, value: branchName };
+        });
+      });
+    },
     context: 'edit',
     section: 'recoveryClose',
     order: 1

@@ -23,6 +23,7 @@ export class EditRecobroComponent implements OnInit {
     'recoverySituation',
     'recoveryClose'
   ];
+  dateNow: Date = new Date();
   allFields: { [key: string]: Field<Recobro>[] };
   formChangesSubscription: Subscription;
   lastFormValues = {};
@@ -60,6 +61,29 @@ export class EditRecobroComponent implements OnInit {
 
     this.formChangesSubscription = this.editRecobroForm.form.valueChanges.subscribe(
       (formValues) => {
+        if (formValues.resolution !== this.lastFormValues['resolution']) {
+          this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+            const motiveField = this.allFields['recoveryClose'].find(
+              (field) => field.name === 'motive'
+            ) as Field<Recobro>;
+            if (motiveField) {
+              motiveField.options = groupBy(
+                autoComplete['resolutionSelect'],
+                'resolution'
+              )[formValues.resolution].map((element) => {
+                return { label: element.motive, value: element.id };
+              });
+
+              if (
+                !(motiveField.options as SelectOption[]).find(
+                  (option) => option.value == String(this.recobro.motive)
+                )
+              ) {
+                this.editRecobroForm.form.controls['motive'].setValue('');
+              }
+            }
+          });
+        }
         if (formValues.branch !== this.lastFormValues['branch']) {
           this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
             const incidentTypologyField = this.allFields['recoveryInfo'].find(
