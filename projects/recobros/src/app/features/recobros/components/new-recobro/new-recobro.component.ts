@@ -32,11 +32,18 @@ export class NewRecobroComponent {
     this.fieldService
       .getRecobroFields('new', this.newRecobroForm)
       .then((fields) => {
-        console.log(fields);
         this.newRecobroFields = fields;
       });
     this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe(
       (formValues) => {
+        if (
+          formValues.recoveryRoute &&
+          formValues.recoveryRoute !== this.lastFormValues['recoveryRoute']
+        ) {
+          this.newRecobroFields
+            .filter((field) => field.name === 'userAssignment')
+            .map((field) => (field.required = formValues.recoveryRoute !== 2));
+        }
         if (
           formValues.branch &&
           formValues.branch !== this.lastFormValues['branch']
