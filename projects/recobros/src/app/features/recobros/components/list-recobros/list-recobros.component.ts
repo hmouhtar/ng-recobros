@@ -17,7 +17,6 @@ import {
 export class ListRecobrosComponent implements OnInit {
   dataSource: PaginatedDataSource<Recobro>;
   initialSort: Sort<Recobro> = { property: 'sinisterNumber', order: 'asc' };
-
   loadingAction = false;
   canCreateRecobro: boolean;
   displayedColumns: string[] = [

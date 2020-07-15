@@ -504,14 +504,48 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     type: 'select',
     label: 'Resolución Recobro',
     name: 'resolution',
+    value: (
+      injector: Injector,
+      form: NgForm,
+      recobro?: Recobro
+    ): Promise<string> => {
+      if (recobro) {
+        const recobrosService = injector.get<RecobrosService>(RecobrosService);
+        return recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+          const resolutionField = autoComplete['resolutionSelect'].find(
+            (resolution) => resolution.id == recobro.motive
+          );
+          return resolutionField ? resolutionField.resolution : '';
+        });
+      }
+      return Promise.resolve('');
+    },
     options: (injector: Injector): SelectOption[] => {
       const recobrosService = injector.get<RecobrosService>(RecobrosService);
+      const rolesService = injector.get<RolesService>(RolesService);
+
       return recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-        return Object.keys(
+        const options: SelectOption[] = Object.keys(
           groupBy(autoComplete['resolutionSelect'], 'resolution')
-        ).map((branchName) => {
-          return { label: branchName, value: branchName };
+        ).map((resolutionTypeName) => {
+          return { label: resolutionTypeName, value: resolutionTypeName };
         });
+
+        return Promise.all(
+          options.map((option) => {
+            if (option.value === 'Cierre por error') {
+              return rolesService
+                .currentUserCan('CLOSE_RECOVERY_WITH_ERROR_RESOLUTION')
+                .then((currentUserCan) => {
+                  if (!currentUserCan) {
+                    option.disabled = true;
+                  }
+                  return option;
+                });
+            }
+            return option;
+          })
+        );
       });
     },
     context: 'edit',
@@ -582,14 +616,8 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
               value: element['id']
             };
             if (Number(option.value) === JUDICIAL_STATE_ID) {
-              return rolesService
-                .currentUserCan('SELECT_JUDICIAL_PHASE_RECOVERY')
-                .then((currentUserCan) => {
-                  if (!currentUserCan) {
-                    option.disabled = true;
-                  }
-                  return option;
-                });
+              option.disabled = true;
+              return option;
             } else if (
               Number(option.value) === PENDING_AUTHORIZATION_JUDICIAL_STATE_ID
             ) {

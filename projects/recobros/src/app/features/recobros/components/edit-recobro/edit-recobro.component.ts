@@ -61,6 +61,16 @@ export class EditRecobroComponent implements OnInit {
 
     this.formChangesSubscription = this.editRecobroForm.form.valueChanges.subscribe(
       (formValues) => {
+        if (
+          formValues.recoverySituation &&
+          formValues.recoverySituation !==
+            this.lastFormValues['recoverySituation']
+        ) {
+          this.allFields['recoveryClose'].map(
+            (field) =>
+              (field.required = formValues.recoverySituation === 'FINISHED')
+          );
+        }
         if (formValues.resolution !== this.lastFormValues['resolution']) {
           this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
             const motiveField = this.allFields['recoveryClose'].find(
