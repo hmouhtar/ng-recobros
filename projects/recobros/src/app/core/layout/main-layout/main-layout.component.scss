@@ -17,6 +17,20 @@ button {
   left: 0;
   width: 100%;
 }
+.mat-list-base {
+  padding-top: 30px;
+  .mat-list-item,
+  .mat-list-subheader {
+    height: auto;
+  }
+  .mat-list-item {
+    padding: 10px 0;
+  }
+  .mat-list-subheader {
+    padding: 0 16px;
+    margin-top: 0;
+  }
+}
 
 .mat-drawer-content {
   overflow: visible;
@@ -43,7 +57,7 @@ button {
   }
   mat-divider {
     border-top-color: #3d96f5;
-    margin: 20px;
+    margin: 10px;
   }
 }
 

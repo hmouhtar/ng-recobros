@@ -13,6 +13,10 @@
       Nuevo recobro
     </button>
   </div>
+  <mat-form-field class="searchField" [floatLabel]="'always'" appearance="fill">
+    <mat-label>Buscar recobro por N. Siniestro</mat-label>
+    <input matInput type="text" #searchBySinisterNumberInput />
+  </mat-form-field>
   <table
     matSort
     matSortDisableClear

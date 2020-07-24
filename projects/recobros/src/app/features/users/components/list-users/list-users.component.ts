@@ -84,7 +84,9 @@ export class ListUsersComponent implements OnInit {
             property: this.sort.active as keyof User,
             order: this.sort.direction
           });
-          this.alertService.success('Se ha eliminado el usuario exitosamente.');
+          this.alertService.emitSuccessAlert(
+            'Se ha eliminado el usuario exitosamente.'
+          );
         })
         .catch(console.error)
         .finally(() => {

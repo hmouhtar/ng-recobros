@@ -30,8 +30,13 @@ export interface Field<T> {
     | SelectOption[]
     | PropertyFunction<T, SelectOption[] | Promise<SelectOption[]>>;
   capability?: string | string[];
-  dynamicDisplayCondition?: (form: NgForm) => boolean;
-  fixedDisplayCondition?: PropertyFunction<T, boolean | Promise<boolean>>;
+  onParentFormValueChanges?: (
+    prevFormValues,
+    nextFormValues,
+    injector: Injector,
+    subject: T
+  ) => void;
+  filterCondition?: PropertyFunction<T, boolean | Promise<boolean>>;
   value?: string | PropertyFunction<T, string | Promise<string>>;
   valuePath?: string;
   context?: 'new' | 'edit';

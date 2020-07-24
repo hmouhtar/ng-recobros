@@ -1,0 +1,52 @@
+<div class="container">
+  <div fxLayout="row" fxLayoutAlign="space-between" class="section-title">
+    <h1>Carga de Recobros</h1>
+  </div>
+
+  <form
+    ngNativeValidate
+    #importRecobrosForm="ngForm"
+    (ngSubmit)="importRecobros($event.target.file.files[0])"
+  >
+    <div fxLayout="row" id="uploadFileContainer">
+      <mat-form-field
+        class="example-full-width"
+        floatLabel="always"
+        appearance="fill"
+      >
+        <mat-label>Selecciona el archivo CSV a subir</mat-label>
+        <input matInput #message readonly />
+        <mat-hint> </mat-hint>
+      </mat-form-field>
+      <button (click)="csvInput.click()" mat-mini-fab color="accent">
+        <mat-icon>attach_files</mat-icon>
+      </button>
+
+      <input
+        ngModel
+        required
+        #csvInput
+        hidden="true"
+        type="file"
+        name="file"
+        (change)="message.value = $event.target.files[0].name"
+        accept=".csv"
+      />
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <button
+      [disabled]="!importRecobrosForm.form.valid || isPerformingRequest"
+      type="submit"
+      mat-raised-button
+      color="primary"
+    >
+      <mat-icon>publish</mat-icon>
+
+      Importar recobros
+      <mat-spinner *ngIf="isPerformingRequest" id="spinner" [diameter]="20">
+      </mat-spinner>
+    </button>
+  </form>
+</div>

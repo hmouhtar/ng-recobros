@@ -61,7 +61,7 @@ export class NewUserComponent {
     this.userService
       .register(form.value)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
         this.router.navigate(['/users'], {});
       })
       .catch(console.error)

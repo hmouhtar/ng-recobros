@@ -35,10 +35,10 @@ export class NewLawyerComponent {
     this.lawyersService
       .createLawyer(form.value)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
         this.router.navigate(['/lawyers'], {});
       })
-      .catch((err) => this.alertService.error(err.message))
+      .catch((err) => this.alertService.emitErrorAlert(err.message))
       .finally(() => {
         this.loadingAction = false;
       });

@@ -1,0 +1,21 @@
+.container form {
+  width: 90%;
+  margin: 0 auto;
+  padding: 60px 0;
+}
+
+#uploadFileContainer {
+  max-width: 350px;
+  &::ng-deep .mat-form-field-infix {
+    padding-right: 50px;
+  }
+  button {
+    position: relative;
+    left: -50px;
+    top: 4px;
+  }
+}
+
+button[type='submit'] {
+  margin-top: 25px;
+}

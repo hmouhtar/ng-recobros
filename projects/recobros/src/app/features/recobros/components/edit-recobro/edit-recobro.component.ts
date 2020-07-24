@@ -131,7 +131,7 @@ export class EditRecobroComponent implements OnInit {
     this.recobrosService
       .editRecobro(form.value, this.recobroID)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
       })
       .catch(console.error)
       .finally(() => {

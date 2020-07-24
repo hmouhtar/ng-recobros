@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
@@ -31,6 +31,8 @@ export class ListRecobrosComponent implements OnInit {
     'company',
     'edit'
   ];
+  @ViewChild('searchBySinisterNumberInput')
+  searchBySinisterNumberInput: ElementRef;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(

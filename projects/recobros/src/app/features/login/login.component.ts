@@ -59,7 +59,15 @@ export class LoginComponent {
     this.currentDialog.close();
     this.userService
       .resetUserPassword(emailAddress)
-      .then((sucess) => this.alertService.success(sucess))
-      .catch((error) => this.alertService.error(error));
+      .then(() =>
+        this.alertService.emitSuccessAlert(
+          'Se ha procesado tu solicitud correctamente.'
+        )
+      )
+      .catch(() =>
+        this.alertService.emitErrorAlert(
+          'Ha habido un error. Por favor, inténtalo de nuevo.'
+        )
+      );
   }
 }

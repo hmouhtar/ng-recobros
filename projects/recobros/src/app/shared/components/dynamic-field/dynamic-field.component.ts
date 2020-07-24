@@ -1,9 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Injector } from '@angular/core';
 import { Field } from '../../models/field';
 import { FormGroup, ControlContainer, NgForm } from '@angular/forms';
-import { Lawyer } from '../../models/lawyer';
-import { Recobro } from '../../models/recobro';
-import { User } from '../../models/user';
+import { pairwise } from 'rxjs/operators';
 
 @Component({
   selector: 'alvea-dynamic-field',
@@ -12,6 +10,24 @@ import { User } from '../../models/user';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class DynamicFieldComponent {
-  @Input() field: Field<Recobro | User | Lawyer>;
-  @Input() form: FormGroup;
+  @Input() field: Field<unknown>;
+  @Input() subject: unknown;
+  @Input() parentForm: NgForm;
+
+  constructor(private injector: Injector) {}
+  ngOnInit(): void {
+    if (this.field.onParentFormValueChanges) {
+      this.parentForm.valueChanges
+        ?.pipe(pairwise())
+        .subscribe(([prevFormValues, newFormValues]) => {
+          if (this.field.onParentFormValueChanges)
+            this.field.onParentFormValueChanges(
+              prevFormValues,
+              newFormValues,
+              this.injector,
+              this.subject
+            );
+        });
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { Recobro } from '../../shared/models/recobro';
 import { map } from 'rxjs/operators';
 import { PageRequest, Page } from './paginated.datasource';
 import { Observable } from 'rxjs';
+import { HttpResponse } from '../../shared/models/http-response';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,9 @@ export class RecobrosService {
 
   getRecobro(id): Promise<Recobro> {
     return this.http
-      .get<Recobro>(`${Config.apiURL}/api/manager/recovery/info/${id}`)
+      .get<HttpResponse<Recobro>>(
+        `${Config.apiURL}/api/manager/recovery/info/${id}`
+      )
       .pipe(map((recobro) => recobro['data']))
       .toPromise();
   }
@@ -56,15 +59,29 @@ export class RecobrosService {
     return this._autoComplete;
   }
 
-  createRecobro(data) {
+  createRecobro(data: Recobro): Promise<boolean> {
     return this.http
-      .post(`${Config.apiURL}/api/manager/recovery`, data)
-      .toPromise();
+      .post<HttpResponse<[]>>(`${Config.apiURL}/api/manager/recovery`, data)
+      .toPromise()
+      .then(() => true);
   }
 
-  editRecobro(data, id) {
+  editRecobro(data: Recobro, id): Promise<boolean> {
     return this.http
-      .put(`${Config.apiURL}/api/manager/recovery/edit/${id}`, data)
-      .toPromise();
+      .put<HttpResponse<[]>>(
+        `${Config.apiURL}/api/manager/recovery/edit/${id}`,
+        data
+      )
+      .toPromise()
+      .then(() => true);
+  }
+
+  importRecobros(file: File | Blob): Promise<boolean> {
+    const formData = new FormData();
+    formData.append('file', file, (file as File).name || 'unnamed_file.csv');
+    return this.http
+      .post<HttpResponse<[]>>(`${Config.apiURL}/api/csv/upload`, formData)
+      .toPromise()
+      .then(() => true);
   }
 }

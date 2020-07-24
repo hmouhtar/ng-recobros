@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { RolesService } from './roles.service';
-import { groupBy } from 'lodash';
+import { groupBy, Dictionary } from 'lodash';
+import { Route } from '../../shared/models/route';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SidenavService {
-  private routes = [
+  private routes: Route[] = [
     {
       title: 'Home',
       capability: '',
@@ -21,14 +23,13 @@ export class SidenavService {
       icon: 'library_books',
       category: 'Recobros'
     },
-    // {
-    //   title: 'Carga de Recobros',
-    //   capability: 'add_recobros',
-    //   path: 'recobros/new',
-    //   icon: 'library_add',
-    //   category: 'Gestión de Recobros',
-    // },
-
+    {
+      title: 'Carga de Recobros',
+      capability: 'CREATE_RECOVERY',
+      path: 'recobros/import',
+      icon: 'library_add',
+      category: 'Recobros'
+    },
     {
       title: 'Cuadros de Mando',
       capability: 'CREATE_RECOVERY',
@@ -61,21 +62,17 @@ export class SidenavService {
   ];
   constructor(private rolesService: RolesService) {}
 
-  getAllRoutes() {
-    return groupBy(this.routes, 'category');
+  getAllRoutes(): Route[] {
+    return this.routes;
   }
 
-  // Returns routes accesible by the current user based on the role.
-  getAccesibleRoutes(): Promise<any> {
+  getAccesibleRoutesByCurrentUser(): Promise<Route[]> {
     return Promise.all(
-      this.routes.map((route) =>
+      this.getAllRoutes().map((route) =>
         this.rolesService.currentUserCan(route.capability)
       )
-    ).then((routesBool) =>
-      groupBy(
-        this.routes.filter((role, index) => routesBool[index]),
-        'category'
-      )
-    );
+    ).then((routesBool: Array<boolean>) => {
+      return this.getAllRoutes().filter((route, index) => routesBool[index]);
+    });
   }
 }

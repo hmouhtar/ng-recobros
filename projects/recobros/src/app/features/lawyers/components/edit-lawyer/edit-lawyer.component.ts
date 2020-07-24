@@ -37,7 +37,7 @@ export class EditLawyerComponent implements OnInit {
         (lawyer) => String(lawyer.id) === this.lawyerID
       ) as Lawyer;
       if (!this.lawyer) {
-        this.alertService.error('ID no válido.');
+        this.alertService.emitErrorAlert('ID no válido.');
         this.router.navigate(['/lawyers'], {});
         return;
       }
@@ -51,9 +51,9 @@ export class EditLawyerComponent implements OnInit {
     this.lawyersService
       .editLawyer(this.lawyer.id, form.value)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
       })
-      .catch((err) => this.alertService.error(err.message))
+      .catch((err) => this.alertService.emitErrorAlert(err.message))
       .finally(() => {
         this.loadingAction = false;
       });

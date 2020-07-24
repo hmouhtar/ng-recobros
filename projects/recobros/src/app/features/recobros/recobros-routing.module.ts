@@ -5,7 +5,7 @@ import { AuthGuard } from '../../core/guards/auth.guard';
 import { NewRecobroComponent } from './components/new-recobro/new-recobro.component';
 import { ListRecobrosComponent } from './components/list-recobros/list-recobros.component';
 import { EditRecobroComponent } from './components/edit-recobro/edit-recobro.component';
-
+import { ImportRecobrosComponent } from './components/import-recobros/import-recobros.component';
 @NgModule({
   imports: [
     RouterModule.forChild([
@@ -26,6 +26,11 @@ import { EditRecobroComponent } from './components/edit-recobro/edit-recobro.com
           {
             path: 'edit/:id',
             component: EditRecobroComponent,
+            canActivate: [AuthGuard]
+          },
+          {
+            path: 'import',
+            component: ImportRecobrosComponent,
             canActivate: [AuthGuard]
           }
         ]

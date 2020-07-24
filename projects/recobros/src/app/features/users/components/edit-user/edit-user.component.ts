@@ -59,7 +59,7 @@ export class EditUserComponent {
     this.userService
       .editUser(this.user.id, form.value)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
       })
       .catch(console.error)
       .finally(() => {

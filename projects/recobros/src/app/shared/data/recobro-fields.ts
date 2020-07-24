@@ -10,6 +10,7 @@ import { groupBy } from 'lodash';
 import { UserService } from '../../core/services/user.service';
 import { LawyersService } from '../../core/services/lawyers.service';
 import { SelectOption } from '../models/selectOption';
+// import { TaxonomyService } from '../../core/services/taxonomy.service';
 
 function generateOptionsFromAutoComplete(
   recobrosService: RecobrosService,
@@ -535,7 +536,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
           options.map((option) => {
             if (option.value === 'Cierre por error') {
               return rolesService
-                .currentUserCan('CLOSE_RECOVERY_WITH_ERROR_RESOLUTION')
+                .currentUserCan('SELECT_FAILED_CLOSURE_RECOVERY')
                 .then((currentUserCan) => {
                   if (!currentUserCan) {
                     option.disabled = true;
@@ -606,6 +607,31 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     options: (injector: Injector): Promise<SelectOption[]> => {
       const recobrosService = injector.get<RecobrosService>(RecobrosService);
       const rolesService = injector.get<RolesService>(RolesService);
+      // const taxonomyService = injector.get<TaxonomyService>(TaxonomyService);
+
+      // taxonomyService.getTermsFromTaxonomy('estado-gestion').then((terms) => {
+      //   return Promise.all([
+      //     terms.map((term) => {
+      //       const option: SelectOption = {
+      //         label: term.name,
+      //         value: String(term.id)
+      //       };
+      //       // read-only option
+      //       if (term.slug === 'en-fase-judicial') {
+      //         option.disabled = true;
+      //       } else if (term.slug === 'pendiente-aprobacion-pase-judicial') {
+      //         return rolesService
+      //           .currentUserCan('SELECT_PENDING_AUTHORIZATION_COMPANY')
+      //           .then((currentUserCan) => {
+      //             option.disabled = !currentUserCan;
+      //             return option;
+      //           });
+      //       }
+      //       return option;
+      //     })
+      //   ]);
+      // }).catch(console.error);
+
       return recobrosService.getRecobroAutoComplete().then((autoComplete) => {
         const JUDICIAL_STATE_ID = 7;
         const PENDING_AUTHORIZATION_JUDICIAL_STATE_ID = 6;
@@ -665,6 +691,14 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
       recobro: Recobro
     ): Promise<boolean> => {
       const rolesService = injector.get<RolesService>(RolesService);
+      // const taxonomyService = injector.get<TaxonomyService>(TaxonomyService);
+      // return Promise.all([
+      //   taxonomyService.getTermBySlug('pendiente-aprobacion-pase-judicial', 'estado-gestion'),
+      //   rolesService.currentUserCan('JUDICIAL_APPROVAL')
+      // ]).then((res) => {
+      //   const [term, currentUserCan] = res;
+      //   return currentUserCan && term.id == recobro.situationManagement;
+      // });
       const PENDING_APPROVAL_STATE_ID = 6;
       return rolesService
         .currentUserCan('JUDICIAL_APPROVAL')

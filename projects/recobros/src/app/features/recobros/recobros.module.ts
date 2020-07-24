@@ -6,13 +6,14 @@ import { NewRecobroComponent } from './components/new-recobro/new-recobro.compon
 import { ListRecobrosComponent } from './components/list-recobros/list-recobros.component';
 import { SharedModule } from '../../shared/shared.module';
 import { EditRecobroComponent } from './components/edit-recobro/edit-recobro.component';
-
+import { ImportRecobrosComponent } from './components/import-recobros/import-recobros.component';
 @NgModule({
   declarations: [
     RecobrosComponent,
     NewRecobroComponent,
     ListRecobrosComponent,
-    EditRecobroComponent
+    EditRecobroComponent,
+    ImportRecobrosComponent
   ],
   imports: [CommonModule, RecobrosRoutingModule, SharedModule]
 })

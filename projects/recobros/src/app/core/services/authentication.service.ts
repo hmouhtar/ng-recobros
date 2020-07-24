@@ -26,7 +26,7 @@ export class AuthenticationService {
     } catch (error) {
       token = null;
       console.error(error);
-      this.alertService.error(
+      this.alertService.emitErrorAlert(
         'LocalStorage blocked by browser. Please enable cookies.'
       );
     }

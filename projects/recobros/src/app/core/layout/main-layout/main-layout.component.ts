@@ -6,6 +6,8 @@ import { SidenavService } from '../../services/sidenav.service';
 import { UserService } from '../../services/user.service';
 import { Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { groupBy } from 'lodash';
+import { Alert } from '../../../shared/models/alert';
 
 @Component({
   selector: 'alvea-main-layout',
@@ -42,8 +44,8 @@ export class MainLayoutComponent implements OnInit {
     this.authenticationService.isUserLoggedInO.subscribe((res) => {
       this.isUserLoggedIn = res;
       if (this.isUserLoggedIn) {
-        this.sidenavService.getAccesibleRoutes().then((routes) => {
-          this.sidenavLinks = routes;
+        this.sidenavService.getAccesibleRoutesByCurrentUser().then((routes) => {
+          this.sidenavLinks = groupBy(routes, 'category');
         });
         this.userService
           .getCurrentUser()
@@ -52,12 +54,11 @@ export class MainLayoutComponent implements OnInit {
       }
     });
 
-    this.alertService.getAlert().subscribe((message) => {
-      message &&
-        this._snackBar.open(message.text, 'close', {
-          duration: 2500,
-          panelClass: `snackbar-${message.type}`
-        });
+    this.alertService.getAlertStream().subscribe((alert: Alert) => {
+      this._snackBar.open(alert.message, 'close', {
+        duration: 2500,
+        panelClass: `snackbar-${alert.type}`
+      });
     });
   }
 

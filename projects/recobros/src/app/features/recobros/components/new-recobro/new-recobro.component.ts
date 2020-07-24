@@ -78,7 +78,7 @@ export class NewRecobroComponent {
     this.recobrosService
       .createRecobro(form.value)
       .then(() => {
-        this.alertService.success('Yay!');
+        this.alertService.emitSuccessAlert('Yay!');
         this.router.navigate(['/recobros'], {});
       })
       .catch(console.error)
