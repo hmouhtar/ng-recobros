@@ -1,11 +1,7 @@
 <div class="container">
   <h1 class="section-title">Administrar Recobro</h1>
   {{ editRecobroForm.form.value | json }}
-  <form
-    ngNativeValidate
-    #editRecobroForm="ngForm"
-    (ngSubmit)="editRecobro(editRecobroForm)"
-  >
+  <form ngNativeValidate #editRecobroForm="ngForm" (ngSubmit)="editRecobro()">
     <mat-tab-group>
       <ng-container *ngFor="let section of sortedFieldLabels">
         <mat-tab
@@ -46,6 +42,8 @@
                     : true)
                 "
                 [field]="field"
+                [form]="editRecobroForm"
+                [subject]="recobro"
               ></alvea-dynamic-field>
             </ng-container>
           </div>
@@ -55,6 +53,7 @@
     <button
       [disabled]="!editRecobroForm.form.valid || loadingAction"
       mat-raised-button
+      type="submit"
       color="primary"
     >
       <mat-icon>create</mat-icon>

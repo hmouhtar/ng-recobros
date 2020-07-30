@@ -4,7 +4,7 @@ import { RECOBRO_FIELDS } from '../../shared/data/recobro-fields';
 import { Field } from '../../shared/models/field';
 import { Recobro } from '../../shared/models/recobro';
 import { NgForm } from '@angular/forms';
-import { clone, cloneDeep } from 'lodash';
+import { clone, cloneDeep, Dictionary, groupBy } from 'lodash';
 import { RECOVERY_ADMINISTRATOR_FIELDS } from '../../shared/data/recovery_administrator-fields';
 import { USER_FIELDS } from '../../shared/data/user-fields';
 import { Lawyer } from '../../shared/models/lawyer';
@@ -62,6 +62,18 @@ export class FieldService {
     subject?: Recobro
   ): Promise<Field<Recobro>[]> {
     return this.getFields<Recobro>(RECOBRO_FIELDS, context, form, subject);
+  }
+
+  groupFieldsBySection(
+    fields: Field<any>[],
+    defaultSection: string
+  ): Dictionary<Field<any>[]> {
+    return groupBy(
+      fields.map(
+        (field) => ((field.section = field.section || defaultSection), field)
+      ),
+      'section'
+    );
   }
 
   private async getFields<T>(
@@ -140,7 +152,11 @@ export class FieldService {
       fields.map((field) => {
         return Promise.all(
           Object.keys(field)
-            .filter((key) => key !== 'dynamicDisplayCondition')
+            .filter(
+              (key) =>
+                key !== 'dynamicDisplayCondition' &&
+                key !== 'onParentFormValueChanges'
+            )
             .map((key) => {
               if ('function' === typeof field[key]) {
                 return Promise.resolve(

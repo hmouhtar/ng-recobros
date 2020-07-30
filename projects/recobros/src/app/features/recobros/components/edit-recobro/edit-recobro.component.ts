@@ -8,7 +8,7 @@ import { groupBy } from 'lodash';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
-import { SelectOption } from 'projects/recobros/src/app/shared/models/selectOption';
+import { pairwise, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'alvea-edit-recobro',
@@ -23,13 +23,12 @@ export class EditRecobroComponent implements OnInit {
     'recoverySituation',
     'recoveryClose'
   ];
-  dateNow: Date = new Date();
-  allFields: { [key: string]: Field<Recobro>[] };
-  formChangesSubscription: Subscription;
-  lastFormValues = {};
-  recobroPromise: Promise<Recobro>;
   recobro: Recobro;
   recobroID: string;
+  allFields: { [key: string]: Field<Recobro>[] };
+  formChangesSubscription: Subscription;
+  @ViewChild('editRecobroForm') editRecobroForm: NgForm;
+
   constructor(
     private recobrosService: RecobrosService,
     private route: ActivatedRoute,
@@ -37,105 +36,88 @@ export class EditRecobroComponent implements OnInit {
     private fieldService: FieldService
   ) {}
 
-  @ViewChild('editRecobroForm') editRecobroForm: NgForm;
-
   ngOnInit(): void {
-    this.recobroID = this.route.snapshot.paramMap.get('id') || '';
+    this.recobroID = this.getRecobroID();
   }
 
   ngAfterViewInit(): void {
-    (async () => {
-      this.recobro = await this.recobrosService.getRecobro(this.recobroID);
-      const fields = await this.fieldService.getRecobroFields(
-        'edit',
-        this.editRecobroForm,
-        this.recobro
-      );
-      this.allFields = groupBy(
-        fields.map(
-          (field) => ((field.section = field.section || 'recoveryInfo'), field)
-        ),
-        'section'
-      );
-    })();
+    this.recobrosService
+      .getRecobro(Number(this.recobroID))
+      .then((recobro) => {
+        this.recobro = recobro;
+      })
+      .then(() => {
+        return this.fieldService.getRecobroFields(
+          'edit',
+          this.editRecobroForm,
+          this.recobro
+        );
+      })
+      .then((fields) => {
+        this.allFields = this.fieldService.groupFieldsBySection(
+          fields,
+          'recoveryInfo'
+        );
+      });
 
-    this.formChangesSubscription = this.editRecobroForm.form.valueChanges.subscribe(
-      (formValues) => {
+    this.formChangesSubscription = this.subscribeToFormValueChanges();
+  }
+
+  getRecobroID(): string {
+    return this.route.snapshot.paramMap.get('id') || '';
+  }
+
+  subscribeToFormValueChanges(): Subscription {
+    return this.editRecobroForm.form.valueChanges
+      .pipe(startWith({}), pairwise())
+      .subscribe(([prevFormValues, nextFormValues]) => {
         if (
-          formValues.recoverySituation &&
-          formValues.recoverySituation !==
-            this.lastFormValues['recoverySituation']
+          prevFormValues.recoverySituation !== nextFormValues.recoverySituation
         ) {
-          this.allFields['recoveryClose'].map(
-            (field) =>
-              (field.required = formValues.recoverySituation === 'FINISHED')
-          );
+          this.isRecoverySituationFinished()
+            ? this.setRecoveryCloseFieldsAsRequired()
+            : this.setRecoveryCloseFieldsAsOptional();
         }
-        if (formValues.resolution !== this.lastFormValues['resolution']) {
-          this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-            const motiveField = this.allFields['recoveryClose'].find(
-              (field) => field.name === 'motive'
-            ) as Field<Recobro>;
-            if (motiveField) {
-              motiveField.options = groupBy(
-                autoComplete['resolutionSelect'],
-                'resolution'
-              )[formValues.resolution].map((element) => {
-                return { label: element.motive, value: element.id };
-              });
+      });
+  }
 
-              if (
-                !(motiveField.options as SelectOption[]).find(
-                  (option) => option.value == String(this.recobro.motive)
-                )
-              ) {
-                this.editRecobroForm.form.controls['motive'].setValue('');
-              }
-            }
-          });
-        }
-        if (formValues.branch !== this.lastFormValues['branch']) {
-          this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-            const incidentTypologyField = this.allFields['recoveryInfo'].find(
-              (field) => field.name === 'incidentTypology'
-            ) as Field<Recobro>;
-            if (incidentTypologyField) {
-              incidentTypologyField.options = groupBy(
-                autoComplete['incidentTypologySelect'],
-                'branch'
-              )[formValues.branch].map((element) => {
-                return { label: element.nature, value: element.id };
-              });
-
-              if (
-                !(incidentTypologyField.options as SelectOption[]).find(
-                  (option) =>
-                    option.value == String(this.recobro.incidentTypology)
-                )
-              ) {
-                this.editRecobroForm.form.controls['incidentTypology'].setValue(
-                  ''
-                );
-              }
-            }
-          });
-        }
-
-        this.lastFormValues = formValues;
-      }
+  isRecoverySituationFinished(): boolean {
+    return (
+      this.editRecobroForm.form.controls['recoverySituation'].value ===
+      'FINISHED'
     );
   }
 
-  editRecobro(form: NgForm): void {
+  setRecoveryCloseFieldsAsRequired(): void {
+    this.allFields['recoveryClose'].map((field) => (field.required = true));
+  }
+
+  setRecoveryCloseFieldsAsOptional(): void {
+    this.allFields['recoveryClose'].map((field) => (field.required = false));
+  }
+
+  editRecobro(): void {
+    if (
+      this.isRecoverySituationFinished() &&
+      !confirm(
+        'Procederás a cambiar la situación de recobro a "Terminado". Ten en cuenta que luego de aceptar no podrás modificar la información del expediente de recobro.'
+      )
+    ) {
+      return;
+    }
     this.loadingAction = true;
     this.recobrosService
-      .editRecobro(form.value, this.recobroID)
+      .editRecobro(this.editRecobroForm.value, this.recobroID)
       .then(() => {
         this.alertService.emitSuccessAlert('Yay!');
       })
       .catch(console.error)
       .finally(() => {
-        window.location.reload(false);
+        this.reloadPage();
       });
+  }
+
+  reloadPage(): void {
+    window.location.reload(false);
   }
 }

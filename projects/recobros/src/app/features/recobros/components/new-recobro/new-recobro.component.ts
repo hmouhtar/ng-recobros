@@ -3,7 +3,6 @@ import { RecobrosService } from 'projects/recobros/src/app/core/services/recobro
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { NgForm } from '@angular/forms';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
-import { groupBy } from 'lodash';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
@@ -34,43 +33,6 @@ export class NewRecobroComponent {
       .then((fields) => {
         this.newRecobroFields = fields;
       });
-    this.formChangesSubscription = this.newRecobroForm.form.valueChanges.subscribe(
-      (formValues) => {
-        if (
-          formValues.recoveryRoute &&
-          formValues.recoveryRoute !== this.lastFormValues['recoveryRoute']
-        ) {
-          this.newRecobroFields
-            .filter((field) => field.name === 'userAssignment')
-            .map((field) => (field.required = formValues.recoveryRoute !== 2));
-        }
-        if (
-          formValues.branch &&
-          formValues.branch !== this.lastFormValues['branch']
-        ) {
-          this.recobrosService.getRecobroAutoComplete().then((autoComplete) => {
-            const incidentTypologyField = this.newRecobroFields.find(
-              (field) => field.name === 'incidentTypology'
-            );
-
-            if (incidentTypologyField) {
-              incidentTypologyField.options = groupBy(
-                autoComplete['incidentTypologySelect'],
-                'branch'
-              )[formValues.branch].map((element) => {
-                return { label: element.nature, value: element.id };
-              });
-
-              this.newRecobroForm.form.controls['incidentTypology'].setValue(
-                ''
-              );
-            }
-          });
-        }
-
-        this.lastFormValues = formValues;
-      }
-    );
   }
 
   createNewRecobro(form: NgForm): void {

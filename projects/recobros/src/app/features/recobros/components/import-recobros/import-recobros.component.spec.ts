@@ -11,6 +11,8 @@ import { RecobrosService } from 'projects/recobros/src/app/core/services/recobro
 import { By } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
+import { SharedModule } from 'projects/recobros/src/app/shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ImportRecobrosComponent', () => {
   let component: ImportRecobrosComponent;
@@ -20,7 +22,7 @@ describe('ImportRecobrosComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImportRecobrosComponent],
-      imports: [FormsModule, ReactiveFormsModule, MatIconModule],
+      imports: [SharedModule, BrowserAnimationsModule],
       providers: [
         {
           provide: RecobrosService,

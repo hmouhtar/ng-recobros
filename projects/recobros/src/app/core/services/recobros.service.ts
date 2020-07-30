@@ -39,7 +39,7 @@ export class RecobrosService {
       .pipe(map((res) => res['data']));
   }
 
-  getRecobro(id): Promise<Recobro> {
+  getRecobro(id: number): Promise<Recobro> {
     return this.http
       .get<HttpResponse<Recobro>>(
         `${Config.apiURL}/api/manager/recovery/info/${id}`

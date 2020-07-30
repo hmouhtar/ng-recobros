@@ -6,10 +6,11 @@ import { RolesService } from '../../core/services/roles.service';
 import { NgForm } from '@angular/forms';
 import { RecobrosService } from '../../core/services/recobros.service';
 import { Company } from '../models/company';
-import { groupBy } from 'lodash';
+import { groupBy, Dictionary } from 'lodash';
 import { UserService } from '../../core/services/user.service';
 import { LawyersService } from '../../core/services/lawyers.service';
 import { SelectOption } from '../models/selectOption';
+import { DynamicFieldComponent } from '../components/dynamic-field/dynamic-field.component';
 // import { TaxonomyService } from '../../core/services/taxonomy.service';
 
 function generateOptionsFromAutoComplete(
@@ -209,6 +210,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
         'recoveryRouteSelect',
         'route'
       ),
+
     required: true,
     order: 8
   },
@@ -277,6 +279,37 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     label: 'Naturaleza',
     name: 'incidentTypology',
     options: [],
+    onParentFormValueChanges: (
+      prevFormValues: Dictionary<any>,
+      nextFormValues: Dictionary<any>,
+      injector: Injector,
+      componentInstance: DynamicFieldComponent,
+      subject: Recobro
+    ): void => {
+      if (
+        nextFormValues.branch &&
+        prevFormValues.branch !== nextFormValues.branch
+      ) {
+        const recobrosService = injector.get<RecobrosService>(RecobrosService);
+        recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+          componentInstance.field.options = groupBy(
+            autoComplete['incidentTypologySelect'],
+            'branch'
+          )[nextFormValues.branch].map((element) => {
+            return { label: element.nature, value: element.id };
+          });
+          if (
+            !componentInstance.field.options.find(
+              (option) => option.value == String(subject.incidentTypology)
+            )
+          ) {
+            componentInstance.parentForm.controls['incidentTypology'].setValue(
+              ''
+            );
+          }
+        });
+      }
+    },
     required: true,
     order: 5
   },
@@ -300,13 +333,14 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     order: 10,
     required: true,
     prefix: '€',
-    dynamicDisplayCondition: (form: NgForm): boolean => {
-      const inNameOfControl = form.controls['inNameOf'];
-      if (inNameOfControl) {
-        return inNameOfControl.value == '1' || inNameOfControl.value == '3';
-      } else {
-        return false;
-      }
+    onParentFormValueChanges: (
+      prevFormValues,
+      nextFormValues,
+      injector: Injector,
+      componentInstance: DynamicFieldComponent
+    ): void => {
+      componentInstance.display =
+        nextFormValues.inNameOf == '1' || nextFormValues.inNameOf == '3';
     }
   },
   {
@@ -348,6 +382,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
           })
       );
     },
+
     order: 18
   },
   {
@@ -374,6 +409,19 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
             };
           });
       });
+    },
+    onParentFormValueChanges: (
+      prevFormValues: Dictionary<any>,
+      nextFormValues: Dictionary<any>,
+      injector: Injector,
+      componentInstance: DynamicFieldComponent
+    ): void => {
+      if (
+        nextFormValues.recoveryRoute &&
+        nextFormValues.recoveryRoute !== prevFormValues.recoveryRoute
+      ) {
+        componentInstance.field.required = nextFormValues.recoveryRoute !== 2;
+      }
     },
     order: 18
   },
@@ -445,6 +493,36 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     name: 'motive',
     context: 'edit',
     options: [],
+    onParentFormValueChanges: (
+      prevFormValues: Dictionary<any>,
+      nextFormValues: Dictionary<any>,
+      injector: Injector,
+      componentInstance: DynamicFieldComponent,
+      subject: Recobro
+    ): void => {
+      if (
+        nextFormValues.resolution &&
+        prevFormValues.resolution !== nextFormValues.resolution
+      ) {
+        const recobrosService = injector.get<RecobrosService>(RecobrosService);
+        recobrosService.getRecobroAutoComplete().then((autoComplete) => {
+          componentInstance.field.options = groupBy(
+            autoComplete['resolutionSelect'],
+            'resolution'
+          )[nextFormValues.resolution].map((element) => {
+            return { label: element.motive, value: element.id };
+          });
+
+          if (
+            !componentInstance.field.options.find(
+              (option) => option.value == subject.motive
+            )
+          ) {
+            componentInstance.parentForm.controls['motive'].setValue('');
+          }
+        });
+      }
+    },
     section: 'recoveryClose',
     order: 2
   },

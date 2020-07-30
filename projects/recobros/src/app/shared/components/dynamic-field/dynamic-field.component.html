@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="display">
   <ng-container [ngSwitch]="field.type">
     <label style="display: block;">{{ field.label }}</label>
     <mat-form-field

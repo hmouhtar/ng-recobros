@@ -1,6 +1,7 @@
 import { Injector } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { SelectOption } from './selectOption';
+import { DynamicFieldComponent } from '../components/dynamic-field/dynamic-field.component';
 
 export type PropertyFunction<S, T> = (
   serviceInjector: Injector,
@@ -34,9 +35,12 @@ export interface Field<T> {
     prevFormValues,
     nextFormValues,
     injector: Injector,
+    componentInstance: DynamicFieldComponent,
     subject: T
   ) => void;
   filterCondition?: PropertyFunction<T, boolean | Promise<boolean>>;
+  dynamicDisplayCondition?: (form: NgForm) => boolean;
+  fixedDisplayCondition?: PropertyFunction<T, boolean | Promise<boolean>>;
   value?: string | PropertyFunction<T, string | Promise<string>>;
   valuePath?: string;
   context?: 'new' | 'edit';
