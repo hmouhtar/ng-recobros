@@ -8,11 +8,16 @@ export interface Sort<T> {
   order: SortDirection;
 }
 
+type GenericKeys<T> = {
+  [k in keyof T]?: any;
+};
 export interface PageRequest<T> {
   page: number;
   size: number;
   sort?: Sort<T>;
 }
+
+export type PageRequestWithSearch<T> = PageRequest<T> & GenericKeys<T>;
 
 export interface Page<T> {
   content: T[];
@@ -26,26 +31,43 @@ export interface SimpleDataSource<T> extends DataSource<T> {
   disconnect(): void;
 }
 
-export type PaginatedEndpoint<T> = (req: PageRequest<T>) => Observable<Page<T>>;
+export type PaginatedEndpoint<T> = (
+  req: PageRequestWithSearch<T>
+) => Observable<Page<T>>;
 
 export class PaginatedDataSource<T> implements SimpleDataSource<T> {
+  private search = new Subject<{ key: keyof T; value: string }>();
   private pageNumber = new Subject<number>();
   private sort = new Subject<Sort<T>>();
-
   public page$: Observable<Page<T>>;
 
   constructor(endpoint: PaginatedEndpoint<T>, initialSort: Sort<T>, size = 20) {
-    this.page$ = this.sort.pipe(
-      startWith(initialSort),
-      switchMap((sort) =>
-        this.pageNumber.pipe(
-          startWith(0),
-          switchMap((page) => endpoint({ page, sort, size })),
-          tap((page) => console.log(page))
+    this.page$ = this.search.pipe(
+      startWith(''),
+      switchMap((search) =>
+        this.sort.pipe(
+          startWith(initialSort),
+          switchMap((sort) =>
+            this.pageNumber.pipe(
+              startWith(0),
+              switchMap((page) =>
+                endpoint({
+                  page: page,
+                  sort: sort,
+                  size: size,
+                  [search['key']]: search['value']
+                })
+              )
+            )
+          ),
+          share()
         )
-      ),
-      share()
+      )
     );
+  }
+
+  searchBy(key: keyof T, value: string): void {
+    this.search.next({ key, value });
   }
 
   sortBy(sort: Sort<T>): void {

@@ -8,6 +8,8 @@ import {
   PaginatedDataSource,
   Sort
 } from 'projects/recobros/src/app/core/services/paginated.datasource';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'alvea-list-recobros',
@@ -59,5 +61,18 @@ export class ListRecobrosComponent implements OnInit {
         order: this.sort.direction
       })
     );
+
+    fromEvent(this.searchBySinisterNumberInput.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(150),
+        distinctUntilChanged(),
+        tap(() => {
+          this.dataSource.searchBy(
+            'sinisterNumber',
+            this.searchBySinisterNumberInput.nativeElement.value
+          );
+        })
+      )
+      .subscribe();
   }
 }

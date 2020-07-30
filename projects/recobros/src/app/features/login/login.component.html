@@ -12,17 +12,31 @@
         (ngSubmit)="onSubmit(loginForm)"
       >
         <mat-card-content>
-          <mat-form-field appearance="fill" [floatLabel]="'always'" class="width-input">
+          <mat-form-field
+            appearance="fill"
+            [floatLabel]="'always'"
+            class="width-input"
+          >
             <mat-label>Nombre de usuario</mat-label>
             <input ngModel matInput required name="username" />
           </mat-form-field>
-          <mat-form-field appearance="fill" [floatLabel]="'always'" class="width-input">
-            <input ngModel matInput required name="password" [type]="hide ? 'password' : 'text'" />
+          <mat-form-field
+            appearance="fill"
+            [floatLabel]="'always'"
+            class="width-input"
+          >
+            <input
+              ngModel
+              matInput
+              required
+              name="password"
+              [type]="hide ? 'password' : 'text'"
+            />
             <mat-label>
               Contraseña
             </mat-label>
             <mat-icon matSuffix (click)="hide = !hide">{{
-              hide ? "visibility_off" : "visibility"
+              hide ? 'visibility_off' : 'visibility'
             }}</mat-icon>
           </mat-form-field>
         </mat-card-content>
@@ -49,11 +63,13 @@
           (ngSubmit)="onResetUserPassword($event.target.emailAddress.value)"
         >
           <mat-form-field [floatLabel]="'always'">
-            <mat-label>Introduzca su email, por favor</mat-label>
+            <mat-label>Introduzca su nombre de usuario</mat-label>
             <input matInput type="text" name="emailAddress" required />
           </mat-form-field>
           <div mat-dialog-actions>
-            <button mat-flat-button color="primary" class="btn-block">Enviar</button>
+            <button mat-flat-button color="primary" class="btn-block">
+              Enviar
+            </button>
           </div>
         </form>
       </div>

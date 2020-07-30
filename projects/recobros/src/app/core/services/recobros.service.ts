@@ -3,7 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Config } from 'projects/recobros/src/constants';
 import { Recobro } from '../../shared/models/recobro';
 import { map } from 'rxjs/operators';
-import { PageRequest, Page } from './paginated.datasource';
+import {
+  PageRequest,
+  Page,
+  PageRequestWithSearch
+} from './paginated.datasource';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '../../shared/models/http-response';
 
@@ -27,13 +31,16 @@ export class RecobrosService {
       .toPromise();
   }
 
-  getRecobrosPage(request: PageRequest<Recobro>): Observable<Page<Recobro>> {
+  getRecobrosPage(
+    request: PageRequestWithSearch<Recobro>
+  ): Observable<Page<Recobro>> {
     return this.http
-      .get<Page<Recobro>>(`${Config.apiURL}/api/manager/recoveries`, {
+      .get<Page<Recobro>>(`${Config.apiURL}/api/manager/recovery/search`, {
         params: {
           size: String(request.size),
           page: String(request.page),
-          sort: `${request.sort?.property},${request.sort?.order}`
+          sort: `${request.sort?.property},${request.sort?.order}`,
+          sinisterNumber: request.sinisterNumber || ''
         }
       })
       .pipe(map((res) => res['data']));

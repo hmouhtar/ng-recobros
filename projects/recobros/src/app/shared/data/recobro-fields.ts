@@ -563,6 +563,13 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     label: 'Abogado',
     name: 'lawyerName',
     context: 'edit',
+    value: (
+      injector: Injector,
+      form: NgForm,
+      recobro: Recobro
+    ): Promise<string> => {
+      return Promise.resolve(String(recobro.lawyerName || ''));
+    },
     options: (injector: Injector): Promise<SelectOption[]> => {
       const lawyersService = injector.get<LawyersService>(LawyersService);
       return lawyersService.getLawyers().then((lawyers) =>
