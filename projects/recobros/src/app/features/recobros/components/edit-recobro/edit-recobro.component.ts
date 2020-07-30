@@ -4,7 +4,6 @@ import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
-import { groupBy } from 'lodash';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
@@ -27,6 +26,7 @@ export class EditRecobroComponent implements OnInit {
   recobroID: string;
   allFields: { [key: string]: Field<Recobro>[] };
   formChangesSubscription: Subscription;
+  isRecoveryEditable = true;
   @ViewChild('editRecobroForm') editRecobroForm: NgForm;
 
   constructor(
@@ -45,6 +45,8 @@ export class EditRecobroComponent implements OnInit {
       .getRecobro(Number(this.recobroID))
       .then((recobro) => {
         this.recobro = recobro;
+        if (this.recobro.recoverySituation === 'FINISHED')
+          this.isRecoveryEditable = false;
       })
       .then(() => {
         return this.fieldService.getRecobroFields(
@@ -83,8 +85,7 @@ export class EditRecobroComponent implements OnInit {
 
   isRecoverySituationFinished(): boolean {
     return (
-      this.editRecobroForm.form.controls['recoverySituation'].value ===
-      'FINISHED'
+      this.editRecobroForm.form.controls.recoverySituation.value === 'FINISHED'
     );
   }
 

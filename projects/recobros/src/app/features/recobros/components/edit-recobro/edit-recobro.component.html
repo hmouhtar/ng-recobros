@@ -2,65 +2,67 @@
   <h1 class="section-title">Administrar Recobro</h1>
   {{ editRecobroForm.form.value | json }}
   <form ngNativeValidate #editRecobroForm="ngForm" (ngSubmit)="editRecobro()">
-    <mat-tab-group>
-      <ng-container *ngFor="let section of sortedFieldLabels">
-        <mat-tab
-          [disabled]="
-            'recoverySituation' === section && recobro?.recoveryRoute != 2
-          "
-        >
-          <ng-template mat-tab-label [ngSwitch]="section">
-            <ng-container *ngSwitchCase="'recoveryInfo'"
-              >Datos del Recobro
-            </ng-container>
-            <ng-container *ngSwitchCase="'recoveryStatus'"
-              >Estado del Recobro
-            </ng-container>
-            <ng-container *ngSwitchCase="'recoverySituation'"
-              >Situación Judicial
-            </ng-container>
-            <ng-container *ngSwitchCase="'recoveryClose'"
-              >Cierre del Recobro / Minutas</ng-container
-            >
-          </ng-template>
-
-          <br />
-          <div
-            *ngIf="allFields && allFields[section]"
-            fxLayout="row wrap"
-            fxLayoutAlign="space-between"
+    <fieldset [disabled]="!isRecoveryEditable">
+      <mat-tab-group>
+        <ng-container *ngFor="let section of sortedFieldLabels">
+          <mat-tab
+            [disabled]="
+              'recoverySituation' === section && recobro?.recoveryRoute != 2
+            "
           >
-            <ng-container *ngFor="let field of allFields[section]">
-              <alvea-dynamic-field
-                fxFlex="0 0 48%"
-                *ngIf="
-                  (field.fixedDisplayCondition !== undefined
-                    ? field.fixedDisplayCondition
-                    : true) &&
-                  (field.dynamicDisplayCondition !== undefined
-                    ? field.dynamicDisplayCondition(this.editRecobroForm)
-                    : true)
-                "
-                [field]="field"
-                [form]="editRecobroForm"
-                [subject]="recobro"
-              ></alvea-dynamic-field>
-            </ng-container>
-          </div>
-        </mat-tab>
-      </ng-container>
-    </mat-tab-group>
-    <button
-      [disabled]="!editRecobroForm.form.valid || loadingAction"
-      mat-raised-button
-      type="submit"
-      color="primary"
-    >
-      <mat-icon>create</mat-icon>
+            <ng-template mat-tab-label [ngSwitch]="section">
+              <ng-container *ngSwitchCase="'recoveryInfo'"
+                >Datos del Recobro
+              </ng-container>
+              <ng-container *ngSwitchCase="'recoveryStatus'"
+                >Estado del Recobro
+              </ng-container>
+              <ng-container *ngSwitchCase="'recoverySituation'"
+                >Situación Judicial
+              </ng-container>
+              <ng-container *ngSwitchCase="'recoveryClose'"
+                >Cierre del Recobro / Minutas</ng-container
+              >
+            </ng-template>
 
-      Editar recobro
-      <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
-      </mat-spinner>
-    </button>
+            <br />
+            <div
+              *ngIf="allFields && allFields[section]"
+              fxLayout="row wrap"
+              fxLayoutAlign="space-between"
+            >
+              <ng-container *ngFor="let field of allFields[section]">
+                <alvea-dynamic-field
+                  fxFlex="0 0 48%"
+                  *ngIf="
+                    (field.fixedDisplayCondition !== undefined
+                      ? field.fixedDisplayCondition
+                      : true) &&
+                    (field.dynamicDisplayCondition !== undefined
+                      ? field.dynamicDisplayCondition(this.editRecobroForm)
+                      : true)
+                  "
+                  [field]="field"
+                  [form]="editRecobroForm"
+                  [subject]="recobro"
+                ></alvea-dynamic-field>
+              </ng-container>
+            </div>
+          </mat-tab>
+        </ng-container>
+      </mat-tab-group>
+      <button
+        [disabled]="!editRecobroForm.form.valid || loadingAction"
+        mat-raised-button
+        type="submit"
+        color="primary"
+      >
+        <mat-icon>create</mat-icon>
+
+        Editar recobro
+        <mat-spinner *ngIf="loadingAction" id="spinner" [diameter]="20">
+        </mat-spinner>
+      </button>
+    </fieldset>
   </form>
 </div>
