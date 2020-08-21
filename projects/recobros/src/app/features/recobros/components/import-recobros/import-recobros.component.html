@@ -3,50 +3,111 @@
     <h1>Carga de Recobros</h1>
   </div>
 
-  <form
-    ngNativeValidate
-    #importRecobrosForm="ngForm"
-    (ngSubmit)="importRecobros($event.target.file.files[0])"
-  >
-    <div fxLayout="row" id="uploadFileContainer">
-      <mat-form-field
-        class="example-full-width"
-        floatLabel="always"
-        appearance="fill"
-      >
-        <mat-label>Selecciona el archivo CSV a subir</mat-label>
-        <input matInput #message readonly />
-        <mat-hint> </mat-hint>
-      </mat-form-field>
-      <button (click)="csvInput.click()" mat-mini-fab color="accent">
-        <mat-icon>attach_files</mat-icon>
-      </button>
-
-      <input
-        ngModel
-        required
-        #csvInput
-        hidden="true"
-        type="file"
-        name="file"
-        (change)="message.value = $event.target.files[0].name"
-        accept=".csv"
-      />
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <button
-      [disabled]="!importRecobrosForm.form.valid || isPerformingRequest"
-      type="submit"
-      mat-raised-button
-      color="primary"
+  <div class="container padding-x padding-y">
+    <form
+      ngNativeValidate
+      #importRecobrosForm="ngForm"
+      (ngSubmit)="importRecobros($event.target.file.files[0])"
     >
-      <mat-icon>publish</mat-icon>
+      <p>
+        Importante: Solo se puede subir un archivo CSV.
+      </p>
+      <p><a href="#">Descargar plantilla.</a></p>
+      <div fxLayout="row" id="uploadFileContainer">
+        <mat-form-field
+          class="example-full-width"
+          floatLabel="always"
+          appearance="fill"
+        >
+          <mat-label>Selecciona el archivo CSV a subir</mat-label>
+          <input matInput #message readonly />
+        </mat-form-field>
+        <button (click)="csvInput.click()" mat-mini-fab color="accent">
+          <mat-icon>attach_files</mat-icon>
+        </button>
 
-      Importar recobros
-      <mat-spinner *ngIf="isPerformingRequest" id="spinner" [diameter]="20">
-      </mat-spinner>
-    </button>
-  </form>
+        <input
+          ngModel
+          required
+          #csvInput
+          hidden="true"
+          type="file"
+          name="file"
+          (change)="message.value = $event.target.files[0].name"
+          accept=".csv"
+        />
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <button
+        [disabled]="!importRecobrosForm.form.valid || isPerformingRequest"
+        type="submit"
+        mat-raised-button
+        color="primary"
+      >
+        <mat-icon>publish</mat-icon>
+
+        Importar recobros
+        <mat-spinner *ngIf="isPerformingRequest" id="spinner" [diameter]="20">
+        </mat-spinner>
+      </button>
+    </form>
+  </div>
+</div>
+<br />
+<div class="container">
+  <div fxLayout="row" fxLayoutAlign="space-between" class="section-title">
+    <h1>Historial de Cargas</h1>
+  </div>
+
+  <table mat-table [dataSource]="importRecobroLogs" class="">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Fecha y hora de carga</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Usuario</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.username }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="payMethod">
+      <th mat-header-cell *matHeaderCellDef>Forma de carga</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.payMethod }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="records">
+      <th mat-header-cell *matHeaderCellDef>Número de registros</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.records }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loadStatus">
+      <th mat-header-cell *matHeaderCellDef>Estado de carga</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.loadStatus }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="observations">
+      <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+      <td mat-cell *matCellDef="let importRecobroLog">
+        {{ importRecobroLog.observations }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="importRecobroLogsTableColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: importRecobroLogsTableColumns"
+    ></tr>
+  </table>
 </div>

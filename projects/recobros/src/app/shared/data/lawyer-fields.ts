@@ -17,18 +17,23 @@ export const LAWYER_FIELDS = [
     name: 'surname2'
   },
   {
+    type: 'email',
+    label: 'E-mail',
+    name: 'email',
+    required: true
+  },
+  {
+    type: 'string',
+    label: 'Teléfono',
+    name: 'email',
+    required: true
+  },
+  {
     type: 'text',
     label: 'Población / Zona Geográfica',
     name: 'location',
     required: true
   },
-  // {
-  //   type: 'hidden',
-  //   label: '',
-  //   name: 'active',
-  //   value: 'false',
-  //   context: 'edit',
-  // },
   {
     type: 'checkbox',
     label: 'Asignable',

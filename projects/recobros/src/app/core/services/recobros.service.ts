@@ -10,6 +10,7 @@ import {
 } from './paginated.datasource';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '../../shared/models/http-response';
+import { ImportRecobroLog } from '../../shared/models/importRecobroLog';
 
 @Injectable({
   providedIn: 'root'
@@ -90,5 +91,12 @@ export class RecobrosService {
       .post<HttpResponse<[]>>(`${Config.apiURL}/api/csv/upload`, formData)
       .toPromise()
       .then(() => true);
+  }
+
+  getImportRecobroLogs(): Promise<ImportRecobroLog[]> {
+    return this.http
+      .get<HttpResponse<ImportRecobroLog[]>>(`${Config.apiURL}/api/csv/logs`)
+      .pipe(map((recobro) => recobro['data']))
+      .toPromise();
   }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AlertService } from 'projects/recobros/src/app/core/services/alert.service';
 import { Recobro } from 'projects/recobros/src/app/shared/models/recobro';
 import { RecobrosService } from 'projects/recobros/src/app/core/services/recobros.service';
 import { MatSort } from '@angular/material/sort';
@@ -39,19 +38,15 @@ export class ListRecobrosComponent implements OnInit {
 
   constructor(
     private recobrosService: RecobrosService,
-    private alertService: AlertService,
     private rolesService: RolesService
-  ) {
-    this.dataSource = new PaginatedDataSource<Recobro>(
-      (request) => this.recobrosService.getRecobrosPage(request),
-      this.initialSort
-    );
-  }
+  ) {}
 
   ngOnInit(): void {
     this.rolesService
       .currentUserCan('CREATE_RECOVERY')
       .then((res) => (this.canCreateRecobro = res));
+
+    this.setTableDataSource();
   }
 
   ngAfterViewInit(): void {
@@ -74,5 +69,12 @@ export class ListRecobrosComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  setTableDataSource() {
+    this.dataSource = new PaginatedDataSource<Recobro>(
+      (request) => this.recobrosService.getRecobrosPage(request),
+      this.initialSort
+    );
   }
 }

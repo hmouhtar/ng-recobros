@@ -22,7 +22,7 @@ export class ListUsersComponent implements OnInit {
   displayedColumns: string[] = [
     //'username',
     'role',
-    'fullName',
+    'name',
     'emailAddress',
     'phone',
     'companyScope',

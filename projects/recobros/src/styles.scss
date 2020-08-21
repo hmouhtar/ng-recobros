@@ -24,6 +24,14 @@ body {
   margin: 0 auto;
   background-color: white;
   padding-bottom: 60px;
+  &.padding-x {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  &.padding-y {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 }
 .section-title {
   background-color: var(--color-accent);

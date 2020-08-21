@@ -1,7 +1,5 @@
-.container form {
-  width: 90%;
-  margin: 0 auto;
-  padding: 60px 0;
+form {
+  padding: 0;
 }
 
 #uploadFileContainer {
@@ -15,7 +13,9 @@
     top: 4px;
   }
 }
-
+table {
+  width: 100%;
+}
 button[type='submit'] {
   margin-top: 25px;
 }

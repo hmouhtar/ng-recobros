@@ -211,6 +211,13 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
         'route'
       ),
 
+    disabled: (injector: Injector): Promise<boolean> => {
+      const rolesService = injector.get<RolesService>(RolesService);
+      return rolesService
+        .currentUserCan('SELECT_RECOVERY_ROUTE')
+        .then((userCan) => !userCan);
+    },
+
     required: true,
     order: 8
   },
@@ -376,7 +383,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
           .filter((user) => user.rol === 'RECOVERY_EMPLOYEE')
           .map((user) => {
             return {
-              label: user['fullName'],
+              label: `${user.name} ${user.surname1}`,
               value: (user.id as unknown) as string
             };
           })

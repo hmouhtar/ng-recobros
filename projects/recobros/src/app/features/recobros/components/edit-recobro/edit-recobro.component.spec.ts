@@ -21,7 +21,7 @@ import { SharedModule } from 'projects/recobros/src/app/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { sample, Dictionary } from 'lodash';
 
-fdescribe('EditRecobroComponent', () => {
+describe('EditRecobroComponent', () => {
   const sampleRecobroID = '123';
   const sampleEditRecobroFields: Field<Recobro>[] = [
     {
