@@ -2,6 +2,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable, Subject } from 'rxjs';
 import { switchMap, startWith, share, tap, pluck } from 'rxjs/operators';
 import { SortDirection } from '@angular/material/sort';
+import { Dictionary } from 'lodash';
 
 export interface Sort<T> {
   property: keyof T;
@@ -36,7 +37,7 @@ export type PaginatedEndpoint<T> = (
 ) => Observable<Page<T>>;
 
 export class PaginatedDataSource<T> implements SimpleDataSource<T> {
-  private search = new Subject<{ key: keyof T; value: string }>();
+  private search = new Subject();
   private pageNumber = new Subject<number>();
   private sort = new Subject<Sort<T>>();
   public page$: Observable<Page<T>>;
@@ -55,7 +56,7 @@ export class PaginatedDataSource<T> implements SimpleDataSource<T> {
                   page: page,
                   sort: sort,
                   size: size,
-                  [search['key']]: search['value']
+                  ...(search as any)
                 })
               )
             )
@@ -66,8 +67,9 @@ export class PaginatedDataSource<T> implements SimpleDataSource<T> {
     );
   }
 
-  searchBy(key: keyof T, value: string): void {
-    this.search.next({ key, value });
+  searchBy(searchParams): void {
+    console.log('Params:', searchParams);
+    this.search.next(searchParams);
   }
 
   sortBy(sort: Sort<T>): void {

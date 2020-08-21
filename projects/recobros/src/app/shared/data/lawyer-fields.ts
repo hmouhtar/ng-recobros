@@ -1,4 +1,7 @@
-export const LAWYER_FIELDS = [
+import { Field } from '../models/field';
+import { Lawyer } from '../models/lawyer';
+
+export const LAWYER_FIELDS: Field<Lawyer>[] = [
   {
     type: 'text',
     label: 'Nombres',
@@ -23,9 +26,9 @@ export const LAWYER_FIELDS = [
     required: true
   },
   {
-    type: 'string',
+    type: 'text',
     label: 'Teléfono',
-    name: 'email',
+    name: 'phone',
     required: true
   },
   {

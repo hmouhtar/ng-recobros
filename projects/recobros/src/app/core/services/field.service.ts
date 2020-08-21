@@ -64,6 +64,10 @@ export class FieldService {
     return this.getFields<Recobro>(RECOBRO_FIELDS, context, form, subject);
   }
 
+  getRecobroSearchFilterFields(): Promise<Field<Recobro>[]> {
+    return this.getSearchFilterFields<Recobro>(RECOBRO_FIELDS);
+  }
+
   groupFieldsBySection(
     fields: Field<any>[],
     defaultSection: string
@@ -76,8 +80,19 @@ export class FieldService {
     );
   }
 
+  async getSearchFilterFields<T>(fields: Field<T>[]): Promise<Field<T>[]> {
+    fields = fields.filter((field) => field.useAsSearchFilter);
+    fields = fields
+      .map(({ required, disabled, ...propertiesToKeep }) => propertiesToKeep)
+      .map((field) => {
+        field.value = '';
+        return field;
+      });
+    fields = await this.setPropertiesFromFunctions(fields);
+    return fields;
+  }
   private async getFields<T>(
-    fields,
+    fields: Field<T>[],
     context: 'new' | 'edit',
     form: NgForm,
     subject?: T
@@ -144,7 +159,7 @@ export class FieldService {
 
   private setPropertiesFromFunctions<T>(
     fields: Field<T>[],
-    form: NgForm,
+    form?: NgForm,
     subject?: T
   ): Promise<Field<T>[]> {
     fields = cloneDeep(fields);

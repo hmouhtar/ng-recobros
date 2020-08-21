@@ -9,6 +9,9 @@ import {
 } from 'projects/recobros/src/app/core/services/paginated.datasource';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
+import { Field } from 'projects/recobros/src/app/shared/models/field';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'alvea-list-recobros',
@@ -32,13 +35,15 @@ export class ListRecobrosComponent implements OnInit {
     'company',
     'edit'
   ];
-  @ViewChild('searchBySinisterNumberInput')
-  searchBySinisterNumberInput: ElementRef;
+  searchFilterFields: Field<Recobro>[] = [];
+  // @ViewChild('searchBySinisterNumberInput')
+  // searchBySinisterNumberInput: ElementRef;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private recobrosService: RecobrosService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private fieldService: FieldService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +52,11 @@ export class ListRecobrosComponent implements OnInit {
       .then((res) => (this.canCreateRecobro = res));
 
     this.setTableDataSource();
+    this.getFilterFields();
+    this.fieldService.getRecobroSearchFilterFields().then((fields) => {
+      this.searchFilterFields = fields;
+      console.log(fields);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -57,18 +67,23 @@ export class ListRecobrosComponent implements OnInit {
       })
     );
 
-    fromEvent(this.searchBySinisterNumberInput.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.dataSource.searchBy(
-            'sinisterNumber',
-            this.searchBySinisterNumberInput.nativeElement.value
-          );
-        })
-      )
-      .subscribe();
+    // fromEvent(this.searchBySinisterNumberInput.nativeElement, 'keyup')
+    //   .pipe(
+    //     debounceTime(150),
+    //     distinctUntilChanged(),
+    //     tap(() => {
+    //       this.dataSource.searchBy(
+    //         'sinisterNumber',
+    //         this.searchBySinisterNumberInput.nativeElement.value
+    //       );
+    //     })
+    //   )
+    //   .subscribe();
+  }
+
+  filterResults(form: NgForm): void {
+    console.log(form.value);
+    this.dataSource.searchBy(form.value);
   }
 
   setTableDataSource() {
@@ -77,4 +92,6 @@ export class ListRecobrosComponent implements OnInit {
       this.initialSort
     );
   }
+
+  getFilterFields() {}
 }

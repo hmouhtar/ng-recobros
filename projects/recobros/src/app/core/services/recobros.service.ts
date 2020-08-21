@@ -35,13 +35,14 @@ export class RecobrosService {
   getRecobrosPage(
     request: PageRequestWithSearch<Recobro>
   ): Observable<Page<Recobro>> {
+    console.log(request);
     return this.http
       .get<Page<Recobro>>(`${Config.apiURL}/api/manager/recovery/search`, {
         params: {
+          ...request,
           size: String(request.size),
           page: String(request.page),
-          sort: `${request.sort?.property},${request.sort?.order}`,
-          sinisterNumber: request.sinisterNumber || ''
+          sort: `${request.sort?.property},${request.sort?.order}`
         }
       })
       .pipe(map((res) => res['data']));

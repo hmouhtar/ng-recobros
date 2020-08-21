@@ -48,4 +48,5 @@ export interface Field<T> {
   section?: string;
   prefix?: string;
   hint?: string;
+  useAsSearchFilter?: boolean;
 }

@@ -31,6 +31,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     label: 'N. Siniestro',
     name: 'sinisterNumber',
     required: true,
+    useAsSearchFilter: true,
     order: 1,
     disabled: function (injector: Injector): Promise<boolean> {
       const router = injector.get<Router>(Router);
@@ -186,6 +187,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Situación de recobro',
+    useAsSearchFilter: true,
     name: 'recoverySituation',
     options: [
       {
@@ -204,6 +206,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     type: 'select',
     label: 'Vía Recobro',
     name: 'recoveryRoute',
+    useAsSearchFilter: true,
     options: (injector: Injector): Promise<SelectOption[]> =>
       generateOptionsFromAutoComplete(
         injector.get<RecobrosService>(RecobrosService),
@@ -250,6 +253,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Ramo',
+    useAsSearchFilter: true,
     name: 'branch',
     value: (
       injector: Injector,
@@ -284,6 +288,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Naturaleza',
+    useAsSearchFilter: true,
     name: 'incidentTypology',
     options: [],
     onParentFormValueChanges: (
@@ -305,11 +310,17 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
           )[nextFormValues.branch].map((element) => {
             return { label: element.nature, value: element.id };
           });
-          if (
-            !componentInstance.field.options.find(
-              (option) => option.value == String(subject.incidentTypology)
-            )
-          ) {
+          if (subject) {
+            if (
+              !componentInstance.field.options.find(
+                (option) => option.value == String(subject.incidentTypology)
+              )
+            ) {
+              componentInstance.parentForm.controls[
+                'incidentTypology'
+              ].setValue('');
+            }
+          } else {
             componentInstance.parentForm.controls['incidentTypology'].setValue(
               ''
             );
@@ -368,6 +379,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Empleado Recobrador',
+    useAsSearchFilter: true,
     name: 'userAssignment',
     required: true,
     fixedDisplayCondition: (injector: Injector): Promise<boolean> => {
@@ -497,6 +509,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Motivo Cierre',
+    useAsSearchFilter: true,
     name: 'motive',
     context: 'edit',
     options: [],
@@ -568,6 +581,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Abogado',
+    useAsSearchFilter: true,
     name: 'lawyerName',
     context: 'edit',
     value: (
@@ -596,6 +610,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Resolución Recobro',
+    useAsSearchFilter: true,
     name: 'resolution',
     value: (
       injector: Injector,
@@ -648,6 +663,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Situación Judicial',
+    useAsSearchFilter: true,
     name: 'judicialSituation',
     context: 'edit',
     options: (injector: Injector): Promise<SelectOption[]> =>
@@ -694,6 +710,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
   {
     type: 'select',
     label: 'Estado Gestión',
+    useAsSearchFilter: true,
     order: 1,
     name: 'situationManagement',
     options: (injector: Injector): Promise<SelectOption[]> => {
