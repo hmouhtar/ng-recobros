@@ -29,23 +29,9 @@ export class ImportRecobrosComponent {
   ) {}
 
   ngOnInit(): void {
-    this.importRecobroLogs = [
-      {
-        date: '12/12/12 5',
-        username: 'something',
-        loadStatus: 'SUCCESFUL',
-        observations: 'AAA',
-        records: 12,
-        payMethod: 'MANUAL'
-      }
-    ];
-    // this.recobrosService
-    //   .getImportRecobroLogs()
-    //   .then(
-    //     (importRecobroLogs) => (this.importRecobroLogs = importRecobroLogs)
-    //   );
-
-    console.log(this.importRecobroLogs);
+    this.recobrosService.getImportRecobroLogs().then((importRecobroLogs) => {
+      this.importRecobroLogs = importRecobroLogs['content'];
+    });
   }
 
   importRecobros(file: Blob): void {

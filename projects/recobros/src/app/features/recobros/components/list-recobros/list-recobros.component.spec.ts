@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { SharedModule } from 'projects/recobros/src/app/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-fdescribe('ListRecobrosComponent', () => {
+describe('ListRecobrosComponent', () => {
   let component: ListRecobrosComponent;
   let fixture: ComponentFixture<ListRecobrosComponent>;
   let recobrosServiceSpy: jasmine.SpyObj<RecobrosService>;

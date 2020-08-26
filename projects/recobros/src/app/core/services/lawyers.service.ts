@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Lawyer } from '../../shared/models/lawyer';
 import { map } from 'rxjs/operators';
 import { PageRequest, Page } from './paginated.datasource';
+import { PaginatedResponse } from '../../shared/models/paginated-response';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,9 @@ export class LawyersService {
     return this.http.post(`${Config.apiURL}/api/lawyer`, data).toPromise();
   }
 
-  getLawyersPage(request: PageRequest<Lawyer>) {
+  getLawyersPage(
+    request: PageRequest<Lawyer>
+  ): Observable<PaginatedResponse<Lawyer>> {
     return this.http
       .get<Page<Lawyer>>(`${Config.apiURL}/api/lawyer`, {
         params: {
@@ -27,6 +31,7 @@ export class LawyersService {
       .pipe(map((res) => res['data']));
   }
   getLawyers(): Promise<Lawyer[]> {
+    return Promise.resolve([]);
     return this.http
       .get<Lawyer[]>(`${Config.apiURL}/api/lawyer`)
       .pipe(map((lawyer) => lawyer['data']['content']))

@@ -89,9 +89,11 @@ export class FieldService {
         return field;
       });
     fields = await this.setPropertiesFromFunctions(fields);
+    //fields = this.orderFields(fields);
+
     return fields;
   }
-  private async getFields<T>(
+  async getFields<T>(
     fields: Field<T>[],
     context: 'new' | 'edit',
     form: NgForm,
@@ -101,13 +103,13 @@ export class FieldService {
     fields = this.orderFields(fields);
     if ('edit' === context && subject) {
       fields = this.setFieldsValueFromSubject(fields, subject);
-      fields = this.parseFielsdDate<T>(fields);
+      fields = this.parseFieldsDate<T>(fields);
     }
     fields = await this.setPropertiesFromFunctions(fields, form, subject);
     return fields;
   }
 
-  private filterFieldsByContext<T>(
+  filterFieldsByContext<T>(
     fields: Field<T>[],
     context: 'new' | 'edit'
   ): Field<T>[] {
@@ -116,10 +118,7 @@ export class FieldService {
     );
   }
 
-  private setFieldsValueFromSubject<T>(
-    fields: Field<T>[],
-    subject: T
-  ): Field<T>[] {
+  setFieldsValueFromSubject<T>(fields: Field<T>[], subject: T): Field<T>[] {
     fields = cloneDeep(fields);
     return fields.map((field) => {
       if (field.value === undefined) {
@@ -131,21 +130,30 @@ export class FieldService {
     });
   }
 
-  private orderFields<T>(fields: Field<T>[]): Field<T>[] {
+  orderFields<T>(fields: Field<T>[]): Field<T>[] {
     return fields.sort((a, b) => {
       return (a.order || 999) - (b.order || 999);
     });
   }
 
-  private parseFielsdDate<T>(fields: Field<T>[]): Field<T>[] {
+  orderFieldsBy<T>(fields: Field<T>[], predefinedOrder: string[]): Field<T>[] {
+    return fields.sort((a, b) => {
+      return (
+        predefinedOrder.indexOf(a.name as string) -
+        predefinedOrder.indexOf(b.name as string)
+      );
+    });
+  }
+
+  // YYYY-MM-DDTHH:mm:ss.sssZ
+  parseFieldsDate<T>(fields: Field<T>[]): Field<T>[] {
     return fields.map((field) => {
       if (
         ['date', 'datetime-local'].includes(field.type) &&
         field.value !== undefined
       ) {
-        const date = new Date(`${field.value}+00:00`);
+        const date = new Date(`${field.value}Z`);
         date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-
         if ('date' === field.type) {
           field.value = date.toISOString().split('T')[0];
         } else if ('datetime-local' === field.type) {
@@ -157,7 +165,7 @@ export class FieldService {
     });
   }
 
-  private setPropertiesFromFunctions<T>(
+  setPropertiesFromFunctions<T>(
     fields: Field<T>[],
     form?: NgForm,
     subject?: T

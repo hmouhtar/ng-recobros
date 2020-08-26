@@ -408,6 +408,7 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
     type: 'select',
     label: 'Administrador Recobrador',
     name: 'userAssignment',
+    useAsSearchFilter: true,
     required: true,
     fixedDisplayCondition: (injector: Injector): Promise<boolean> => {
       const rolesService = injector.get<RolesService>(RolesService);
@@ -533,12 +534,14 @@ export const RECOBRO_FIELDS: Field<Recobro>[] = [
             return { label: element.motive, value: element.id };
           });
 
-          if (
-            !componentInstance.field.options.find(
-              (option) => option.value == subject.motive
-            )
-          ) {
-            componentInstance.parentForm.controls['motive'].setValue('');
+          if (subject) {
+            if (
+              !componentInstance.field.options.find(
+                (option) => option.value == subject.motive
+              )
+            ) {
+              componentInstance.parentForm.controls['motive'].setValue('');
+            }
           }
         });
       }

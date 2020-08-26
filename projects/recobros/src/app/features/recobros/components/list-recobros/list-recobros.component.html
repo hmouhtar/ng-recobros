@@ -25,6 +25,9 @@
           fxFlex="0 0 48%"
           [field]="field"
           [form]="searchRecobroFiltersForm"
+          *ngIf="field.fixedDisplayCondition !== undefined
+          ? field.fixedDisplayCondition
+          : true"
         ></alvea-dynamic-field>
       </ng-container>
     </div>

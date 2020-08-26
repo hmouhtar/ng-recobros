@@ -12,6 +12,7 @@ import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { FieldService } from 'projects/recobros/src/app/core/services/field.service';
 import { Field } from 'projects/recobros/src/app/shared/models/field';
 import { NgForm } from '@angular/forms';
+import { SelectOption } from 'projects/recobros/src/app/shared/models/selectOption';
 
 @Component({
   selector: 'alvea-list-recobros',
@@ -50,12 +51,34 @@ export class ListRecobrosComponent implements OnInit {
     this.rolesService
       .currentUserCan('CREATE_RECOVERY')
       .then((res) => (this.canCreateRecobro = res));
-
     this.setTableDataSource();
-    this.getFilterFields();
+    // this.getFilterFields();
     this.fieldService.getRecobroSearchFilterFields().then((fields) => {
-      this.searchFilterFields = fields;
-      console.log(fields);
+      this.searchFilterFields = this.fieldService
+        .orderFieldsBy(fields, [
+          'sinisterNumber',
+          'recoverySituation',
+          'recoveryRoute',
+          'branch',
+          'incidentTypology',
+          'situationManagement',
+          'judicialSituation(',
+          'resolution',
+          'motive',
+          'lawyerName',
+          'userAssignment'
+        ])
+        .map((field) => {
+          if (field.options) {
+            field.options = (field.options as Array<SelectOption>).map(
+              (option) => {
+                option.disabled = false;
+                return option;
+              }
+            );
+          }
+          return field;
+        });
     });
   }
 
@@ -86,7 +109,7 @@ export class ListRecobrosComponent implements OnInit {
     this.dataSource.searchBy(form.value);
   }
 
-  setTableDataSource() {
+  setTableDataSource(): void {
     this.dataSource = new PaginatedDataSource<Recobro>(
       (request) => this.recobrosService.getRecobrosPage(request),
       this.initialSort
