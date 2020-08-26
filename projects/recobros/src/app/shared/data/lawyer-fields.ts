@@ -22,13 +22,13 @@ export const LAWYER_FIELDS: Field<Lawyer>[] = [
   {
     type: 'email',
     label: 'E-mail',
-    name: 'email',
+    name: 'emailAddress',
     required: true
   },
   {
     type: 'text',
     label: 'Teléfono',
-    name: 'phone',
+    name: 'phoneNumber',
     required: true
   },
   {

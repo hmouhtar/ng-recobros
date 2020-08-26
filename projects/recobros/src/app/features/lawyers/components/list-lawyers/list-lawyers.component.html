@@ -16,7 +16,7 @@
   <table
     matSort
     matSortDisableClear
-    matSortActive="fullName"
+    matSortActive="name"
     matSortDirection="asc"
     mat-table
     [dataSource]="dataSource"
@@ -29,24 +29,24 @@
       <td mat-cell *matCellDef="let lawyer">{{ lawyer.id }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="fullName">
+    <ng-container matColumnDef="name">
       <th mat-sort-header mat-header-cell *matHeaderCellDef>Nombre</th>
       <td mat-cell *matCellDef="let lawyer">
         {{ lawyer.name }} {{ lawyer.surname1 }} {{ lawyer.surname2 }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="email">
+    <ng-container matColumnDef="emailAddress">
       <th mat-sort-header mat-header-cell *matHeaderCellDef>E-mail</th>
       <td mat-cell *matCellDef="let lawyer">
-        {{ lawyer.email }}
+        {{ lawyer.emailAddress }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="phone">
+    <ng-container matColumnDef="phoneNumber">
       <th mat-sort-header mat-header-cell *matHeaderCellDef>Teléfono</th>
       <td mat-cell *matCellDef="let lawyer">
-        {{ lawyer.phone }}
+        {{ lawyer.phoneNumber }}
       </td>
     </ng-container>
 

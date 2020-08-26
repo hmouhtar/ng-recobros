@@ -31,7 +31,7 @@ export class LawyersService {
       .pipe(map((res) => res['data']));
   }
   getLawyers(): Promise<Lawyer[]> {
-    return Promise.resolve([]);
+    // return Promise.resolve([]);
     return this.http
       .get<Lawyer[]>(`${Config.apiURL}/api/lawyer`)
       .pipe(map((lawyer) => lawyer['data']['content']))

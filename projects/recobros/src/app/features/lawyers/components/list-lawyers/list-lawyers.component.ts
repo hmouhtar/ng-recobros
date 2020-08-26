@@ -20,8 +20,10 @@ export class ListLawyersComponent {
 
   dataSource: PaginatedDataSource<Lawyer>;
   displayedColumns: string[] = [
-    'fullName',
+    'name',
     'location',
+    'emailAddress',
+    'phoneNumber',
     'active',
     'edit',
     'delete'
